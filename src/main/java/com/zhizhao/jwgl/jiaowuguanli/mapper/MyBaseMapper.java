@@ -6,5 +6,5 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.util.List;
 
 public interface MyBaseMapper<T> extends BaseMapper<T> {
-    IPage<T> selectAll(IPage page);
+    List<T> selectAll();
 }

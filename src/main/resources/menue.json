@@ -1,0 +1,167 @@
+/**
+教务管理
+  学员管理
+  班级管理
+  老师管理
+  课程管理
+  上课记录
+销售管理
+  学员档案
+  学员报名
+  续费预警
+  试听记录
+  成长记录
+财务管理
+  缴费记录
+  退转课记录
+  老师课时记录
+机构设置
+  员工管理
+  规则设置
+  操作日志
+**/
+
+{
+  "value": [
+    {
+      "descVal": "教务中心",
+      "uniqueVal": "jiaowuzhongxin",
+      "pathVal": ""
+    },
+    {
+      "descVal": "学员管理",
+      "uniqueVal": "xueyuanguanli",
+      "pathVal": ""
+    },
+    {
+      "descVal": "学员详情",
+      "uniqueVal": "xuyuanxiangqing",
+      "pathVal": ""
+    },
+    {
+      "descVal": "班级管理",
+      "uniqueVal": "banjiguanli",
+      "pathVal": ""
+    },
+    {
+      "descVal": "班级详情",
+      "uniqueVal": "banjixiangqing",
+      "pathVal": ""
+    },
+    {
+      "descVal": "老师管理",
+      "uniqueVal": "laoshiguanli",
+      "pathVal": ""
+    },
+    {
+      "descVal": "老师详情",
+      "uniqueVal": "laoshixiangqing",
+      "pathVal": ""
+    },
+    {
+      "descVal": "课程管理",
+      "uniqueVal": "kechengguanli",
+      "pathVal": ""
+    },
+    {
+      "descVal": "新建课程",
+      "uniqueVal": "xinjiankeychen",
+      "pathVal": ""
+    },
+    {
+      "descVal": "上课记录",
+      "uniqueVal": "shangkejilu",
+      "pathVal": ""
+    },
+    {
+      "descVal": "缺课补课",
+      "uniqueVal": "quekebuke",
+      "pathVal": ""
+    },
+    {
+      "descVal": "销售管理",
+      "uniqueVal": "xiaoshouguanli",
+      "pathVal": ""
+    },
+    {
+      "descVal": "学员档案",
+      "uniqueVal": "xuyuandangan",
+      "pathVal": ""
+    },
+    {
+      "descVal": "历史学员",
+      "uniqueVal": "lishxueyuan",
+      "pathVal": ""
+    },
+    {
+      "descVal": "在读学员",
+      "uniqueVal": "zaiduxueyuan",
+      "pathVal": ""
+    },
+    {
+      "descVal": "学员试听",
+      "uniqueVal": "xueyuanshiting",
+      "pathVal": ""
+    },
+    {
+      "descVal": "学员报名",
+      "uniqueVal": "xuyuanbaoming",
+      "pathVal": ""
+    },
+    {
+      "descVal": "续费预警",
+      "uniqueVal": "xufeiyujing",
+      "pathVal": ""
+    },
+    {
+      "descVal": "试听记录",
+      "uniqueVal": "shitingjilu",
+      "pathVal": ""
+    },
+    {
+      "descVal": "成长记录",
+      "uniqueVal": "chengzhangjilu",
+      "pathVal": ""
+    },
+    {
+      "descVal": "财务中心",
+      "uniqueVal": "caiwuzhongxin",
+      "pathVal": ""
+    },
+    {
+      "descVal": "缴费记录",
+      "uniqueVal": "jiaofeijilu",
+      "pathVal": ""
+    },
+    {
+      "descVal": "转课记录",
+      "uniqueVal": "zhuankejilu",
+      "pathVal": ""
+    },
+    {
+      "descVal": "老师课时记录",
+      "uniqueVal": "laoshikeshijilu",
+      "pathVal": ""
+    },
+    {
+      "descVal": "机构设置",
+      "uniqueVal": "jigoushezhi",
+      "pathVal": ""
+    },
+    {
+      "descVal": "员工管理",
+      "uniqueVal": "yuangongguanli",
+      "pathVal": ""
+    },
+    {
+      "descVal": "规则设置",
+      "uniqueVal": "guizeshezhi",
+      "pathVal": ""
+    },
+    {
+      "descVal": "操作日志",
+      "uniqueVal": "caozuorizhi",
+      "pathVal": ""
+    }
+  ]
+}

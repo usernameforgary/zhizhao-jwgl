@@ -9,12 +9,13 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.time.Duration;
 
 @Configuration
-//@PropertySource("classpath:redis.properties")
+@PropertySource("classpath:redis.properties")
 public class RedisConfig {
 //    @Value("${redis.hostName}")
 //    private String redisHostName;
