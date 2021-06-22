@@ -1,11 +1,51 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.biaoqian;
 
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.spring.stereotype.Aggregate;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.Hibernate;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Aggregate
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Getter
+@Setter
+@ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class BiaoQian {
-   @AggregateIdentifier
-   private Long id;
-   private String name;
+   @Id
+   @NotNull
+   Long id;
+   @CreatedDate
+   @NotNull
+   Long createTime;
+   @LastModifiedDate
+   Long updateTime;
+   @Version
+   Integer version;
+   Boolean isDeleted = false;
+
+   //名称
+   @Column(nullable = false)
+   String mingCheng;
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+      BiaoQian biaoQian = (BiaoQian) o;
+
+      return getId() != null && getId().equals(biaoQian.getId());
+   }
+
+   @Override
+   public int hashCode() {
+      return 1106370586;
+   }
 }

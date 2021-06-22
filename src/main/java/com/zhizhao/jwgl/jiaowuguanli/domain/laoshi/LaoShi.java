@@ -1,28 +1,25 @@
-package com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan;
+package com.zhizhao.jwgl.jiaowuguanli.domain.laoshi;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.Version;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
-/**
- * 系统菜单
- */
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-public class XiTongCaiDan {
+public class LaoShi {
     @Id
     @NotNull
     Long id;
@@ -35,31 +32,25 @@ public class XiTongCaiDan {
     Integer version;
     Boolean isDeleted = false;
 
-    //父级菜单Id
-    private Long fuId;
-    //菜单名称
-    private String mingCheng;
-    //菜单路由
-    private String url;
-    //菜单排序
-    private Integer paiXu;
-    //隐藏
-    private Boolean yinCang= false;
-    //菜单图标
-    private String tuBiao;
+    //所属账号
+    @Column(nullable = false)
+    Long zhangHaoId;
+    //擅长科目组
+    @ElementCollection
+    @Column(name = "shanChangKeMuId")
+    Set<Long> shanChangKeMuZu;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        XiTongCaiDan that = (XiTongCaiDan) o;
+        LaoShi laoShi = (LaoShi) o;
 
-        return getId() != null && getId().equals(that.getId());
+        return getId() != null && getId().equals(laoShi.getId());
     }
 
     @Override
     public int hashCode() {
-        return 973547846;
+        return 722388156;
     }
 }
-

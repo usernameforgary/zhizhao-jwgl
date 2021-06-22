@@ -1,7 +1,7 @@
-package com.zhizhao.jwgl.jiaowuguanli.domain.banji;
+package com.zhizhao.jwgl.jiaowuguanli.domain.kecheng;
 
-import com.zhizhao.jwgl.jiaowuguanli.domain.constant.BanJiZhuangTai;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -12,13 +12,14 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EntityListeners(AuditingEntityListener.class)
-public class BanJi {
+public class KeCheng {
     @Id
     @NotNull
     Long id;
@@ -33,27 +34,22 @@ public class BanJi {
 
     //名称
     @Column(nullable = false)
-    String mingChen;
-    //所属课程
+    String mingCheng;
+    //单价
     @Column(nullable = false)
-    Long keChengId;
-    //班级状态
+    Double danJia;
+    //启用状态
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    BanJiZhuangTai banJiZhuangTai = BanJiZhuangTai.KAI_KE;
-    //班级老师
-    Long laoShiId;
-    //容量
-    Integer rongLiang;
-    //班级学员
+    Boolean qiYongZhuangTai = true;
+    //定价标准
     @ElementCollection
-    Set<BanJiXuYuan> banJiXueYuanZu;
-    //班级分类
-    Long banJiFenLeiId;
-    //上课教室
-    Long shangKeJiaoShiId;
-    //授课课时
-    Double shouKeKeShi;
+    Set<DingJiaBiaoZhun> dingJiaBiaoZhunZu;
+    //请假扣课时
+    @Column(nullable = false)
+    Boolean qingJiaKouKeShi = false;
+    //未到扣课时
+    @Column(nullable = false)
+    Boolean WeiDaoKouKeShi = false;
     //备注
     String beiZhu;
 
@@ -61,13 +57,13 @@ public class BanJi {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        BanJi banJi = (BanJi) o;
+        KeCheng keCheng = (KeCheng) o;
 
-        return getId() != null && getId().equals(banJi.getId());
+        return getId() != null && getId().equals(keCheng.getId());
     }
 
     @Override
     public int hashCode() {
-        return 2132218027;
+        return 815518512;
     }
 }
