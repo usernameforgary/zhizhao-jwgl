@@ -53,7 +53,7 @@ public class PublicController {
             return PPResult.getPPResultOK(map);
         }
 
-        return PPResult.fail(ErrorCode.DataNotFound, "用户名或密码错误!");
+        return PPResult.fail(ErrorCode.NoAuthorization, "用户名或密码错误!");
     }
 
     // 添加员工

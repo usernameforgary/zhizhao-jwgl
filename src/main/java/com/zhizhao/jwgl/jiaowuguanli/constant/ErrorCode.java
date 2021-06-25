@@ -1,6 +1,8 @@
 package com.zhizhao.jwgl.jiaowuguanli.constant;
 
 public enum ErrorCode {
+    NoAuthorization(401, "认证失败"),
+    NoAuthentication(403, "没有权限"),
     NoPermission(100,"权限错误"),
     ServerError(101,"服务器内部错误"),
     RequestParamsInvalid(102,"参数缺失或不合法"),
