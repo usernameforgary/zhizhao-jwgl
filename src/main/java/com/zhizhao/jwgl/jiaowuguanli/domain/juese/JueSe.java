@@ -9,9 +9,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -30,6 +32,7 @@ public class JueSe {
     Long updateTime;
     @Version
     Integer version;
+    @Column(columnDefinition = "boolean default false")
     Boolean isDeleted = false;
 
     // 名称
@@ -45,6 +48,36 @@ public class JueSe {
     @ElementCollection
     @Column(name = "xiTongApiId")
     Set<Long> xiTongApiZu;
+
+    public static JueSe chuangJian(ChuangJianCmd cmd) {
+        JueSe result = JueSe.builder()
+                .id(cmd.id)
+                .mingCheng(cmd.mingCheng)
+                .jianJie(cmd.jianJie)
+                .xiTongCaiDanZu(cmd.xiTongCaiDanZu)
+                .xiTongApiZu(cmd.xiTongApiZu)
+                .build();
+        return result;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChuangJianCmd {
+        @NotNull
+        Long id;
+        @NotNull
+        Boolean isDelete = false;
+        @NotNull
+        @Size(min = 1, max = 50)
+        String mingCheng;
+        @NotNull
+        @Size(min = 1, max = 50)
+        String jianJie;
+        @NotNull
+        Set<Long> xiTongCaiDanZu;
+        Set<Long> xiTongApiZu;
+    }
 
     @Override
     public boolean equals(Object o) {
