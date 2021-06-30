@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.laoshi;
 
+import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
+@Builder(toBuilder = true)
 @Getter
 @Setter
 @ToString
@@ -39,6 +41,33 @@ public class LaoShi {
     @ElementCollection
     @Column(name = "shanChangKeMuId")
     Set<Long> shanChangKeMuZu;
+
+    // 创建老师
+    public static LaoShi chuangJian(ChuangJianCmd cmd) {
+        if(cmd.getZhangHaoId() == null) {
+            throw new BusinessException("老师账号创建失败");
+        }
+
+        LaoShi laoShi = LaoShi.builder()
+                .id(cmd.id)
+                .isDeleted(false)
+                .zhangHaoId(cmd.zhangHaoId)
+                .shanChangKeMuZu(cmd.shanChangKeMuZu)
+                .build();
+        return laoShi;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class ChuangJianCmd {
+        @NotNull
+        Long id;
+        @NotNull
+        Long zhangHaoId;
+        @NotNull
+        Set<Long> shanChangKeMuZu;
+    }
 
     @Override
     public boolean equals(Object o) {

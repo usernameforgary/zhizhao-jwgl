@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    @Value("${jiaowugaunli.security.jwt.key}")
+    @Value("${jiaowuguanli.security.jwt.key}")
     private String SECRET_KEY;
 
     /**

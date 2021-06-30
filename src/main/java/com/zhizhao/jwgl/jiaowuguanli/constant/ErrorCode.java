@@ -12,7 +12,8 @@ public enum ErrorCode {
     DataAlreadyExisted(1000,"数据已经存在"),
     DataNotFound(1001,"数据不存在"),
     WXAccountAlreadyExisted(10003,"该微信账户已经存在"),
-    PhoneHasBeenUsed(11004,"该手机号已经被使用");
+    PhoneHasBeenUsed(11004,"该手机号已经被使用"),
+    BusinessError(-100, "非法操作");
 
     private int code;
 

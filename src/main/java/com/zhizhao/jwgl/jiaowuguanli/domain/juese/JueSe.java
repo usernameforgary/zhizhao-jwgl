@@ -56,6 +56,7 @@ public class JueSe {
                 .jianJie(cmd.jianJie)
                 .xiTongCaiDanZu(cmd.xiTongCaiDanZu)
                 .xiTongApiZu(cmd.xiTongApiZu)
+                .isDeleted(false)
                 .build();
         return result;
     }
@@ -66,8 +67,6 @@ public class JueSe {
     public static class ChuangJianCmd {
         @NotNull
         Long id;
-        @NotNull
-        Boolean isDelete = false;
         @NotNull
         @Size(min = 1, max = 50)
         String mingCheng;

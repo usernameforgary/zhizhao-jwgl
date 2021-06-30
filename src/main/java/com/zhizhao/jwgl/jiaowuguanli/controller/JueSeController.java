@@ -14,7 +14,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @RestController
@@ -40,10 +42,12 @@ public class JueSeController {
         cmd.setId(id);
 
         JueSe jueSe = JueSe.chuangJian(cmd);
-        jueSe.setIsDeleted(cmd.getIsDelete());
+
         entityManager.persist(jueSe);
         entityManager.flush();
 
-        return PPResult.Ok();
+        Map<String, Object> result = new HashMap<>();
+        result.put("id", id);
+        return PPResult.getPPResultOK(result);
     }
 }

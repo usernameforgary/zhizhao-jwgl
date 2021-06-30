@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.shanchangkemu;
 
+import com.sun.istack.Nullable;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
@@ -9,11 +10,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * 擅长科目
  */
 @Entity
+@Builder(toBuilder = true)
 @Getter
 @ToString
 @Setter
@@ -32,11 +35,33 @@ public class ShanChangKeMu {
     Long updateTime;
     @Version
     Integer version;
+    @Column(columnDefinition = "boolean default false")
     Boolean isDeleted = false;
 
     // 名称
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     String minCheng;
+
+    public static ShanChangKeMu chuangJian(ChuangJianCmd cmd) {
+        ShanChangKeMu result = ShanChangKeMu.builder()
+                .id(cmd.id)
+                .minCheng(cmd.minCheng)
+                .isDeleted(false)
+                .build();
+        return result;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class ChuangJianCmd {
+        @Nullable
+        Long id;
+        @NotNull
+        @Size(min = 1, max = 50)
+        String minCheng;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

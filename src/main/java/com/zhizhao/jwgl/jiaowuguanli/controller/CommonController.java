@@ -4,27 +4,58 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.biaoqian.BiaoQian;
 import com.zhizhao.jwgl.jiaowuguanli.domain.shanchangkemu.ShanChangKeMu;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.BiaoQianMapper;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.ShanChangKeMuMapper;
+import com.zhizhao.jwgl.jiaowuguanli.repository.ShanChangKeMuRepository;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.zhizhao.jwgl.jiaowuguanli.utils.SnowflakeIdUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("common")
 public class CommonController {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
     @Resource
     ShanChangKeMuMapper shanChangKeMuMapper;
 
     @Resource
     BiaoQianMapper biaoQianMapper;
 
+    @Autowired
+    ShanChangKeMuRepository shanChangKeMuRepository;
+
     @GetMapping("huoQuShanChangKeMuLieBiao")
     public PPResult huoQuShanChangKeMuLieBiao() {
         List<ShanChangKeMu> shanChangKeMus = shanChangKeMuMapper.selectAll();
         return PPResult.getPPResultOK(shanChangKeMus);
+    }
+
+    @Transactional
+    @PostMapping("chuangJianShanChangKeMu")
+    public PPResult chuangJianShanChangKeMu(@Valid @RequestBody ShanChangKeMu.ChuangJianCmd cmd) {
+        Long id = SnowflakeIdUtil.nextId();
+        cmd.setId(id);
+
+        ShanChangKeMu shanChangKeMu = ShanChangKeMu.chuangJian(cmd);
+
+        entityManager.persist(shanChangKeMu);
+        entityManager.flush();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("id", id);
+
+        return PPResult.getPPResultOK(result);
     }
 
     @GetMapping("huoQuBiaoQianLieBiao")

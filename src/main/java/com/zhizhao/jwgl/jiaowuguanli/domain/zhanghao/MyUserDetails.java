@@ -1,10 +1,13 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao;
 
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+// 没有用ZhangHao直接实现UserDetails接口，因为权限是在XiTongApi中保存的，一个账号可能对应多个系统API
+@Data
 public class MyUserDetails implements UserDetails {
     private ZhangHao zhangHao;
     private Collection<? extends GrantedAuthority> authorities;

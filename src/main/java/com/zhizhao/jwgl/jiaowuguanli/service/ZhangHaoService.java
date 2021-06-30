@@ -1,7 +1,7 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoTianJiaYuanGong;
+import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
 
 public interface ZhangHaoService {
-    void tianJianZhangHao();
+    Long chuangJianZhangHao(ZhangHao.ChuangJianCmd cmd);
 }

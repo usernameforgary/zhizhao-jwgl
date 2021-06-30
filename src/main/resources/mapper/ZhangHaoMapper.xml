@@ -3,7 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.ZhangHaoMapper">
-    <select id="yongHuLieBiao" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao">
-        select * from zhang_hao
+    <!-- 获取账号列表 -->
+    <resultMap id="zhangHaoResult" type="com.zhizhao.jwgl.jiaowuguanli.vo.ZhangHaoVo">
+        <id column="id" property="id"/>
+        <collection property="jueSeZu" select="selectYongHuJueSe" column="id">
+        </collection>
+    </resultMap>
+    <select id="yuanGongLieBiao" resultMap="zhangHaoResult">
+        select * from zhang_hao ${ew.customSqlSegment}
     </select>
+    <select id="selectYongHuJueSe" resultType="string">
+        SELECT B.ming_cheng
+        FROM zhang_hao_jue_se_zu A
+        JOIN jue_se B
+        ON A.jue_se_id = B.id
+        WHERE A.zhang_hao_id = #{id}
+    </select>
+    <!-- 获取账号列表 end-->
 </mapper>
