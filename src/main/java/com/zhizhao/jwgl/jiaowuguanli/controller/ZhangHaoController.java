@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ZhangHaoLeiXing;
+import com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan.XiTongCaiDan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.MyUserDetails;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.ZhangHaoMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.ZhangHaoRepository;
+import com.zhizhao.jwgl.jiaowuguanli.service.XiTongCaiDanService;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
 import com.zhizhao.jwgl.jiaowuguanli.vo.ZhangHaoVo;
@@ -18,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,14 +32,27 @@ public class ZhangHaoController {
     @Autowired
     ZhangHaoRepository zhangHaoRepository;
 
+    @Autowired
+    XiTongCaiDanService xiTongCaiDanService;
+
     // 获取账号信息
     @GetMapping("zhangHaoXinXi")
     public PPResult zhangHaoXinXi(Authentication authentication) {
-       MyUserDetails userDetails = ((MyUserDetails) authentication.getPrincipal());
-       ZhangHao zhangHao = userDetails.getZhangHao();
+        MyUserDetails userDetails = ((MyUserDetails) authentication.getPrincipal());
+        ZhangHao zhangHao = userDetails.getZhangHao();
+        Long id = zhangHao.getId();
+        // 获取账号的系统菜单
+        List<XiTongCaiDan> xiTongCaiDanList = xiTongCaiDanService.huoQuXiTongCanDanByZhangHaoId(id);
 
-       return PPResult.getPPResultOK(null);
+        ZhangHaoVo zhangHaoVo = new ZhangHaoVo();
+        zhangHaoVo.setXingMing(zhangHao.getXingMing());
+        zhangHaoVo.setId(id);
+        zhangHaoVo.setIsLaoShi(zhangHao.getIsLaoShi());
+        zhangHaoVo.setXitongCaiDanZu(xiTongCaiDanList);
+
+        return PPResult.getPPResultOK(zhangHaoVo);
     }
+
     // 员工列表
     @GetMapping("yuanGongLieBiao")
     public PPResult<Page<ZhangHao>> huoQuYuanGongLiebiao(

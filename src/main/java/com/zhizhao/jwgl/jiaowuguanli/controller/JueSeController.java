@@ -1,12 +1,9 @@
 package com.zhizhao.jwgl.jiaowuguanli.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhizhao.jwgl.jiaowuguanli.domain.juese.JueSe;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.JueSeMapper;
-import com.zhizhao.jwgl.jiaowuguanli.repository.JueSeRepository;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
 import com.zhizhao.jwgl.jiaowuguanli.utils.SnowflakeIdUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

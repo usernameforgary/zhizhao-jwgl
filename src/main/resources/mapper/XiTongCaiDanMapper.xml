@@ -6,4 +6,15 @@
     <select id="selectAll" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan.XiTongCaiDan">
         select * from xi_tong_cai_dan where is_deleted = 0
     </select>
+
+    <!-- 根据zhangHaoId查询账号下的系统菜单权限 -->
+    <select id="huoQuXiTongCaiDanByZhangHaoId" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan.XiTongCaiDan">
+        SELECT DISTINCT E.* FROM zhang_hao A
+        JOIN zhang_hao_jue_se_zu B ON A.id = B.zhang_hao_id
+        JOIN jue_se C ON B.jue_se_id = C.id
+        JOIN jue_se_xi_tong_cai_dan_zu D ON D.jue_se_id = C.id
+        JOIN xi_tong_cai_dan E ON E.id = D.xi_tong_cai_dan_id
+        WHERE A.id = #{zhangHaoId}
+        AND E.is_deleted = 0;
+    </select>
 </mapper>

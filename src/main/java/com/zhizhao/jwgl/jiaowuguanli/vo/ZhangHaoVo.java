@@ -2,10 +2,12 @@ package com.zhizhao.jwgl.jiaowuguanli.vo;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XingBie;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ZhangHaoLeiXing;
+import com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan.XiTongCaiDan;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -26,4 +28,5 @@ public class ZhangHaoVo {
         Boolean isLaoShi = false;
         String beiZhu;
         Boolean zaiZhiZhuangTai = true;
+        List<XiTongCaiDan> xitongCaiDanZu;
 }
