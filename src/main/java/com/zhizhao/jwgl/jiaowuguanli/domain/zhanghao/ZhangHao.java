@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XingBie;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ZhangHaoLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
@@ -29,19 +30,10 @@ import java.util.Set;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-public class ZhangHao {
+public class ZhangHao extends AggRoot {
     @Id
     @NotNull
     Long id;
-    @CreatedDate
-    @NotNull
-    Long createTime;
-    @LastModifiedDate
-    Long updateTime;
-    @Version
-    Integer version;
-    @NotNull
-    Boolean isDeleted = false;
 
     // 姓名
     @Column(nullable = false)
@@ -85,7 +77,6 @@ public class ZhangHao {
 
         ZhangHao zhangHao = ZhangHao.builder()
                 .id(cmd.id)
-                .isDeleted(false)
                 .xingMing(cmd.xingMing)
                 .shouJi(cmd.shouJi)
                 .xingBie(cmd.xingBie)

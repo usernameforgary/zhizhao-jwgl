@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.banji;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.BanJiZhuangTai;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -18,18 +19,10 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 @EntityListeners(AuditingEntityListener.class)
-public class BanJi {
+public class BanJi extends AggRoot {
     @Id
     @NotNull
     Long id;
-    @CreatedDate
-    @NotNull
-    Long createTime;
-    @LastModifiedDate
-    Long updateTime;
-    @Version
-    Integer version;
-    Boolean isDeleted = false;
 
     //名称
     @Column(nullable = false)

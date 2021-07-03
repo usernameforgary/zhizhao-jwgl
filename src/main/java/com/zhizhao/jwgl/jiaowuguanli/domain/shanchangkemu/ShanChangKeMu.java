@@ -1,6 +1,7 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.shanchangkemu;
 
 import com.sun.istack.Nullable;
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
@@ -24,19 +25,10 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-public class ShanChangKeMu {
+public class ShanChangKeMu extends AggRoot {
     @Id
     @NotNull
     Long id;
-    @CreatedDate
-    @NotNull
-    Long createTime;
-    @LastModifiedDate
-    Long updateTime;
-    @Version
-    Integer version;
-    @Column(columnDefinition = "boolean default false")
-    Boolean isDeleted = false;
 
     // 名称
     @Column(nullable = false, unique = true)
@@ -46,7 +38,6 @@ public class ShanChangKeMu {
         ShanChangKeMu result = ShanChangKeMu.builder()
                 .id(cmd.id)
                 .minCheng(cmd.minCheng)
-                .isDeleted(false)
                 .build();
         return result;
     }

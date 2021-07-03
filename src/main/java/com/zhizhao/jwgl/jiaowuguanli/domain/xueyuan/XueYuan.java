@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XingBie;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
 import lombok.*;
@@ -24,22 +25,17 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class XueYuan {
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"zhangHaoId", "xingMing"})
+})
+public class XueYuan extends AggRoot {
    @Id
    @NotNull
    Long id;
-   @CreatedDate
-   @NotNull
-   Long createTime;
-   @LastModifiedDate
-   Long updateTime;
-   @Version
-   Integer version;
-   Boolean isDeleted = false;
 
    // 所属账号
    @Column(nullable = false)
-   Long ZhangHaoId;
+   Long zhangHaoId;
    @Column(nullable = false)
    String xingMing;
    // 学员状态

@@ -10,7 +10,7 @@
         </collection>
     </resultMap>
     <select id="yuanGongLieBiao" resultMap="zhangHaoResult">
-        select * from zhang_hao ${ew.customSqlSegment}
+        select * from zhang_hao ${ew.customSqlSegment} order by create_time desc
     </select>
     <select id="selectYongHuJueSe" resultType="string">
         SELECT B.ming_cheng

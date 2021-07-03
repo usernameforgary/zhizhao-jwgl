@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.KeChengMapper">
+    <!-- 获取课程列表 -->
+    <resultMap id="keChengResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoKeCheng">
+        <result column="ding_jia_biao_zhun_zu" property="dingJiaBiaoZhunZu" jdbcType="VARCHAR" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <association property="zaiDuXueYuanShu" select="getZaiDuXueYuanShu" column="{ke_cheng_id=id}">
+        </association>
+    </resultMap>
+    <select id="getKeChengLieBiao" resultMap="keChengResult">
+        select * from ke_cheng ${ew.customSqlSegment} order by create_time desc
+    </select>
+    <select id="getZaiDuXueYuanShu" resultType="integer">
+        select count(*) from xue_yuan_ke_cheng A
+        <where>
+            A.ke_cheng_id = #{ke_cheng_id}
+            and A.ke_cheng_zhuang_tai in ('DAI_BU_JIAO', 'DAI_PAI_KE', 'DAI_SHANG_KE', 'DAI_JIE_KE')
+        </where>
+    </select>
+    <!-- 获取课程列表 end-->
+</mapper>

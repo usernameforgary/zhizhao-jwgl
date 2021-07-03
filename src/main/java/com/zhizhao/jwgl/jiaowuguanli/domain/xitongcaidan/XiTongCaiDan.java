@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
@@ -22,18 +23,10 @@ import javax.validation.constraints.NotNull;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @Builder(toBuilder = true)
-public class XiTongCaiDan {
+public class XiTongCaiDan extends AggRoot {
     @Id
     @NotNull
     Long id;
-    @CreatedDate
-    @NotNull
-    Long createTime;
-    @LastModifiedDate
-    Long updateTime;
-    @Version
-    Integer version;
-    Boolean isDeleted = false;
 
     // 直接父级菜单Id
     Long fuId;

@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.laoshi;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -21,18 +22,10 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-public class LaoShi {
+public class LaoShi extends AggRoot {
     @Id
     @NotNull
     Long id;
-    @CreatedDate
-    @NotNull
-    Long createTime;
-    @LastModifiedDate
-    Long updateTime;
-    @Version
-    Integer version;
-    Boolean isDeleted = false;
 
     //所属账号
     @Column(nullable = false)
@@ -50,7 +43,6 @@ public class LaoShi {
 
         LaoShi laoShi = LaoShi.builder()
                 .id(cmd.id)
-                .isDeleted(false)
                 .zhangHaoId(cmd.zhangHaoId)
                 .shanChangKeMuZu(cmd.shanChangKeMuZu)
                 .build();

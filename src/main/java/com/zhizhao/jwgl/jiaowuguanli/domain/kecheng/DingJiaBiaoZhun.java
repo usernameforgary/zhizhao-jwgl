@@ -5,7 +5,6 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.Embeddable;
 
-@Embeddable
 @Getter
 @Setter
 @ToString

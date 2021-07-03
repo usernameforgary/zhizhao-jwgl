@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.juese;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
@@ -21,19 +22,10 @@ import java.util.Set;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-public class JueSe {
+public class JueSe extends AggRoot {
     @Id
     @NotNull
     Long id;
-    @CreatedDate
-    @NotNull
-    Long createTime;
-    @LastModifiedDate
-    Long updateTime;
-    @Version
-    Integer version;
-    @Column(columnDefinition = "boolean default false")
-    Boolean isDeleted = false;
 
     // 名称
     @Column(nullable = false, unique = true)
@@ -56,7 +48,6 @@ public class JueSe {
                 .jianJie(cmd.jianJie)
                 .xiTongCaiDanZu(cmd.xiTongCaiDanZu)
                 .xiTongApiZu(cmd.xiTongApiZu)
-                .isDeleted(false)
                 .build();
         return result;
     }

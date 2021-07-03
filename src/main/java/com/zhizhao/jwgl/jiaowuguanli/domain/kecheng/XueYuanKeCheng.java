@@ -1,11 +1,15 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.kecheng;
 
+import com.vladmihalcea.hibernate.type.json.JsonType;
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.KeChengLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.KeChengZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.YouHuiLeiXing;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,18 +25,11 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-public class XueYuanKeCheng {
+@TypeDef(name="json", typeClass = JsonType.class)
+public class XueYuanKeCheng extends AggRoot {
     @Id
     @NotNull
     Long id;
-    @CreatedDate
-    @NotNull
-    Long createTime;
-    @LastModifiedDate
-    Long updateTime;
-    @Version
-    Integer version;
-    Boolean isDeleted = false;
 
     //学员ID
     @Column(nullable = false)
@@ -41,7 +38,8 @@ public class XueYuanKeCheng {
     @Column(nullable = false)
     Long keChengId;
     //定价标准
-    @Embedded
+    @Type(type="json")
+    @Column(columnDefinition = "json")
     DingJiaBiaoZhun dingJiaBiaoZhun;
 
     //课程状态

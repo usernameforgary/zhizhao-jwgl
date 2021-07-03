@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.xitongapi;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,18 +22,10 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class XiTongApi {
+public class XiTongApi extends AggRoot {
     @Id
     @NotNull
     Long id;
-    @CreatedDate
-    @NotNull
-    Long createTime;
-    @LastModifiedDate
-    Long updateTime;
-    @Version
-    Integer version;
-    Boolean isDeleted = false;
 
     /**
      * 接口父ID(即接口分组)

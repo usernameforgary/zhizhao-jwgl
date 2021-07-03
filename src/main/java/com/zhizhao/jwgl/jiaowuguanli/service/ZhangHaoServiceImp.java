@@ -36,8 +36,6 @@ public class ZhangHaoServiceImp implements ZhangHaoService {
             zhangHao.setMiMa(bCryptPasswordEncoder.encode(defaultPsw));
         }
 
-        zhangHao.setIsDeleted(false);
-
         zhangHaoRepository.save(zhangHao);
         return zhangHao.getId();
     }

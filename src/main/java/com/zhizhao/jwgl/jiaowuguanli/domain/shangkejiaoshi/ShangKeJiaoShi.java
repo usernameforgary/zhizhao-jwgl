@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.shangkejiaoshi;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
@@ -21,21 +22,12 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-public class ShangKeJiaoShi {
+public class ShangKeJiaoShi extends AggRoot {
     @Id
     @NotNull
     Long id;
-    @CreatedDate
-    @NotNull
-    Long createTime;
-    @LastModifiedDate
-    Long updateTime;
-    @Version
-    Integer version;
-    // 不用Integer是确保有默认值0
-    Boolean isDeleted = false;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     String mingCheng;
 
     @Override

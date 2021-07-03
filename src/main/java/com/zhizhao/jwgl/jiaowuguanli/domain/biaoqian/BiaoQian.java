@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.biaoqian;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
@@ -18,21 +19,13 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class BiaoQian {
+public class BiaoQian extends AggRoot {
    @Id
    @NotNull
    Long id;
-   @CreatedDate
-   @NotNull
-   Long createTime;
-   @LastModifiedDate
-   Long updateTime;
-   @Version
-   Integer version;
-   Boolean isDeleted = false;
 
    //名称
-   @Column(nullable = false)
+   @Column(nullable = false, unique = true)
    String mingCheng;
 
    @Override
