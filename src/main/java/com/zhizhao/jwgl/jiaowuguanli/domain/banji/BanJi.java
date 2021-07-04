@@ -2,6 +2,7 @@ package com.zhizhao.jwgl.jiaowuguanli.domain.banji;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.BanJiZhuangTai;
+import com.zhizhao.jwgl.jiaowuguanli.domain.laoshi.LaoShi;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,7 +36,7 @@ public class BanJi extends AggRoot {
     @Enumerated(EnumType.STRING)
     BanJiZhuangTai banJiZhuangTai = BanJiZhuangTai.KAI_KE;
     //班级老师
-    Long laoShiId;
+    Long banJiLaoShiId;
     //容量
     Integer rongLiang;
     //班级学员

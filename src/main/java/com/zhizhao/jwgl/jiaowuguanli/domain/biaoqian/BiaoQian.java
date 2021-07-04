@@ -24,7 +24,7 @@ public class BiaoQian extends AggRoot {
    @NotNull
    Long id;
 
-   //名称
+   // 名称
    @Column(nullable = false, unique = true)
    String mingCheng;
 

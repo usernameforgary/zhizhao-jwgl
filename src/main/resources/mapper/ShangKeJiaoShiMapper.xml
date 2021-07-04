@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.ShangKeJiaoShiMapper">
+    <select id="selectAll" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.shangkejiaoshi.ShangKeJiaoShi">
+        select A.* from shang_ke_jiao_shi A
+        <where>
+            A.is_deleted = 0
+            order by A.update_time desc
+        </where>
+    </select>
+</mapper>

@@ -4,6 +4,7 @@ import com.zhizhao.jwgl.jiaowuguanli.constant.ErrorCode;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;

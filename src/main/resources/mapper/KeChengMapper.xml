@@ -20,4 +20,13 @@
         </where>
     </select>
     <!-- 获取课程列表 end-->
+
+    <select id="selectAll" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.kecheng.KeCheng">
+        select A.id, A.ming_cheng from ke_cheng A
+        <where>
+            A.is_deleted = 0
+            and A.qi_yong_zhuang_tai = 1
+            order by A.update_time desc
+        </where>
+    </select>
 </mapper>

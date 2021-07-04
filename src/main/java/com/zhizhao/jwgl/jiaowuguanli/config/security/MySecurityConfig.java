@@ -37,6 +37,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
         return new MyAccessDeniedHandler();
     }
 
+    @Bean
     public MyAuthenticationEntryPoint authenticationEntryPoint() {
         return new MyAuthenticationEntryPoint();
     }
