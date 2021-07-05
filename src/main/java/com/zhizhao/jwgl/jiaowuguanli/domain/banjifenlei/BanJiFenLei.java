@@ -10,8 +10,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
+@Builder(toBuilder = true)
 @Getter
 @Setter
 @ToString
@@ -27,6 +29,53 @@ public class BanJiFenLei extends AggRoot {
     // 名称
     @Column(unique = true)
     String mingCheng;
+
+    /**
+     * 创建
+     * @param cmd
+     * @return
+     */
+    public static BanJiFenLei chuangJian(ChuangJianCmd cmd) {
+        BanJiFenLei banJiFenLei = BanJiFenLei.builder()
+                .id(cmd.getId())
+                .mingCheng(cmd.getMingCheng())
+                .build();
+        return banJiFenLei;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChuangJianCmd {
+        @NotNull
+        Long id;
+        @NotNull
+        @Size(min = 1, max = 50)
+        String mingCheng;
+    }
+
+    /**
+     * 更新
+     * @param cmd
+     */
+    public void gengXin(GengXinCmd cmd) {
+        this.mingCheng = cmd.mingCheng;
+        if(cmd.isDeleted != null) {
+            this.setIsDeleted(cmd.isDeleted);
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class GengXinCmd {
+        @NotNull
+        Long id;
+        @NotNull
+        @Size(min = 1, max = 50)
+        String mingCheng;
+        Boolean isDeleted;
+    }
 
     @Override
     public boolean equals(Object o) {

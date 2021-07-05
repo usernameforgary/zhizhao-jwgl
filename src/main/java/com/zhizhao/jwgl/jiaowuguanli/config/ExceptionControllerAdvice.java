@@ -19,9 +19,8 @@ public class ExceptionControllerAdvice {
         return PPResult.fail(ErrorCode.BusinessError, e.getMessage());
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseBody
+    @ExceptionHandler(ConstraintViolationException.class) @ResponseBody
     public PPResult handler(ConstraintViolationException e) {
-        return PPResult.fail(ErrorCode.DataAlreadyExisted, "存在重复记录");
+        return PPResult.fail(ErrorCode.DataAlreadyExisted, "系统中存在[或已禁用]，与该记录相同的记录");
     }
 }

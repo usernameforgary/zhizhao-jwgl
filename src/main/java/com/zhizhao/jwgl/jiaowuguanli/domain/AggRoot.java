@@ -1,9 +1,9 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -22,5 +22,6 @@ public class AggRoot {
     Integer version;
     @NotNull
     @Column(columnDefinition = "boolean default false")
+    @Setter
     Boolean isDeleted = false;
 }
