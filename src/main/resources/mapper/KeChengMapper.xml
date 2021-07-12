@@ -5,6 +5,7 @@
 <mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.KeChengMapper">
     <!-- 获取课程列表 -->
     <resultMap id="keChengResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoKeCheng">
+        <!-- 定价标准组列json格式转换 -->
         <result column="ding_jia_biao_zhun_zu" property="dingJiaBiaoZhunZu" jdbcType="VARCHAR" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
         <association property="zaiDuXueYuanShu" select="getZaiDuXueYuanShu" column="{ke_cheng_id=id}">
         </association>

@@ -3,7 +3,7 @@ package com.zhizhao.jwgl.jiaowuguanli.domain.kecheng;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.KeChengLeiXing;
-import com.zhizhao.jwgl.jiaowuguanli.domain.constant.KeChengZhuangTai;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XuYuanKeChengZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.YouHuiLeiXing;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -45,7 +45,7 @@ public class XueYuanKeCheng extends AggRoot {
     //课程状态
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    KeChengZhuangTai keChengZhuangTai;
+    XuYuanKeChengZhuangTai keChengZhuangTai;
     //课程类型
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

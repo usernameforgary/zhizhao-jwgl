@@ -17,5 +17,5 @@ public class BanJiXuYuan {
    //删除
    @NotNull
    @Column(columnDefinition = "boolean default false")
-   Boolean shanChu;
+   Boolean isDeleted;
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.BanJiMapper">
+    <!-- 查询班级列表 -->
+    <resultMap id="banJiLieBiaoResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi">
+        <association property="renShu" select="getBanJiRenShu" column="{ban_ji_id=id}"/>
+        <association property="paiKeCiShu" select="getBanJiPaiKeCiShu" column="{ban_ji_id = id}"/>
+        <association property="yiShangKeCiShu" select="getBanJiYiShangKeCeShu" column="{ban_ji_id=id}"/>
+    </resultMap>
+    <select id="huoQuBanJiLeiBiao" resultMap="banJiLieBiaoResult">
+        select
+            A.id, A.ming_cheng, A.rong_liang, A.yi_shou_ke_shi,
+            B.ming_cheng as keChengMingCheng,
+            D.xing_ming as banJiLaoShiXingMing,
+            E.ming_cheng as banJiFenLeiMingCheng
+        from ban_ji A
+        left join ke_cheng B
+        on A.ke_cheng_id = B.id
+        left join lao_shi C
+        on A.ban_ji_lao_shi_id = C.id
+        left join zhang_hao D
+        on C.zhang_hao_id = D.id
+        left join ban_ji_fen_lei E
+        on A.ban_ji_fen_lei_id = E.id
+        <where>
+            A.is_deleted = 0
+        </where>
+        order by A.update_time desc
+    </select>
+    <select id="getBanJiRenShu" resultType="integer">
+        select count(*) from ban_ji_ban_ji_xue_yuan_zu A where A.ban_ji_id = #{ban_ji_id} and A.is_deleted = 0
+    </select>
+    <select id="getBanJiPaiKeCiShu" resultType="integer">
+        select count(*)
+        from ban_ji_pai_ke_xin_xi A
+        join pai_ke_ji_lu B
+        on B.ban_ji_pai_ke_xin_xi_id = A.id
+        where
+          A.ban_ji_id = #{ban_ji_id}
+        and A.is_deleted = 0
+        and B.is_deleted = 0
+    </select>
+    <select id="getBanJiYiShangKeCeShu" resultType="integer">
+        select count(*)
+        from ban_ji_pai_ke_xin_xi A
+        join pai_ke_ji_lu B
+            on B.ban_ji_pai_ke_xin_xi_id = A.id
+        where A.ban_ji_id = #{ban_ji_id}
+        and A.is_deleted = 0
+        and B.is_deleted = 0
+        and B.pai_ke_ji_lu_zhuang_tai = 'YI_DIAN_MING'
+    </select>
+    <!-- 查询班级列表 end -->
+
+    <resultMap id="banJiXiangQingResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi">
+        <association property="renShu" select="getBanJiRenShu" column="{ban_ji_id=id}"/>
+    </resultMap>
+    <select id="huoQuBanJiXiangQing" resultMap="banJiXiangQingResult">
+        select
+        A.id, A.ming_cheng, A.rong_liang, A.shou_ke_ke_shi as moRenShouKeKeShi, A.bei_zhu,
+        B.id as keChengId, B.ming_cheng as keChengMingCheng,
+        C.ming_cheng as shangKeJiaoShi,
+        E.xing_ming as banJiLaoShiXingMing,
+        F.ming_cheng as banJiFenLeiMingCheng
+        from ban_ji A
+        left join ke_cheng B
+        on A.ke_cheng_id = B.id
+        left join shang_ke_jiao_shi C
+        on A.shang_ke_jiao_shi_id = C.id
+        left join lao_shi D
+        on A.ban_ji_lao_shi_id = D.id
+        left join zhang_hao E
+        on D.zhang_hao_id = E.id
+        left join ban_ji_fen_lei F
+        on A.ban_ji_fen_lei_id = F.id
+        <where>
+            A.is_deleted = 0
+            and A.id = #{id}
+        </where>
+    </select>
+
+</mapper>

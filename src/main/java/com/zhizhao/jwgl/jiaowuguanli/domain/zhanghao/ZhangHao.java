@@ -30,6 +30,11 @@ import java.util.Set;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"shouJi", "zhangHaoLeiXing"})
+        }
+)
 public class ZhangHao extends AggRoot {
     @Id
     @NotNull
@@ -39,7 +44,7 @@ public class ZhangHao extends AggRoot {
     @Column(nullable = false)
     String xingMing;
     // 手机
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     String shouJi;
     // 性别
     @Enumerated(EnumType.STRING)
