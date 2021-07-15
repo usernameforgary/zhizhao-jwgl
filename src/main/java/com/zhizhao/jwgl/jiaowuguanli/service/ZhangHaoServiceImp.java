@@ -1,7 +1,9 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ZhangHaoLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan.XiTongCaiDan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
+import com.zhizhao.jwgl.jiaowuguanli.mapper.ZhangHaoMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.ZhangHaoRepository;
 import com.zhizhao.jwgl.jiaowuguanli.utils.SnowflakeIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -22,6 +25,9 @@ public class ZhangHaoServiceImp implements ZhangHaoService {
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Resource
+    ZhangHaoMapper zhangHaoMapper;
 
     @Override
     @Transactional
@@ -38,5 +44,16 @@ public class ZhangHaoServiceImp implements ZhangHaoService {
 
         zhangHaoRepository.save(zhangHao);
         return zhangHao.getId();
+    }
+
+    /**
+     * 根据手机和账号类型获取账号信息
+     * @param shouJi
+     * @param zhangHaoLeiXing
+     * @return
+     */
+    @Override
+    public ZhangHao getZhangHaoByShouJiAndLeiXing(Long shouJi, ZhangHaoLeiXing zhangHaoLeiXing) {
+        return zhangHaoMapper.getZhangHaoByShouJiAndLeiXing(shouJi, zhangHaoLeiXing);
     }
 }

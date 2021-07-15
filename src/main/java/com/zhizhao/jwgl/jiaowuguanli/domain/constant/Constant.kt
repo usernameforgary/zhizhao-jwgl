@@ -71,3 +71,42 @@ enum class XueYuanDaoKeZhuangTai {
     QING_JIA,
     WEI_DAO
 }
+
+/**
+ * 排课方式，规则排课 || 日历排课
+ */
+enum class PaiKeFangShi {
+    GUI_ZE_PAI_KE,
+    RI_LI_PAI_KE
+}
+
+/**
+ * 规则排课重复方式，每天重复 || 每周重复
+ */
+enum class GuiZeChongFuFangShi {
+    MEI_ZHOU,
+    MEI_TIAN
+}
+
+/**
+ * 规则排课结束方式，日期结束 || 次数结束
+ */
+enum class GuiZeJiShuFangShi {
+    RI_QI_JIE_SHU,
+    CI_SHU_JIE_SHU
+}
+
+
+/**
+ * 排课上课时间，周一到周日，每天
+ */
+enum class PaiKeShangKeTian {
+    ONE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE,
+    SIX,
+    SEVEN,
+    DAILY
+}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.XueYuanMapper">
+    <select id="huoQuXueYuanXinXi" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan">
+        select A.id, A.bei_zhu_xin_xi, A.danq_qian_nian_ji, A.gen_jin_ren_id, A.jia_ting_zhu_zhi,
+               A.jiu_du_xue_xiao, A.nan_ling, A.tou_xiang, A.xing_bie, A.xing_ming, A.xue_yuan_lai_yuan, A.zhang_hao_id,
+               B.shou_ji as zhangHaoShouJi,
+               C.xing_ming as genJinRenXingMing
+        from xue_yuan A
+        join zhang_hao B
+        on A.zhang_hao_id = B.id
+        left join zhang_hao C
+        on A.gen_jin_ren_id = C.id
+        <where>
+            A.id = #{xueYuanId}
+            and A.is_deleted = 0
+            and B.zhang_hao_lei_xing = 'XUE_YUAN'
+        </where>
+    </select>
+    <!-- 获取所有学员 -->
+    <select id="huoQuXueYuanAll" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan">
+        select A.id, A.bei_zhu_xin_xi, A.danq_qian_nian_ji, A.gen_jin_ren_id, A.jia_ting_zhu_zhi,
+        A.jiu_du_xue_xiao, A.nan_ling, A.tou_xiang, A.xing_bie, A.xing_ming, A.xue_yuan_lai_yuan, A.zhang_hao_id, A.xue_yuan_zhuang_tai,
+        B.shou_ji as zhangHaoShouJi,
+        C.xing_ming as genJinRenXingMing
+        from xue_yuan A
+        join zhang_hao B
+        on A.zhang_hao_id = B.id
+        left join zhang_hao C
+        on A.gen_jin_ren_id = C.id
+        <where>
+            B.zhang_hao_lei_xing = 'XUE_YUAN'
+            order by A.create_time desc
+        </where>
+    </select>
+
+    <!-- 根据姓名和所属账号手机号获取学员 -->
+    <select id="huoQuXueYuanByXinMingAndZhangHaoShouJi"
+            resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan">
+        select A.id, A.bei_zhu_xin_xi, A.danq_qian_nian_ji, A.gen_jin_ren_id, A.jia_ting_zhu_zhi,
+        A.jiu_du_xue_xiao, A.nan_ling, A.tou_xiang, A.xing_bie, A.xing_ming, A.xue_yuan_lai_yuan, A.zhang_hao_id, A.xue_yuan_zhuang_tai,
+        B.shou_ji as zhangHaoShouJi,
+        C.xing_ming as genJinRenXingMing
+        from xue_yuan A
+        join zhang_hao B
+        on A.zhang_hao_id = B.id
+        left join zhang_hao C
+        on A.gen_jin_ren_id = C.id
+        <where>
+            A.xing_ming = #{xingMing}
+            and B.shou_ji = #{shouJi}
+            and B.zhang_hao_lei_xing = 'XUE_YUAN'
+        </where>
+    </select>
+</mapper>

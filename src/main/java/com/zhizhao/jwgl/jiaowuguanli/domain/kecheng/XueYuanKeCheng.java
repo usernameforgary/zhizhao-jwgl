@@ -70,6 +70,8 @@ public class XueYuanKeCheng extends AggRoot {
     //签约金额
     @Column(nullable = false)
     Double qianYueJinE;
+    // 备注
+    String beiZhu;
 
     @Override
     public boolean equals(Object o) {

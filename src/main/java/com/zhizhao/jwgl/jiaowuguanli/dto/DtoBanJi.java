@@ -21,6 +21,8 @@ public class DtoBanJi {
     String keChengMingCheng;
     // 课程Id
     Long keChengId;
+    // 班级老师Id
+    Long banJiLaoShiId;
     // 班级老师
     String banJiLaoShiXingMing;
     // 班级人数
@@ -37,6 +39,8 @@ public class DtoBanJi {
     String banJiFenLeiMingCheng;
     // 默认授课课时
     String moRenShouKeKeShi;
+    // 上课教室Id
+    Long shangKeJiaoShiId;
     // 上课教室
     String shangKeJiaoShi;
     // 备注

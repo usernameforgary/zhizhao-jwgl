@@ -61,8 +61,8 @@
         select
         A.id, A.ming_cheng, A.rong_liang, A.shou_ke_ke_shi as moRenShouKeKeShi, A.bei_zhu,
         B.id as keChengId, B.ming_cheng as keChengMingCheng,
-        C.ming_cheng as shangKeJiaoShi,
-        E.xing_ming as banJiLaoShiXingMing,
+        C.id as shangKeJiaoShiId, C.ming_cheng as shangKeJiaoShi,
+        D.id as banJiLaoShiId, E.xing_ming as banJiLaoShiXingMing,
         F.ming_cheng as banJiFenLeiMingCheng
         from ban_ji A
         left join ke_cheng B

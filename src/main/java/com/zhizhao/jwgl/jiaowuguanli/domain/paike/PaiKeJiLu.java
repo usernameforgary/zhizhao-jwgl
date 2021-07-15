@@ -35,6 +35,7 @@ public class PaiKeJiLu extends AggRoot {
     Long shangKeRiQi;
 
     // 上课老师
+    @NotNull
     Long shangKeLaoShiId;
     // 上课教室
     Long shangKeJiaoShiId;

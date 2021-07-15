@@ -112,7 +112,6 @@ public class ZhangHao extends AggRoot {
         @NotNull
         @Size(min = 1, max = 50)
         String miMa;
-        @NotNull
         Set<Long> jueSeZu;
         @NotNull
         ZhangHaoLeiXing zhangHaoLeiXing;

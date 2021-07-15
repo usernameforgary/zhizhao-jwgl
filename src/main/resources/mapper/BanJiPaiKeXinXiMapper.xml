@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.BanJiPaiKeXinXiMapper">
+    <resultMap id="dtoBanJiPaiKeXinXiDto" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJiPaiKeXinXi">
+        <result column="pai_ke_gui_ze" property="paiKeGuiZe" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"></result>
+    </resultMap>
+    <select id="huoQuBanJiPaiKeXinXi" resultMap="dtoBanJiPaiKeXinXiDto">
+        select A.id, A.ban_ji_id, A.pai_ke_gui_ze, A.shang_ke_lao_shi_id, A.shang_ke_jiao_shi_id, A.shang_ke_nei_rong,
+               C.xing_ming as shangKeLaoShiXingMing, D.ming_cheng as shangKeJiaoShiMingCheng
+        from ban_ji_pai_ke_xin_xi A
+        left join lao_shi B on A.shang_ke_lao_shi_id = B.id
+        left join zhang_hao C on B.zhang_hao_id = C.id
+        left join shang_ke_jiao_shi D on A.shang_ke_jiao_shi_id = D.id
+        <where>
+            A.is_deleted = 0
+            and A.ban_ji_id = #{banJiId}
+            order by A.create_time desc
+        </where>
+    </select>
+</mapper>

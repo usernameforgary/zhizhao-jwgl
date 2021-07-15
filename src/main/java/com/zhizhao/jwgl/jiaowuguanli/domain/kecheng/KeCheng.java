@@ -52,6 +52,11 @@ public class KeCheng extends AggRoot {
     //备注
     String beiZhu;
 
+    /**
+     * 创建课程
+     * @param cmd
+     * @return
+     */
     public static KeCheng chuangJian(ChuangJianCmd cmd) {
         KeCheng result = KeCheng.builder()
                 .id(cmd.getId())
