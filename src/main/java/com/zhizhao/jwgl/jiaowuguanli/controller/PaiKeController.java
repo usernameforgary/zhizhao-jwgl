@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("banjipaikexinxi")
-public class BanJiPaiKeXinXiController {
+@RequestMapping("paike")
+public class PaiKeController {
     @Autowired
     BanJiPaiKeXinXiService banJiPaiKeXinXiService;
 

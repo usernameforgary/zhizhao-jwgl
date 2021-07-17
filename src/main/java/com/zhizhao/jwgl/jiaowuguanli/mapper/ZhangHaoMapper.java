@@ -16,5 +16,5 @@ public interface ZhangHaoMapper extends MyBaseMapper<ZhangHao> {
      * @param zhangHaoLeiXing
      * @return
      */
-    ZhangHao getZhangHaoByShouJiAndLeiXing(Long shouJi, ZhangHaoLeiXing zhangHaoLeiXing);
+    ZhangHao getZhangHaoByShouJiAndLeiXing(String shouJi, ZhangHaoLeiXing zhangHaoLeiXing);
 }

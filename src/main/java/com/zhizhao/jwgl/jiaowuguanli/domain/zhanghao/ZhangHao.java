@@ -30,11 +30,11 @@ import java.util.Set;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"shouJi", "zhangHaoLeiXing"})
-        }
-)
+//@Table(
+//        uniqueConstraints = {
+//                @UniqueConstraint(columnNames = {"shouJi", "zhangHaoLeiXing"})
+//        }
+//)
 public class ZhangHao extends AggRoot {
     @Id
     @NotNull
@@ -43,8 +43,9 @@ public class ZhangHao extends AggRoot {
     // 姓名
     @Column(nullable = false)
     String xingMing;
+    //TODO 目前系统里手机号唯一，部分角色
     // 手机
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     String shouJi;
     // 性别
     @Enumerated(EnumType.STRING)

@@ -14,5 +14,5 @@ public interface ZhangHaoService {
      * @param zhangHaoLeiXing
      * @return
      */
-    ZhangHao getZhangHaoByShouJiAndLeiXing(Long shouJi, ZhangHaoLeiXing zhangHaoLeiXing);
+    ZhangHao getZhangHaoByShouJiAndLeiXing(String shouJi, ZhangHaoLeiXing zhangHaoLeiXing);
 }

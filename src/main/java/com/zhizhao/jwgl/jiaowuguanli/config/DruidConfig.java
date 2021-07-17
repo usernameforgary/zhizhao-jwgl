@@ -1,6 +1,9 @@
 package com.zhizhao.jwgl.jiaowuguanli.config;
 
+import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.support.http.StatViewServlet;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +13,9 @@ import java.util.Map;
 
 @Configuration
 public class DruidConfig {
+    private static final String FILTER_STAT_PREFIX = "spring.datasource.druid.filter.stat";
 
-    //@Bean
+    @Bean
     public ServletRegistrationBean<StatViewServlet> statViewServlet() {
         StatViewServlet statViewServlet = new StatViewServlet();
         String urlPattern = "/druid/*";
@@ -27,5 +31,12 @@ public class DruidConfig {
         bean.setInitParameters(initParams);
 
         return bean;
+    }
+
+    @Bean
+    @ConfigurationProperties(FILTER_STAT_PREFIX)
+    @ConditionalOnProperty(prefix = FILTER_STAT_PREFIX, name = "enabled")
+    public StatFilter statFilter() {
+        return new StatFilter();
     }
 }

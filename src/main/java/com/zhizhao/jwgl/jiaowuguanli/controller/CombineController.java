@@ -31,6 +31,11 @@ public class CombineController {
         return PPResult.Ok();
     }
 
+    /**
+     * 创建班级排课信息
+     * @param cmd
+     * @return
+     */
     @PostMapping("chuangJianBanJiPaiKeXinXi")
     public PPResult tianJiaBanJiPaiKeXinXi(@Valid @RequestBody BanJiPaiKeXinXi.ChuangJianCommand cmd) {
         combineService.chuangJianBanJiPaiKeXinXi(cmd);

@@ -25,6 +25,11 @@ public class BanJIServiceImp implements BanJiService{
         return  banJiMapper.huoQuBanJiLeiBiao(page);
     }
 
+    /**
+     * 获取班级详情
+     * @param id
+     * @return
+     */
     @Override
     public DtoBanJi huoQuBanJiXiangQing(Long id) {
         if(id == null) {

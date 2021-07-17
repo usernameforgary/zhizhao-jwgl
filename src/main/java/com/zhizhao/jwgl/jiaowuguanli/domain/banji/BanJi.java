@@ -2,13 +2,9 @@ package com.zhizhao.jwgl.jiaowuguanli.domain.banji;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.BanJiZhuangTai;
-import com.zhizhao.jwgl.jiaowuguanli.domain.laoshi.LaoShi;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.CollectionType;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -53,7 +49,7 @@ public class BanJi extends AggRoot {
     Integer rongLiang;
     //班级学员
     @ElementCollection
-    Map<Integer, BanJiXuYuan> banJiXueYuanZu;
+    Map<Long, BanJiXuYuan> banJiXueYuanZu;
     //班级分类
     Long banJiFenLeiId;
     //上课教室

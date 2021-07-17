@@ -53,7 +53,7 @@ public class ZhangHaoServiceImp implements ZhangHaoService {
      * @return
      */
     @Override
-    public ZhangHao getZhangHaoByShouJiAndLeiXing(Long shouJi, ZhangHaoLeiXing zhangHaoLeiXing) {
+    public ZhangHao getZhangHaoByShouJiAndLeiXing(String shouJi, ZhangHaoLeiXing zhangHaoLeiXing) {
         return zhangHaoMapper.getZhangHaoByShouJiAndLeiXing(shouJi, zhangHaoLeiXing);
     }
 }

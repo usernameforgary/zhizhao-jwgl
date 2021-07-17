@@ -5,9 +5,10 @@
 <mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.BanJiMapper">
     <!-- 查询班级列表 -->
     <resultMap id="banJiLieBiaoResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi">
-        <association property="renShu" select="getBanJiRenShu" column="{ban_ji_id=id}"/>
+        <id column="id" property="id"/>
         <association property="paiKeCiShu" select="getBanJiPaiKeCiShu" column="{ban_ji_id = id}"/>
         <association property="yiShangKeCiShu" select="getBanJiYiShangKeCeShu" column="{ban_ji_id=id}"/>
+        <collection property="banJiXueYuanZu" column="{ban_ji_id=id}" select="huoQuBanJiXueYuan"></collection>
     </resultMap>
     <select id="huoQuBanJiLeiBiao" resultMap="banJiLieBiaoResult">
         select
@@ -46,7 +47,7 @@
         select count(*)
         from ban_ji_pai_ke_xin_xi A
         join pai_ke_ji_lu B
-            on B.ban_ji_pai_ke_xin_xi_id = A.id
+        on B.ban_ji_pai_ke_xin_xi_id = A.id
         where A.ban_ji_id = #{ban_ji_id}
         and A.is_deleted = 0
         and B.is_deleted = 0
@@ -55,7 +56,8 @@
     <!-- 查询班级列表 end -->
 
     <resultMap id="banJiXiangQingResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi">
-        <association property="renShu" select="getBanJiRenShu" column="{ban_ji_id=id}"/>
+        <id column="id" property="id"/>
+        <collection property="banJiXueYuanZu" column="{ban_ji_id=id}" select="huoQuBanJiXueYuan"></collection>
     </resultMap>
     <select id="huoQuBanJiXiangQing" resultMap="banJiXiangQingResult">
         select
@@ -78,6 +80,16 @@
         <where>
             A.is_deleted = 0
             and A.id = #{id}
+        </where>
+    </select>
+
+    <select id="huoQuBanJiXueYuan" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXuYuan">
+        select
+               A.ban_ji_id, A.xue_yuan_id, A.created_at, A.is_deleted
+        from ban_ji_ban_ji_xue_yuan_zu A
+        <where>
+            A.ban_ji_id = #{ban_ji_id}
+            and A.is_deleted = 0
         </where>
     </select>
 
