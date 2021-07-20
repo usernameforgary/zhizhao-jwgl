@@ -1,7 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhizhao.jwgl.jiaowuguanli.domain.kecheng.KeCheng;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoKeCheng;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.KeChengMapper;
@@ -70,6 +69,17 @@ public class KeChengController {
     @GetMapping("huoQuKeChengAll")
     public PPResult huoQuKeChengAll() {
         List<KeCheng> keChengList = keChengMapper.selectAll();
+        return PPResult.getPPResultOK(keChengList);
+    }
+
+    /**
+     * 根据学员Id
+     * @param xueYuanId
+     * @return
+     */
+    @GetMapping("getWeiXuanZeKeChengByXueYuanId")
+    public PPResult getWeiXuanZeKeChengByXueYuanId(@RequestParam(required = false) Long xueYuanId) {
+        List<KeCheng> keChengList = keChengService.getWeiXuanKeChengListByXueYuanId(xueYuanId);
         return PPResult.getPPResultOK(keChengList);
     }
 }

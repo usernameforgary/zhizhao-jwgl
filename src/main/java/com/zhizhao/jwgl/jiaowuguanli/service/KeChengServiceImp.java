@@ -11,6 +11,7 @@ import com.zhizhao.jwgl.jiaowuguanli.mapper.KeChengMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class KeChengServiceImp implements KeChengService{
@@ -26,5 +27,16 @@ public class KeChengServiceImp implements KeChengService{
 
         IPage<DtoKeCheng> result = keChengMapper.getKeChengLieBiao(page, keChengLambdaQueryWrapper);
         return result;
+    }
+
+    /**
+     * 根据学员Id获取当前学员未报名的课程，如果学员Id为空，则返回所有课程
+     * @param xueYuanId
+     * @return
+     */
+    @Override
+    public List<KeCheng> getWeiXuanKeChengListByXueYuanId(Long xueYuanId) {
+        List<KeCheng> keChengList = keChengMapper.getWeiXuanKeChengListByXueYuanId(xueYuanId);
+        return keChengList;
     }
 }

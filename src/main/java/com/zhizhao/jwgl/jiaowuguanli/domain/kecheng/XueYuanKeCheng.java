@@ -3,21 +3,20 @@ package com.zhizhao.jwgl.jiaowuguanli.domain.kecheng;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.KeChengLeiXing;
-import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XuYuanKeChengZhuangTai;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanKeChengZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.YouHuiLeiXing;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Builder(toBuilder = true)
 @Getter
 @Setter
 @ToString
@@ -45,7 +44,7 @@ public class XueYuanKeCheng extends AggRoot {
     //课程状态
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    XuYuanKeChengZhuangTai keChengZhuangTai;
+    XueYuanKeChengZhuangTai keChengZhuangTai;
     //课程类型
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -56,9 +55,6 @@ public class XueYuanKeCheng extends AggRoot {
     //课程数量
     @Column(nullable = false)
     Double keChengShuLiang;
-    //原价
-    @Column(nullable = false)
-    Double yuanJia;
     //赠送课时
     @Column(nullable = false)
     Double zengSongKeShi;
@@ -67,9 +63,7 @@ public class XueYuanKeCheng extends AggRoot {
     YouHuiLeiXing youHuiLeiXing;
     //优惠数量
     Double youHuiShuLiang;
-    //签约金额
-    @Column(nullable = false)
-    Double qianYueJinE;
+
     // 备注
     String beiZhu;
 
