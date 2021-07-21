@@ -3,6 +3,7 @@ package com.zhizhao.jwgl.jiaowuguanli.service;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ZhangHaoLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan.XiTongCaiDan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
+import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.ZhangHaoMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.ZhangHaoRepository;
 import com.zhizhao.jwgl.jiaowuguanli.utils.SnowflakeIdUtil;
@@ -55,5 +56,18 @@ public class ZhangHaoServiceImp implements ZhangHaoService {
     @Override
     public ZhangHao getZhangHaoByShouJiAndLeiXing(String shouJi, ZhangHaoLeiXing zhangHaoLeiXing) {
         return zhangHaoMapper.getZhangHaoByShouJiAndLeiXing(shouJi, zhangHaoLeiXing);
+    }
+
+    /**
+     * 根据账号类型获取系统账号列表
+     * @param zhangHaoLeiXing
+     * @return
+     */
+    @Override
+    public List<ZhangHao> getZhangHaoByLeiXing(ZhangHaoLeiXing zhangHaoLeiXing) {
+        if(zhangHaoLeiXing == null) {
+            throw new BusinessException("请指定要查询的账号类型");
+        }
+        return zhangHaoMapper.getZhangHaoByLeiXing(zhangHaoLeiXing);
     }
 }

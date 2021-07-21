@@ -15,4 +15,11 @@ public interface ZhangHaoService {
      * @return
      */
     ZhangHao getZhangHaoByShouJiAndLeiXing(String shouJi, ZhangHaoLeiXing zhangHaoLeiXing);
+
+    /**
+     * 根据账号类型获取系统账号列表
+     * @param zhangHaoLeiXing
+     * @return
+     */
+    List<ZhangHao> getZhangHaoByLeiXing(ZhangHaoLeiXing zhangHaoLeiXing);
 }

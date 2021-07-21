@@ -4,6 +4,7 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface XueYuanService {
     /**
@@ -32,4 +33,17 @@ public interface XueYuanService {
      * @return
      */
     DtoXueYuan huoQuXueYuanByXinMingAndZhangHaoShouJi(String xingMing, String shouJi);
+
+    /**
+     * 更新学员
+     * @param xueYuan
+     */
+    void gengXinXueYuan(XueYuan xueYuan);
+
+    /**
+     * 根据Id获取学员
+     * @param id 学员id
+     * @return
+     */
+    Optional<XueYuan> huoQuXueYuanById(Long id);
 }

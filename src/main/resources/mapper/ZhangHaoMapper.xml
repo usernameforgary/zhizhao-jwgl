@@ -20,6 +20,7 @@
         WHERE A.zhang_hao_id = #{id}
     </select>
     <!-- 获取账号列表 end-->
+
     <select id="getZhangHaoByShouJiAndLeiXing"
             resultType="com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao">
         select A.id, A.bei_zhu,A.is_lao_shi, A.shou_ji,A.xing_bie, A.xing_ming,A.zhang_hao_lei_xing, A.mi_ma
@@ -28,5 +29,16 @@
             A.shou_ji = #{shouJi}
             and A.zhang_hao_lei_xing = #{zhangHaoLeiXing}
         </where>
+    </select>
+
+    <!-- 根据账号类型获取系统账号基本信息 -->
+    <select id="getZhangHaoByLeiXing" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao">
+        select A.id, A.bei_zhu,A.is_lao_shi, A.shou_ji,A.xing_bie, A.xing_ming,A.zhang_hao_lei_xing, A.mi_ma
+        from zhang_hao A
+        <where>
+            A.zhang_hao_lei_xing = #{zhangHaoLeiXing}
+            and A.is_deleted = 0
+        </where>
+        order by A.update_time desc;
     </select>
 </mapper>

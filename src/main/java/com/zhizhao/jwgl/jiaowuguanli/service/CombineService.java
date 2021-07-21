@@ -2,6 +2,7 @@ package com.zhizhao.jwgl.jiaowuguanli.service;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.BanJiPaiKeXinXi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanBaoMing;
 
 public interface CombineService {
     /**
@@ -16,4 +17,10 @@ public interface CombineService {
      * @return
      */
     Long chuangJianXueYuan(DtoXueYuan dtoXueYuan);
+
+    /**
+     * 学员报名
+     * @param dtoXueYuanBaoMing 学员报名dto
+     */
+    void xueYuanBaoMing(DtoXueYuanBaoMing dtoXueYuanBaoMing);
 }

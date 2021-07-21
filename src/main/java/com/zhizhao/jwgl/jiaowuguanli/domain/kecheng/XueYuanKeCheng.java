@@ -5,6 +5,8 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.KeChengLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanKeChengZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.YouHuiLeiXing;
+import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
+import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
@@ -31,41 +33,130 @@ public class XueYuanKeCheng extends AggRoot {
     Long id;
 
     //学员ID
+    @NotNull
     @Column(nullable = false)
     Long xueYuanId;
+
     //课程ID
+    @NotNull
     @Column(nullable = false)
     Long keChengId;
+
     //定价标准
+    @NotNull
     @Type(type="json")
     @Column(columnDefinition = "json")
     DingJiaBiaoZhun dingJiaBiaoZhun;
 
     //课程状态
+    @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     XueYuanKeChengZhuangTai keChengZhuangTai;
+
     //课程类型
+    @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     KeChengLeiXing keChengLeiXing;
+
     //单价
+    @NotNull
     @Column(nullable = false)
     Double danJia;
+
     //课程数量
+    @NotNull
     @Column(nullable = false)
     Double keChengShuLiang;
+
     //赠送课时
+    @NotNull
     @Column(nullable = false)
     Double zengSongKeShi;
+
     //优惠类型
+    @NotNull
     @Enumerated(EnumType.STRING)
     YouHuiLeiXing youHuiLeiXing;
+
     //优惠数量
+    @NotNull
     Double youHuiShuLiang;
 
     // 备注
     String beiZhu;
+
+    // 学员课程有效期限
+    Long keChengYouXiaoQi;
+
+    // 剩余课时
+    @NotNull
+    Double shengYuKeShi;
+
+    // 创建
+    public static XueYuanKeCheng chaungJian(XueYuanKeCheng.ChuangJianCmd cmd) {
+        if(cmd.xueYuanId == null) {
+            throw new BusinessException("对应学员不能为空");
+        }
+        if(cmd.keChengId == null) {
+            throw new BusinessException("对应课程Id不能为空");
+        }
+        if(cmd.danJia == null) {
+            throw new BusinessException("单价不能为空");
+        }
+        if(cmd.keChengShuLiang == null || cmd.keChengShuLiang <= 0) {
+            throw new BusinessException("请指定课程数量");
+        }
+        XueYuanKeCheng xueYuanKeCheng = XueYuanKeCheng.builder()
+                .id(cmd.id)
+                .xueYuanId(cmd.xueYuanId)
+                .keChengId(cmd.keChengId)
+                .dingJiaBiaoZhun(cmd.dingJiaBiaoZhun)
+                .keChengZhuangTai(cmd.keChengZhuangTai)
+                .keChengLeiXing(cmd.keChengLeiXing)
+                .danJia(cmd.danJia)
+                .keChengShuLiang(cmd.keChengShuLiang)
+                .zengSongKeShi(cmd.zengSongKeShi)
+                .youHuiLeiXing(cmd.youHuiLeiXing)
+                .youHuiShuLiang(cmd.youHuiShuLiang)
+                .keChengYouXiaoQi(cmd.keChengYouXiaoQi)
+                .beiZhu(cmd.beiZhu)
+                .shengYuKeShi(cmd.keChengShuLiang + cmd.zengSongKeShi)
+                .build();
+        return xueYuanKeCheng;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChuangJianCmd {
+        @NotNull
+        Long id;
+        @NotNull
+        Long xueYuanId;
+        @NotNull
+        Long keChengId;
+        @NotNull
+        DingJiaBiaoZhun dingJiaBiaoZhun;
+        @NotNull
+        XueYuanKeChengZhuangTai keChengZhuangTai;
+        @NotNull
+        KeChengLeiXing keChengLeiXing;
+        @NotNull
+        Double danJia;
+        @NotNull
+        Double keChengShuLiang;
+        @NotNull
+        Double zengSongKeShi;
+        @NotNull
+        YouHuiLeiXing youHuiLeiXing;
+        @NotNull
+        Double youHuiShuLiang;
+        Long keChengYouXiaoQi;
+        String beiZhu;
+        Double shengYuKeShi;
+    }
 
     @Override
     public boolean equals(Object o) {

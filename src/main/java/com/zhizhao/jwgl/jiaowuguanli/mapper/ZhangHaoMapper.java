@@ -7,6 +7,8 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
 import com.zhizhao.jwgl.jiaowuguanli.vo.ZhangHaoVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface ZhangHaoMapper extends MyBaseMapper<ZhangHao> {
     IPage<ZhangHaoVo> yuanGongLieBiao(IPage page, @Param("ew") Wrapper<ZhangHao> wrapper);
 
@@ -17,4 +19,11 @@ public interface ZhangHaoMapper extends MyBaseMapper<ZhangHao> {
      * @return
      */
     ZhangHao getZhangHaoByShouJiAndLeiXing(String shouJi, ZhangHaoLeiXing zhangHaoLeiXing);
+
+    /**
+     * 根据账号类型获取系统账号列表(基础信息）
+     * @param zhangHaoLeiXing
+     * @return
+     */
+    List<ZhangHao> getZhangHaoByLeiXing(ZhangHaoLeiXing zhangHaoLeiXing);
 }

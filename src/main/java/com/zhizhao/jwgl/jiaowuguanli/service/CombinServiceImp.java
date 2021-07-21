@@ -4,11 +4,16 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.Week;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXuYuan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.*;
+import com.zhizhao.jwgl.jiaowuguanli.domain.jiaofeijilu.JiaoFeiJiLu;
+import com.zhizhao.jwgl.jiaowuguanli.domain.jiaofeijilu.JiaoFeiLiShi;
+import com.zhizhao.jwgl.jiaowuguanli.domain.kecheng.XueYuanKeCheng;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.*;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanBaoMing;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanKeCheng;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import com.zhizhao.jwgl.jiaowuguanli.utils.MyDateUtil;
@@ -35,6 +40,12 @@ public class CombinServiceImp implements CombineService {
 
     @Autowired
     BanJiService banJiService;
+
+    @Autowired
+    XueYuanKeChengService xueYuanKeChengService;
+
+    @Autowired
+    JiaoFeiJiLuService jiaoFeiJiLuService;
 
     /**
      * 创建班级排课信息
@@ -238,5 +249,107 @@ public class CombinServiceImp implements CombineService {
         // 创建学员 end
 
         return xueYuanId;
+    }
+
+    /**
+     * 学员报名
+     * @param dtoXueYuanBaoMing 学员报名dto
+     */
+    @Transactional
+    @Override
+    public void xueYuanBaoMing(DtoXueYuanBaoMing dtoXueYuanBaoMing) {
+        // 提交的学员信息
+        DtoXueYuan dtoXueYuan = dtoXueYuanBaoMing.getXueYuanXinXi();
+        if(dtoXueYuan == null) {
+            throw new BusinessException("学员信息不能为空");
+        }
+        if(dtoXueYuan.getZhangHaoShouJi() == null) {
+            throw new BusinessException("学员手机不能为空");
+        }
+        // 提交的学员课程列表
+        List<DtoXueYuanKeCheng> dtoXueYuanKeChengList = dtoXueYuanBaoMing.getXueYuanKeChengList();
+        if(dtoXueYuanKeChengList == null || dtoXueYuanKeChengList.size() == 0) {
+            throw new BusinessException("请至少选择一门报名课程");
+        }
+        // 提交的缴费历史
+        JiaoFeiLiShi jiaoFeiLiShi = dtoXueYuanBaoMing.getJiaoFeiLiShi();
+        if(jiaoFeiLiShi == null) {
+            throw new BusinessException("缴费内容不能为空");
+        }
+        Set<JiaoFeiLiShi> jiaoFeiLiShiSet = new HashSet<>();
+        jiaoFeiLiShiSet.add(jiaoFeiLiShi);
+
+        // 提交的缴费记录跟进人Id
+        Long jiaoFeiJiLuGenJinRenId = dtoXueYuanBaoMing.getGenJinRenId();
+        // 提交的学员课程有效期
+        Long keChengYouXiaoQi = dtoXueYuanBaoMing.getKeChengYouXiaoQi();
+
+        Long xueYuanId;
+        // 学员Id和所属账号Id都为空，说明是新增学员
+        if(dtoXueYuan.getId() == null && dtoXueYuan.getZhangHaoId() == null) {
+            // 学员状态为在读学员
+            dtoXueYuan.setXueYuanZhuangTai(XueYuanZhuangTai.ZAI_DU);
+            xueYuanId = chuangJianXueYuan(dtoXueYuan);
+        } else if(dtoXueYuan.getId() != null && dtoXueYuan.getZhangHaoId() == null ) {
+            throw new BusinessException("请确认系统中是否已存在该学员");
+        } else if(dtoXueYuan.getId() == null && dtoXueYuan.getZhangHaoId() != null) {
+            throw new BusinessException("请确认系统中是否已存在该学员");
+        } else {
+            xueYuanId = dtoXueYuan.getId();
+            // 更新学员状态为在读学员
+            Optional<XueYuan> xueYuanOptional = xueYuanService.huoQuXueYuanById(xueYuanId);
+            if(!xueYuanOptional.isPresent()) {
+                throw new BusinessException("未找到指定的学员");
+            }
+            XueYuan xueYuan = xueYuanOptional.get();
+            xueYuan.gengGaiXueYuanZhuangTai(XueYuanZhuangTai.ZAI_DU);
+            xueYuanService.gengXinXueYuan(xueYuan);
+        }
+
+        List<XueYuanKeCheng> xueYuanKeChengList = new ArrayList<>();
+        // 生成学员课程
+        for(DtoXueYuanKeCheng dtoXueYuanKeCheng: dtoXueYuanKeChengList) {
+            if(dtoXueYuanKeCheng.getKeChengId() == null) {
+                throw new BusinessException("请指定所选课程");
+            }
+            if(dtoXueYuanKeCheng.getKeChengShuLiang() == null || dtoXueYuanKeCheng.getZengSongKeShi() == null) {
+                throw new BusinessException("课程总数不能为空");
+            }
+            XueYuanKeCheng.ChuangJianCmd cmd = new XueYuanKeCheng.ChuangJianCmd();
+            Long id = SnowflakeIdUtil.nextId();
+            cmd.setId(id);
+            cmd.setXueYuanId(xueYuanId);
+            cmd.setKeChengId(dtoXueYuanKeCheng.getKeChengId());
+            cmd.setDingJiaBiaoZhun(dtoXueYuanKeCheng.getDingJiaBiaoZhun());
+            cmd.setKeChengZhuangTai(XueYuanKeChengZhuangTai.DAI_QUE_REN);
+            cmd.setKeChengLeiXing(dtoXueYuanKeCheng.getKeChengLeiXing());
+            cmd.setDanJia(dtoXueYuanKeCheng.getDanJia());
+            cmd.setKeChengShuLiang(dtoXueYuanKeCheng.getKeChengShuLiang());
+            cmd.setZengSongKeShi(dtoXueYuanKeCheng.getZengSongKeShi());
+            cmd.setYouHuiLeiXing(dtoXueYuanKeCheng.getYouHuiLeiXing());
+            cmd.setYouHuiShuLiang(dtoXueYuanKeCheng.getYouHuiShuLiang());
+            cmd.setKeChengYouXiaoQi(keChengYouXiaoQi);
+            cmd.setBeiZhu(dtoXueYuanKeCheng.getBeiZhu());
+            cmd.setShengYuKeShi(dtoXueYuanKeCheng.getKeChengShuLiang() + dtoXueYuanKeCheng.getZengSongKeShi());
+
+            XueYuanKeCheng xueYuanKeCheng = XueYuanKeCheng.chaungJian(cmd);
+            xueYuanKeChengList.add(xueYuanKeCheng);
+        }
+
+        List<XueYuanKeCheng> newXueYuanKeChengList = xueYuanKeChengService.saveAllXueYuanKeCheng(xueYuanKeChengList);
+
+        // 创建缴费记录
+        List<Long> xueYuanKeChengIds = new ArrayList<>();
+        for(XueYuanKeCheng xueYuanKeCheng: newXueYuanKeChengList) {
+            xueYuanKeChengIds.add(xueYuanKeCheng.getId());
+        }
+
+        JiaoFeiJiLu.ChuangJianCmd jiaoFeiJiLuCmd = new JiaoFeiJiLu.ChuangJianCmd();
+        jiaoFeiJiLuCmd.setXueYuanId(xueYuanId);
+        jiaoFeiJiLuCmd.setXueYuanKeChengZu(xueYuanKeChengIds);
+        jiaoFeiJiLuCmd.setJiaoFeiJiLuZhuangTai(JiaoFeiJiLuZhuangTai.WEI_JIAO_FEI);
+        jiaoFeiJiLuCmd.setGenJinRenId(jiaoFeiJiLuGenJinRenId);
+        jiaoFeiJiLuCmd.setJiaoFeiLiShiZu(jiaoFeiLiShiSet);
+        jiaoFeiJiLuService.chuangJian(jiaoFeiJiLuCmd);
     }
 }

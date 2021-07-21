@@ -11,6 +11,7 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.ZhangHaoMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.ZhangHaoRepository;
 import com.zhizhao.jwgl.jiaowuguanli.service.XiTongCaiDanService;
+import com.zhizhao.jwgl.jiaowuguanli.service.ZhangHaoService;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
 import com.zhizhao.jwgl.jiaowuguanli.vo.ZhangHaoVo;
@@ -34,6 +35,9 @@ public class ZhangHaoController {
 
     @Autowired
     XiTongCaiDanService xiTongCaiDanService;
+
+    @Autowired
+    ZhangHaoService zhangHaoService;
 
     // 获取账号信息
     @GetMapping("zhangHaoXinXi")
@@ -78,5 +82,11 @@ public class ZhangHaoController {
 
         Map<String, Object> result = Converter.convertJpaPageResult(pageResult);
         return PPResult.getPPResultOK(result);
+    }
+
+    @GetMapping("getZhangHaoLeiBiaoByZhangHaoLeiXing")
+    public PPResult getZhangHaoLeiBiaoByZhangHaoLeiXing(@RequestParam ZhangHaoLeiXing zhangHaoLeiXing) {
+        List<ZhangHao> zhangHaoList = zhangHaoService.getZhangHaoByLeiXing(zhangHaoLeiXing);
+        return PPResult.getPPResultOK(zhangHaoList);
     }
 }

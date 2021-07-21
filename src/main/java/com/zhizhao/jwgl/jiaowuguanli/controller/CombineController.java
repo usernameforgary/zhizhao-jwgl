@@ -3,6 +3,7 @@ package com.zhizhao.jwgl.jiaowuguanli.controller;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.BanJiPaiKeXinXi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoTianJiaYuanGong;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanBaoMing;
 import com.zhizhao.jwgl.jiaowuguanli.service.CombineService;
 import com.zhizhao.jwgl.jiaowuguanli.service.YuanGongService;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
@@ -53,5 +54,17 @@ public class CombineController {
         Map<String, Object> res = new HashMap<>();
         res.put("id", id);
         return PPResult.getPPResultOK(res);
+    }
+
+    /**
+     * 学员报名
+     * @param dtoXueYuanBaoMing
+     * @return
+     */
+    @PostMapping("xueYuanBaoMing")
+    public PPResult xueYuanBaoMing(@Valid @RequestBody DtoXueYuanBaoMing dtoXueYuanBaoMing) {
+        System.out.println(dtoXueYuanBaoMing);
+        combineService.xueYuanBaoMing(dtoXueYuanBaoMing);
+        return PPResult.Ok();
     }
 }

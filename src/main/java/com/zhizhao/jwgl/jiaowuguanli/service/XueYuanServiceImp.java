@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class XueYuanServiceImp implements XueYuanService {
@@ -75,5 +76,25 @@ public class XueYuanServiceImp implements XueYuanService {
             throw new BusinessException("请指定姓名和手机号");
         }
         return xueYuanMapper.huoQuXueYuanByXinMingAndZhangHaoShouJi(xingMing, shouJi);
+    }
+
+    /**
+     * 更新学员保存
+     * @param xueYuan
+     */
+    @Transactional
+    @Override
+    public void gengXinXueYuan(XueYuan xueYuan) {
+        xueYuanRepository.save(xueYuan);
+    }
+
+    /**
+     * 根据Id获取学员
+     * @param id 学员id
+     * @return
+     */
+    @Override
+    public Optional<XueYuan> huoQuXueYuanById(Long id) {
+        return xueYuanRepository.findById(id);
     }
 }

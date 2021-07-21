@@ -2,6 +2,8 @@ package com.zhizhao.jwgl.jiaowuguanli.domain.jiaofeijilu;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.JiaoFeiJiLuZhuangTai;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ShouKuanFangShi;
+import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
@@ -26,7 +28,6 @@ import java.util.Set;
 @ToString
 @EntityListeners(AuditingEntityListener.class)
 public class JiaoFeiJiLu extends AggRoot {
-    @Column(nullable = false)
     @Id
     @NotNull
     Long id;
@@ -41,12 +42,8 @@ public class JiaoFeiJiLu extends AggRoot {
     @Column(name = "xueYuanKeChengId")
     List<Long> xueYuanKeChengZu;
 
-    @NotNull
-    // 实缴金额
-    Double shiJiaoJinE;
-
     // 缴费记录状态
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     JiaoFeiJiLuZhuangTai jiaoFeiJiLuZhuangTai;
 
     // 跟进人
@@ -54,8 +51,47 @@ public class JiaoFeiJiLu extends AggRoot {
 
     // 缴费历史记录
     @ElementCollection
-    Set<JiaoFeiLishi> jiaoFeiLiShiZu;
+    Set<JiaoFeiLiShi> jiaoFeiLiShiZu;
 
+    // 创建
+    public static JiaoFeiJiLu chuangJian(ChuangJianCmd cmd) {
+        if(cmd.getXueYuanId() == null) {
+            throw new BusinessException("缴费记录对应学员不能为空");
+        }
+        if(cmd.getJiaoFeiLiShiZu() == null || cmd.getJiaoFeiLiShiZu().size() == 0) {
+            throw new BusinessException("缴费记录，缴费信息不能为空");
+        }
+        if(cmd.getJiaoFeiJiLuZhuangTai() == null) {
+            throw new BusinessException("缴费记录状态不能为空");
+        }
+        JiaoFeiJiLu jiaoFeiJiLu = JiaoFeiJiLu.builder()
+                .id(cmd.id)
+                .xueYuanId(cmd.xueYuanId)
+                .xueYuanKeChengZu(cmd.xueYuanKeChengZu)
+                .jiaoFeiJiLuZhuangTai(cmd.jiaoFeiJiLuZhuangTai)
+                .genJinRenId(cmd.genJinRenId)
+                .jiaoFeiLiShiZu(cmd.jiaoFeiLiShiZu)
+                .build();
+        return jiaoFeiJiLu;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChuangJianCmd {
+        @NotNull
+        Long id;
+        @NotNull
+        Long xueYuanId;
+        @NotNull
+        List<Long> xueYuanKeChengZu;
+        @NotNull
+        JiaoFeiJiLuZhuangTai jiaoFeiJiLuZhuangTai;
+        @NotNull
+        Long genJinRenId;
+        @NotNull
+        Set<JiaoFeiLiShi> jiaoFeiLiShiZu;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

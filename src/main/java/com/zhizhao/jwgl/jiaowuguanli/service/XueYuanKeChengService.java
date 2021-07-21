@@ -11,4 +11,11 @@ public interface XueYuanKeChengService {
      * @return
      */
     List<XueYuanKeCheng> getXueYuanKeChengByXueYuanId(Long xueYuanId);
+
+    /**
+     * 保存所有学员课程
+     * @param xueYuanKeChengList
+     * @return
+     */
+    List<XueYuanKeCheng> saveAllXueYuanKeCheng(List<XueYuanKeCheng> xueYuanKeChengList);
 }

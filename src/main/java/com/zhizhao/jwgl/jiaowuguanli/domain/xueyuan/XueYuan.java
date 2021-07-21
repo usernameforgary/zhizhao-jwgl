@@ -97,6 +97,11 @@ public class XueYuan extends AggRoot {
       return xueYuan;
    }
 
+   // 更改学员状态
+   public void gengGaiXueYuanZhuangTai(XueYuanZhuangTai xueYuanZhuangTai) {
+      this.xueYuanZhuangTai = xueYuanZhuangTai;
+   }
+
    @Data
    @NoArgsConstructor
    @AllArgsConstructor
