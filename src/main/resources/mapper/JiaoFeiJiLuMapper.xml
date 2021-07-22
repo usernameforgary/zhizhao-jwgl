@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.JiaoFeiJiLuMapper">
+    <!-- 获取缴费记录列表 -->
+    <resultMap id="dtoJiaoFeiJiLu" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoJiaoFeiJiLu">
+        <collection property="xueYuanKeChengZu" select="getXueYuanKeChengZu" column="{jiao_fen_ji_lu_id=id}"></collection>
+        <collection property="jiaoFeiLiShiZu" select="getJiaoFeiLiShiZu" column="{jiao_fen_ji_lu_id=id}"></collection>
+    </resultMap>
+    <select id="huoQuJiaoFeiJiLu" resultMap="dtoJiaoFeiJiLu">
+        select
+            A.id, A.xue_yuan_id, A.gen_jin_ren_id, A.jiao_fei_ji_lu_zhuang_tai,
+            B.xing_ming as xueYuanXingMing,
+            C.xing_ming as genJinRenXingMing
+        from
+        jiao_fei_ji_lu A
+        left join xue_yuan B
+        on A.xue_yuan_id = B.id
+        left join zhang_hao C
+        on A.gen_jin_ren_id = C.id
+        <where>
+            A.is_deleted = 0
+        </where>
+        order by A.update_time desc
+    </select>
+    <select id="getXueYuanKeChengZu" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanKeCheng">
+        select B.*, C.ming_cheng as keChengMingCheng
+        from jiao_fei_ji_lu_xue_yuan_ke_cheng_zu A
+        JOIN xue_yuan_ke_cheng B
+        on A.xue_yuan_ke_cheng_id = B.id
+        JOIN ke_cheng C
+        on B.ke_cheng_id = C.id
+        where A.jiao_fei_ji_lu_id = #{jiao_fen_ji_lu_id}
+    </select>
+    <select id="getJiaoFeiLiShiZu" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.jiaofeijilu.JiaoFeiLiShi">
+        select A.*
+        from jiao_fei_ji_lu_jiao_fei_li_shi_zu A
+        where A.jiao_fei_ji_lu_id = #{jiao_fen_ji_lu_id}
+    </select>
+    <!-- 获取缴费记录列表 end -->
+</mapper>

@@ -24,6 +24,9 @@ public class DtoXueYuanKeCheng {
     //课程ID
     Long keChengId;
 
+    //课程名称
+    String keChengMingCheng;
+
     //课程信息
     DtoKeCheng keCheng;
 
