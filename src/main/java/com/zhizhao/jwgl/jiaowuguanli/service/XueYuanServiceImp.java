@@ -1,10 +1,15 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.XueYuanMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.XueYuanRepository;
+import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import com.zhizhao.jwgl.jiaowuguanli.utils.SnowflakeIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +43,7 @@ public class XueYuanServiceImp implements XueYuanService {
     }
 
     /**
-     * 获取学员信息
+     * 获取学员信息，基本信息
      * @param xueYuanId 学员Id
      * @return
      */
@@ -62,6 +67,38 @@ public class XueYuanServiceImp implements XueYuanService {
     public List<DtoXueYuan> huoQuXueYuanAll() {
         List<DtoXueYuan> dtoXueYuanList = xueYuanMapper.huoQuXueYuanAll();
         return dtoXueYuanList;
+    }
+
+    /**
+     * 分页获取学员列表
+     *
+     * @param pageNum  当前页
+     * @param pageSize 每页多少条
+     * @return
+     */
+    @Override
+    public DtoPageResult<DtoXueYuan> huoQuXueYuanLieBiao(Integer pageNum, Integer pageSize) {
+        Page<XueYuan> page = new Page<>(pageNum, pageSize);
+        IPage<DtoXueYuan> pageResult = xueYuanMapper.huoQuXueYuanLieBiao(page);
+
+        DtoPageResult<DtoXueYuan> dtoPageResult = Converter.convertPageResultMybatisPlus(pageResult);
+        return dtoPageResult;
+    }
+
+    /**
+     * 分页获取学员列表
+     *
+     * @param pageNum  当前页
+     * @param pageSize 每页多少条
+     * @return
+     */
+    @Override
+    public DtoPageResult<DtoXueYuan> huoQuXueYuanLieBiaoV2(Integer pageNum, Integer pageSize) {
+        Page<XueYuan> page = new Page<>(pageNum, pageSize);
+        IPage<DtoXueYuan> pageResult = xueYuanMapper.huoQuXueYuanLieBiaoV2(page);
+
+        DtoPageResult<DtoXueYuan> dtoPageResult = Converter.convertPageResultMybatisPlus(pageResult);
+        return dtoPageResult;
     }
 
     /**

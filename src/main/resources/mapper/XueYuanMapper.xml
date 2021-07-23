@@ -47,9 +47,88 @@
         left join zhang_hao C
         on A.gen_jin_ren_id = C.id
         <where>
-            A.xing_ming = #{xingMing}
+            A.is_deleted = 0
+            and A.xing_ming = #{xingMing}
             and B.shou_ji = #{shouJi}
             and B.zhang_hao_lei_xing = 'XUE_YUAN'
         </where>
+    </select>
+
+    <!-- 分页获取学员列表 -->
+    <resultMap id="xueYuanXinXiLieBiao" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan">
+        <id column="id" property="id"/>
+        <!-- 购买课时 -->
+        <association property="gouMaiKeShi" column="{xue_yuan_id=id}" select="huoQuGouMaiKeShi"></association>
+        <!-- 赠送课时 -->
+        <association property="zengSongKeShi" column="{xue_yuan_id=id}" select="huoQuZengSongKeShi"></association>
+        <!-- 剩余课时 -->
+        <association property="shengYuKeShi" column="{xue_yuan_id=id}" select="huoQuShengYuKeShi"></association>
+    </resultMap>
+    <select id="huoQuXueYuanLieBiao"
+            resultMap="xueYuanXinXiLieBiao">
+        select A.id, A.bei_zhu_xin_xi, A.danq_qian_nian_ji, A.gen_jin_ren_id, A.jia_ting_zhu_zhi,
+        A.jiu_du_xue_xiao, A.nan_ling, A.tou_xiang, A.xing_bie, A.xing_ming, A.xue_yuan_lai_yuan, A.zhang_hao_id, A.xue_yuan_zhuang_tai,
+        B.shou_ji as zhangHaoShouJi,
+        C.xing_ming as genJinRenXingMing
+        from xue_yuan A
+        left join zhang_hao B
+        on A.zhang_hao_id = B.id
+        left join zhang_hao C
+        on A.gen_jin_ren_id = C.id
+        <where>
+            A.is_deleted = 0
+            and A.xue_yuan_zhuang_tai = 'ZAI_DU'
+        </where>
+        order by A.update_time desc
+    </select>
+    <select id="huoQuGouMaiKeShi" resultType="double">
+        select sum(A.ke_cheng_shu_liang) as gouMaiKeShi
+        from xue_yuan_ke_cheng A
+        <where>
+            A.is_deleted = 0
+            and A.xue_yuan_id = #{xue_yuan_id}
+        </where>
+    </select>
+    <select id="huoQuZengSongKeShi" resultType="double">
+        select sum(A.zeng_song_ke_shi) as zenSongKeShi
+        from xue_yuan_ke_cheng A
+        <where>
+            A.is_deleted = 0
+            and A.xue_yuan_id = #{xue_yuan_id}
+        </where>
+    </select>
+    <select id="huoQuShengYuKeShi" resultType="double">
+        select sum(A.sheng_yu_ke_shi) as shengYuKeShi
+        from xue_yuan_ke_cheng A
+        <where>
+            A.is_deleted = 0
+            and A.xue_yuan_id = #{xue_yuan_id}
+        </where>
+    </select>
+
+
+    <!-- 分页获取学员列表 vserison 2-->
+    <select id="huoQuXueYuanLieBiaoV2"
+            resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan">
+        select
+                A.id, A.bei_zhu_xin_xi, A.danq_qian_nian_ji, A.gen_jin_ren_id, A.jia_ting_zhu_zhi,
+                A.jiu_du_xue_xiao, A.nan_ling, A.tou_xiang, A.xing_bie, A.xing_ming, A.xue_yuan_lai_yuan, A.zhang_hao_id, A.xue_yuan_zhuang_tai,
+                B.shou_ji as zhangHaoShouJi,
+                C.xing_ming as genJinRenXingMing,
+                SUM(D.ke_cheng_shu_liang) as gouMaiKeShi, SUM(D.zeng_song_ke_shi) as zengSongKeShi,SUM(D.sheng_yu_ke_shi) as shengYuKeShi,
+                SUM(D.xiao_ke_jine) as xiaoKeJinE
+        from xue_yuan A
+        left join zhang_hao B
+        on A.zhang_hao_id = B.id
+        left join zhang_hao C
+        on A.gen_jin_ren_id = C.id
+        left join xue_yuan_ke_cheng D
+        on D.xue_yuan_id = A.id
+        <where>
+            A.is_deleted = 0
+            and A.xue_yuan_zhuang_tai = 'ZAI_DU'
+            group by A.id
+        </where>
+        order by A.update_time desc
     </select>
 </mapper>

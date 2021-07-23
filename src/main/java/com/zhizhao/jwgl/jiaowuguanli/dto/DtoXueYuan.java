@@ -6,10 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.Set;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,4 +39,12 @@ public class DtoXueYuan {
     Long genJinRenId;
     // 跟进人姓名
     String genJinRenXingMing;
+    // 购买课时
+    Double gouMaiKeShi;
+    // 赠送课时
+    Double zengSongKeShi;
+    // 剩余课时
+    Double shengYuKeShi;
+    // 消课金额
+    Double xiaoKeJinE;
 }

@@ -1,11 +1,8 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJi;
-import com.zhizhao.jwgl.jiaowuguanli.domain.constant.BanJiZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.BanJiMapper;

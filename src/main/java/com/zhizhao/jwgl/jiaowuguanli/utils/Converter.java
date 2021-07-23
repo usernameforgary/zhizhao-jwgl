@@ -3,9 +3,14 @@ package com.zhizhao.jwgl.jiaowuguanli.utils;
 import cn.hutool.core.date.Week;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.PaiKeShangKeTian;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Converter {
@@ -25,7 +30,17 @@ public class Converter {
         return result;
     }
 
-    //
+
+    public static DtoPageResult convertPageResultMybatisPlus (IPage item) {
+        DtoPageResult dtoPageResult = new DtoPageResult();
+        // JAP 分页是从0开始，前端是从1开始
+        dtoPageResult.setCurrent(item.getCurrent() + 1);
+        dtoPageResult.setPages(item.getPages());
+        dtoPageResult.setRecords(item.getRecords());
+        dtoPageResult.setSize(item.getSize());
+        dtoPageResult.setTotal(item.getTotal());
+        return dtoPageResult;
+    }
 
     /**
      * 转换mybatis plus的分页结果，直接返回，前端默认处理的是mybatis 格式的分页结果。这里为了后端理解上的一致

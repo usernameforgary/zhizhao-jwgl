@@ -1,6 +1,7 @@
 package com.zhizhao.jwgl.jiaowuguanli.controller;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.service.XueYuanService;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
@@ -40,11 +41,35 @@ public class XueYuanController {
     }
 
     /**
-     * 根据姓名和所属账号手机号获取学员
-     * @param xingMing 学员
-     * @param shouJi 账号手机号
+     * 分页获取学员列表
+     * @param pageSize
+     * @param pageNum
      * @return
      */
+    @GetMapping("huoQuXueYuanLieBiao")
+    public PPResult huoQuXueYuanLieBiao(@RequestParam(defaultValue = "20") Integer pageSize, @RequestParam(defaultValue = "1") Integer pageNum) {
+        DtoPageResult<DtoXueYuan> dtoPageResult = xueYuanService.huoQuXueYuanLieBiao(pageNum, pageSize);
+        return PPResult.getPPResultOK(dtoPageResult);
+    }
+
+    /**
+     * 分页获取学员列表
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    @GetMapping("huoQuXueYuanLieBiaoV2")
+    public PPResult huoQuXueYuanLieBiaoV2(@RequestParam(defaultValue = "20") Integer pageSize, @RequestParam(defaultValue = "1") Integer pageNum) {
+        DtoPageResult<DtoXueYuan> dtoPageResult = xueYuanService.huoQuXueYuanLieBiaoV2(pageNum, pageSize);
+        return PPResult.getPPResultOK(dtoPageResult);
+    }
+
+        /**
+         * 根据姓名和所属账号手机号获取学员
+         * @param xingMing 学员
+         * @param shouJi 账号手机号
+         * @return
+         */
     @GetMapping("huoQuXueYuanByXingMingAndZhangHaoShouJi")
     public PPResult huoQuXueYuanByXinMingAndZhangHaoShouJi(@RequestParam String xingMing, @RequestParam String shouJi) {
         DtoXueYuan dtoXueYuan = xueYuanService.huoQuXueYuanByXinMingAndZhangHaoShouJi(xingMing, shouJi);

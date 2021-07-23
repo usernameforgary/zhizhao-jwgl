@@ -1,6 +1,9 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
 
 import java.util.List;
@@ -25,6 +28,22 @@ public interface XueYuanService {
      * @return
      */
     List<DtoXueYuan> huoQuXueYuanAll();
+
+    /**
+     * 分页获取学员列表
+     * @param pageNum 当前页
+     * @param pageSize 每页多少条
+     * @return
+     */
+    DtoPageResult<DtoXueYuan> huoQuXueYuanLieBiao(Integer pageNum, Integer pageSize);
+
+    /**
+     * 分页获取学员列表V2
+     * @param pageNum 当前页
+     * @param pageSize 每页多少条
+     * @return
+     */
+    DtoPageResult<DtoXueYuan> huoQuXueYuanLieBiaoV2(Integer pageNum, Integer pageSize);
 
     /**
      * 根据姓名和所属账号手机号获取学员

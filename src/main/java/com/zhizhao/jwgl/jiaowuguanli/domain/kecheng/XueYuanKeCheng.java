@@ -90,9 +90,14 @@ public class XueYuanKeCheng extends AggRoot {
     // 学员课程有效期限
     Long keChengYouXiaoQi;
 
-    // 剩余课时
+    // 剩余课时（课程数量 + 赠送课时 - 消耗课时)
     @NotNull
     Double shengYuKeShi;
+
+    // 消课金额
+    @NotNull
+    @Column(columnDefinition = "double default 0")
+    Double xiaoKeJinE;
 
     // 创建
     public static XueYuanKeCheng chaungJian(XueYuanKeCheng.ChuangJianCmd cmd) {
@@ -123,6 +128,7 @@ public class XueYuanKeCheng extends AggRoot {
                 .keChengYouXiaoQi(cmd.keChengYouXiaoQi)
                 .beiZhu(cmd.beiZhu)
                 .shengYuKeShi(cmd.keChengShuLiang + cmd.zengSongKeShi)
+                .xiaoKeJinE(new Double(0))
                 .build();
         return xueYuanKeCheng;
     }
@@ -156,6 +162,8 @@ public class XueYuanKeCheng extends AggRoot {
         Long keChengYouXiaoQi;
         String beiZhu;
         Double shengYuKeShi;
+        @NotNull
+        Double xiaoKeJinE;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
 
@@ -16,4 +17,18 @@ public interface XueYuanMapper extends MyBaseMapper<XueYuan> {
      * @return
      */
     DtoXueYuan huoQuXueYuanByXinMingAndZhangHaoShouJi(String xingMing, String shouJi);
+
+    /**
+     * 分页获取学员列表
+      * @param page mybatic plus分页信息
+     * @return
+     */
+    IPage<DtoXueYuan> huoQuXueYuanLieBiao(IPage page);
+
+    /**
+     * 分页获取学员列表 verison 2
+     * @param page mybatic plus分页信息
+     * @return
+     */
+    IPage<DtoXueYuan> huoQuXueYuanLieBiaoV2(IPage page);
 }
