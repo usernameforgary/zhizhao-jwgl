@@ -1,8 +1,7 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.Week;
-import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXuYuan;
+import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.*;
 import com.zhizhao.jwgl.jiaowuguanli.domain.jiaofeijilu.JiaoFeiJiLu;
 import com.zhizhao.jwgl.jiaowuguanli.domain.jiaofeijilu.JiaoFeiLiShi;
@@ -10,10 +9,7 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.kecheng.XueYuanKeCheng;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.*;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanBaoMing;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanKeCheng;
+import com.zhizhao.jwgl.jiaowuguanli.dto.*;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import com.zhizhao.jwgl.jiaowuguanli.utils.MyDateUtil;
@@ -69,7 +65,7 @@ public class CombinServiceImp implements CombineService {
 
         // 排课记录，上课学员
         Set<ShangKeXueYuan> shangKeXueYuanSet = new HashSet<>();
-        for(BanJiXuYuan banJiXuYuan : banJi.getBanJiXueYuanZu()) {
+        for(BanJiXueYuan banJiXuYuan : banJi.getBanJiXueYuanZu()) {
             ShangKeXueYuan shangKeXueYuan = new ShangKeXueYuan();
             shangKeXueYuan.setXueYuanId(banJiXuYuan.getXueYuanId());
             shangKeXueYuan.setShangKeXueYuanLeiXing(ShangKeXueYuanLeiXing.BEN_BAN);
@@ -351,5 +347,112 @@ public class CombinServiceImp implements CombineService {
         jiaoFeiJiLuCmd.setGenJinRenId(jiaoFeiJiLuGenJinRenId);
         jiaoFeiJiLuCmd.setJiaoFeiLiShiZu(jiaoFeiLiShiSet);
         jiaoFeiJiLuService.chuangJian(jiaoFeiJiLuCmd);
+    }
+
+    /**
+     * 学员课程选择班级
+     *
+     * @param xueYuanId        学员Id
+     * @param xueYuanKeChengId 学员课程Id
+     * @param selectedBanJiId  当前选择班级Id
+     * @param previousBanJiId 原来班级Id，可为空
+     */
+    @Transactional
+    @Override
+    public void xueYuanXuanBan(Long xueYuanId, Long xueYuanKeChengId, Long selectedBanJiId, Long previousBanJiId) {
+        if(xueYuanId == null) {
+            throw new BusinessException("请指定选班学员");
+        }
+        if(xueYuanKeChengId == null) {
+            throw new BusinessException("请指定选班课程");
+        }
+        if(selectedBanJiId == null) {
+            throw new BusinessException("请指定目标班级");
+        }
+
+        XueYuanKeCheng currentXueYuanKeCheng = xueYuanKeChengService.getById(xueYuanKeChengId);
+        if(currentXueYuanKeCheng == null) {
+            throw new BusinessException("当前学员所选课程已结课，或不存在");
+        }
+        if(currentXueYuanKeCheng.getShengYuKeShi() <= 0) {
+            throw new BusinessException("当前学员所选课程，剩余课时不足");
+        }
+
+        if(previousBanJiId == null) {
+            // 学员课程未选择过班级
+
+            // 班级，新增学员
+            banJiService.tianJiaBanJiXueYuan(selectedBanJiId, xueYuanId);
+            // 更改学员课程状态
+            xueYuanKeChengService.xuanBanGengGaiKeChengZhuangTai(xueYuanKeChengId);
+
+            // 目标班级的排课记录
+            List<PaiKeJiLu> paiKeJiLuList = huoQuPaiKeJiLuList(selectedBanJiId);
+            // 排课记录添加上课学员
+            for(PaiKeJiLu paiKeJiLu : paiKeJiLuList) {
+                PaiKeJiLu.TianJiaShangKeXueYuanCmd cmd = new PaiKeJiLu.TianJiaShangKeXueYuanCmd();
+                cmd.setIsDeleted(false);
+                cmd.setXueYuanId(xueYuanId);
+                cmd.setShangKeXueYuanLeiXing(ShangKeXueYuanLeiXing.BEN_BAN);
+                paiKeJiLu.tianJiaShangKeXueYuan(cmd);
+            }
+            paiKeJiLuService.saveAllPaiKeJiLu(paiKeJiLuList);
+        } else {
+            if(!selectedBanJiId.equals(previousBanJiId)) {
+                // 新班级，加入学员
+                banJiService.tianJiaBanJiXueYuan(selectedBanJiId, xueYuanId);
+                // 目标班级的排课记录List
+                List<PaiKeJiLu> paiKeJiLuList = huoQuPaiKeJiLuList(selectedBanJiId);
+                // 排课记录添加上课学员
+                for(PaiKeJiLu paiKeJiLu : paiKeJiLuList) {
+                    PaiKeJiLu.TianJiaShangKeXueYuanCmd cmd = new PaiKeJiLu.TianJiaShangKeXueYuanCmd();
+                    cmd.setIsDeleted(false);
+                    cmd.setXueYuanId(xueYuanId);
+                    cmd.setShangKeXueYuanLeiXing(ShangKeXueYuanLeiXing.BEN_BAN);
+                    paiKeJiLu.tianJiaShangKeXueYuan(cmd);
+                }
+
+                // 原班级，删除学员
+                banJiService.shanChuBanJiXueYuan(previousBanJiId, xueYuanId);
+                // 原班级的排课记录List
+                List<PaiKeJiLu> paiKeJiLuPreviousList = huoQuPaiKeJiLuList(selectedBanJiId);
+                // 原班级的排课记录List，删除上课学员
+                for(PaiKeJiLu paiKeJiLu : paiKeJiLuPreviousList) {
+                    PaiKeJiLu.ShanChuXueYuanCmd cmd = new PaiKeJiLu.ShanChuXueYuanCmd();
+                    cmd.setIsDeleted(false);
+                    cmd.setXueYuanId(xueYuanId);
+                    cmd.setShangKeXueYuanLeiXing(ShangKeXueYuanLeiXing.BEN_BAN);
+                    paiKeJiLu.shanChuShanKeXueYuan(cmd);
+                }
+
+                // 合并更新后的，目标班级排课记录，原班级排课记录
+                List<PaiKeJiLu> allPaiKeJiLuList = new ArrayList<>();
+                allPaiKeJiLuList.addAll(paiKeJiLuList);
+                allPaiKeJiLuList.addAll(paiKeJiLuPreviousList);
+
+                // 保存
+                paiKeJiLuService.saveAllPaiKeJiLu(allPaiKeJiLuList);
+            } else {
+                throw new BusinessException("不能选择同一班级");
+            }
+        }
+    }
+
+    /**
+     * 根据班级Id，获取排课记录列表
+     * @param banJiId
+     * @return
+     */
+    private List<PaiKeJiLu> huoQuPaiKeJiLuList(Long banJiId) {
+        // 获取班级排课信息
+        List<DtoBanJiPaiKeXinXi> dtoBanJiPaiKeXinXiList = banJiPaiKeXinXiService.huoQuBanJiPaiKeXinXi(banJiId);
+        List<Long> paiKeXinXiIdList = new ArrayList<>();
+        for(DtoBanJiPaiKeXinXi dtoBanJiPaiKeXinXi : dtoBanJiPaiKeXinXiList) {
+            paiKeXinXiIdList.add(dtoBanJiPaiKeXinXi.getId());
+        }
+
+        // 获取排课记录
+        List<PaiKeJiLu> paiKeJiLuList = paiKeJiLuService.getAllByPaiKeXinXinId(paiKeXinXiIdList);
+        return paiKeJiLuList;
     }
 }

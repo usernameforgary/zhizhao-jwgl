@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,4 +49,6 @@ public class DtoXueYuan {
     Double shengYuKeShi;
     // 消课金额
     Double xiaoKeJinE;
+    // 学员课程
+    Set<DtoXueYuanKeCheng> dtoXueYuanKeChengSet;
 }

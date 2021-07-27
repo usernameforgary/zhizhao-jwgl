@@ -10,4 +10,11 @@ public interface PaiKeJiLuService {
      * @param paiKeJiLuList
      */
     void saveAllPaiKeJiLu(List<PaiKeJiLu> paiKeJiLuList);
+
+    /**
+     * 根据排课信息Id，获取所有（未删除，未点名，上课时间晚于当前时间）的排课记录
+     * @param paiKeXinXiIdList 排课信息Id列表
+     * @return
+     */
+    List<PaiKeJiLu> getAllByPaiKeXinXinId(List<Long> paiKeXinXiIdList);
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sql.DataSource;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -36,6 +37,9 @@ public class PublicController {
     @Autowired
     JwtUtil jwtUtil;
 
+    @Autowired
+    DataSource dataSource;
+
     @PostMapping("/dengLu")
     public PPResult dengLu(@Valid @RequestBody DtoZhanghaoDengLu dto) {
         ZhangHao zhangHao = zhangHaoService.getZhangHaoByShouJiAndLeiXing(dto.getShouJi(), dto.getZhangHaoLeiXing());
@@ -55,4 +59,9 @@ public class PublicController {
         return PPResult.fail(ErrorCode.NoAuthorization, "用户名或密码错误!");
     }
 
+    @GetMapping("hello")
+    public String hello() {
+        System.out.println(dataSource);
+        return "hello world";
+    }
 }

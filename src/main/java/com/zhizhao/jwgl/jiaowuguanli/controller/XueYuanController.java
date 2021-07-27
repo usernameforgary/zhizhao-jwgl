@@ -64,12 +64,12 @@ public class XueYuanController {
         return PPResult.getPPResultOK(dtoPageResult);
     }
 
-        /**
-         * 根据姓名和所属账号手机号获取学员
-         * @param xingMing 学员
-         * @param shouJi 账号手机号
-         * @return
-         */
+    /**
+     * 根据姓名和所属账号手机号获取学员
+     * @param xingMing 学员
+     * @param shouJi 账号手机号
+     * @return
+     */
     @GetMapping("huoQuXueYuanByXingMingAndZhangHaoShouJi")
     public PPResult huoQuXueYuanByXinMingAndZhangHaoShouJi(@RequestParam String xingMing, @RequestParam String shouJi) {
         DtoXueYuan dtoXueYuan = xueYuanService.huoQuXueYuanByXinMingAndZhangHaoShouJi(xingMing, shouJi);

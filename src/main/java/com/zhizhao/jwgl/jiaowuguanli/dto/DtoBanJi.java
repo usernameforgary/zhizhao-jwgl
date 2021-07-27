@@ -1,6 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.dto;
 
-import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXuYuan;
+import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXueYuan;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ public class DtoBanJi {
     // 班级人数
     Integer renShu;
     // 班级学员
-    Set<BanJiXuYuan> banJiXueYuanZu;
+    Set<BanJiXueYuan> banJiXueYuanZu;
     // 容量
     Integer rongLiang;
     // 已排课次

@@ -166,6 +166,32 @@ public class XueYuanKeCheng extends AggRoot {
         Double xiaoKeJinE;
     }
 
+    /**
+     * （学员选班）更改学员课程状态
+     */
+    public void xueYuanXuanBanGengGaiKeChengZhuangTai() {
+        if(keChengZhuangTai.equals(XueYuanKeChengZhuangTai.DAI_QUE_REN)) {
+            throw new BusinessException("学员课程【待确认】，不能选班");
+        }
+        if(keChengZhuangTai.equals(XueYuanKeChengZhuangTai.DAI_JIE_KE)) {
+            throw new BusinessException("学员课程【待结课】，不能选班");
+        }
+        if(keChengZhuangTai.equals(XueYuanKeChengZhuangTai.YI_JIE_KE)) {
+            throw new BusinessException("学员课程【已结课】，不能选班");
+        }
+        if(!(keChengZhuangTai.equals(XueYuanKeChengZhuangTai.DAI_BU_JIAO) || keChengZhuangTai.equals(XueYuanKeChengZhuangTai.DAI_PAI_KE))) {
+            throw new BusinessException("学员课程【待补缴】或【待排课】时，才能选班");
+        }
+        setKeChengZhuangTai(XueYuanKeChengZhuangTai.DAI_SHANG_KE);
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GengGaiKeChengZhuangTaiCmd {
+        XueYuanKeChengZhuangTai keChengZhuangTai;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

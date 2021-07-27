@@ -17,18 +17,27 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DtoXueYuanKeCheng {
-    // 所属学员ID，学员未创建之前为空
+    Long id;
+    // 所属学员ID, (前端创建学员课程，学员未创建之前为空)
     Long xueYuanId;
+    // 所属学员姓名
+    String xueYuanXingMing;
 
     @NotNull
     //课程ID
     Long keChengId;
 
-    //课程名称
+    //课程名称  (简单查询，如mybatis直接join返回【课程名称】）
     String keChengMingCheng;
-
-    //课程信息
+    //课程信息 (复杂查询时，或前端form表单提交，用到)
     DtoKeCheng keCheng;
+
+    // 班级名称 (简单查询，如mybatis直接join返回【班级姓名】）
+    String banJiMingCheng;
+    // 班级老师 (简单查询，如mybatis直接join返回【班级老师】）
+    String banJiLaoShiXingMing;
+    // 班级信息 (复杂查询时，或前端form表单提交，用到)
+    DtoBanJi banJi;
 
     //定价标准
     DingJiaBiaoZhun dingJiaBiaoZhun;
@@ -57,6 +66,9 @@ public class DtoXueYuanKeCheng {
 
     //优惠数量
     Double youHuiShuLiang;
+
+    // 剩余课时
+    Double shengYuKeShi;
 
     // 备注
     String beiZhu;

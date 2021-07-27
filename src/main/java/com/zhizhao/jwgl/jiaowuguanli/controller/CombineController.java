@@ -8,10 +8,7 @@ import com.zhizhao.jwgl.jiaowuguanli.service.CombineService;
 import com.zhizhao.jwgl.jiaowuguanli.service.YuanGongService;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -63,8 +60,20 @@ public class CombineController {
      */
     @PostMapping("xueYuanBaoMing")
     public PPResult xueYuanBaoMing(@Valid @RequestBody DtoXueYuanBaoMing dtoXueYuanBaoMing) {
-        System.out.println(dtoXueYuanBaoMing);
         combineService.xueYuanBaoMing(dtoXueYuanBaoMing);
+        return PPResult.Ok();
+    }
+
+    /**
+     * 学员（学员课程）指定班级
+     * @param xueYuanId 学员Id
+     * @param xueYuanKeChengId 学员课程id
+     * @param banJiId 班级Id
+     * @param previousBanJiId 原来班级Id
+     */
+    @GetMapping("xueYuanXuanBan")
+    public PPResult xueYuanXuanBan(@RequestParam Long xueYuanId, @RequestParam Long xueYuanKeChengId, @RequestParam Long banJiId, @RequestParam(required = false) Long previousBanJiId) {
+        combineService.xueYuanXuanBan(xueYuanId, xueYuanKeChengId, banJiId, previousBanJiId);
         return PPResult.Ok();
     }
 }

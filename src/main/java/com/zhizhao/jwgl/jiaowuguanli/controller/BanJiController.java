@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -69,5 +70,16 @@ public class BanJiController {
     public PPResult huoQuBanJiXiangQing(@RequestParam Long id) {
         DtoBanJi dtoBanJi = banJiService.huoQuBanJiXiangQing(id);
         return PPResult.getPPResultOK(dtoBanJi);
+    }
+
+    /**
+     * 根据课程Id，获取选择了该课程的所有班级
+     * @param keChengId
+     * @return
+     */
+    @GetMapping("huoQuBanJiLieBiaoByKeChengId")
+    public PPResult huoQuBanJiLieBiaoByKeChengId(@RequestParam Long keChengId) {
+        List<DtoBanJi> dtoBanJiList = banJiService.huoQuBanJiByKeChengId(keChengId);
+        return PPResult.getPPResultOK(dtoBanJiList);
     }
 }

@@ -23,4 +23,13 @@ public interface CombineService {
      * @param dtoXueYuanBaoMing 学员报名dto
      */
     void xueYuanBaoMing(DtoXueYuanBaoMing dtoXueYuanBaoMing);
+
+    /**
+     * 学员课程选择班级
+     * @param xueYuanId 学员Id
+     * @param xueYuanKeChengId 学员课程Id
+     * @param selectedBanJiId 当前选择班级Id
+     * @param previousBanJiId 原来选择班级Id
+     */
+    void xueYuanXuanBan(Long xueYuanId, Long xueYuanKeChengId, Long selectedBanJiId, Long previousBanJiId);
 }

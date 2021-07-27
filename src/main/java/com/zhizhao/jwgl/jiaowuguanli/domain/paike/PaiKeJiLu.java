@@ -1,7 +1,9 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.paike;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
+import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJi;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.PaiKeJiLuZhuangTai;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ShangKeXueYuanLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -123,6 +125,89 @@ public class PaiKeJiLu extends AggRoot {
         Set<ShangKeXueYuan> shangKeXueYuanZu;
         // 点名时间
         Long dianMingShiJian;
+    }
+
+    /**
+     * 添加上课学员
+     * @param cmd
+     */
+    public void tianJiaShangKeXueYuan(TianJiaShangKeXueYuanCmd cmd) {
+        if(cmd.xueYuanId == null)  {
+            throw new BusinessException("请指定上课学员");
+        }
+        if(cmd.isDeleted == null) {
+            throw new BusinessException("请指定上课学员状态");
+        }
+        if(cmd.shangKeXueYuanLeiXing == null) {
+            throw new BusinessException("请指定上课学员类型");
+        }
+        ShangKeXueYuan shangKeXueYuan = new ShangKeXueYuan();
+        shangKeXueYuan.setXueYuanId(cmd.xueYuanId);
+        shangKeXueYuan.setIsDeleted(cmd.isDeleted);
+        shangKeXueYuan.setShangKeXueYuanLeiXing(cmd.shangKeXueYuanLeiXing);
+        if(shangKeXueYuanZu.contains(shangKeXueYuan)) {
+            throw new BusinessException("排课记录中，该学员已存在");
+        }
+        shangKeXueYuanZu.add(shangKeXueYuan);
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TianJiaShangKeXueYuanCmd {
+        @NotNull
+        Long xueYuanId;
+        @NotNull
+        Boolean isDeleted;
+        @NotNull
+        ShangKeXueYuanLeiXing shangKeXueYuanLeiXing;
+    }
+
+    /**
+     * 删除上课学员
+     * @param cmd
+     */
+    public void shanChuShanKeXueYuan(ShanChuXueYuanCmd cmd) {
+        if(cmd.xueYuanId == null)  {
+            throw new BusinessException("请指定上课学员");
+        }
+        if(cmd.isDeleted == null) {
+            throw new BusinessException("请指定上课学员状态");
+        }
+        if(cmd.shangKeXueYuanLeiXing == null) {
+            throw new BusinessException("请指定上课学员类型");
+        }
+        ShangKeXueYuan shangKeXueYuan = new ShangKeXueYuan();
+        shangKeXueYuan.setXueYuanId(cmd.xueYuanId);
+        shangKeXueYuan.setIsDeleted(cmd.isDeleted);
+        shangKeXueYuan.setShangKeXueYuanLeiXing(cmd.shangKeXueYuanLeiXing);
+        ShangKeXueYuan existShangKeXueYuan = null;
+        if(!shangKeXueYuanZu.contains(shangKeXueYuan)) {
+            throw new BusinessException("上课学员中，不存在该学员");
+        }
+        for(ShangKeXueYuan shangKeXueYuan1 : shangKeXueYuanZu) {
+            if(shangKeXueYuan1.equals(shangKeXueYuan)) {
+                existShangKeXueYuan = shangKeXueYuan1;
+                return;
+            }
+        }
+        if(existShangKeXueYuan == null) {
+            throw new BusinessException("上课学员中，未找到该学员");
+        } else {
+            existShangKeXueYuan.setIsDeleted(true);
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ShanChuXueYuanCmd {
+        @NotNull
+        Long xueYuanId;
+        @NotNull
+        Boolean isDeleted;
+        @NotNull
+        ShangKeXueYuanLeiXing shangKeXueYuanLeiXing;
     }
 
     @Override

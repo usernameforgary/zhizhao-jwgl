@@ -55,6 +55,7 @@
     </select>
     <!-- 查询班级列表 end -->
 
+    <!-- 获取班级详情 -->
     <resultMap id="banJiXiangQingResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi">
         <id column="id" property="id"/>
         <collection property="banJiXueYuanZu" column="{ban_ji_id=id}" select="huoQuBanJiXueYuan"></collection>
@@ -82,14 +83,26 @@
             and A.id = #{id}
         </where>
     </select>
-
-    <select id="huoQuBanJiXueYuan" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXuYuan">
+    <select id="huoQuBanJiXueYuan" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXueYuan">
         select
                A.ban_ji_id, A.xue_yuan_id, A.created_at, A.is_deleted
         from ban_ji_ban_ji_xue_yuan_zu A
         <where>
             A.ban_ji_id = #{ban_ji_id}
             and A.is_deleted = 0
+        </where>
+    </select>
+    <!-- 获取班级详情 end -->
+
+    <!-- 根据课程Id，获取班级列表 -->
+    <select id="huoQuBanJiByKeChengId" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi">
+        select A.id, A.ming_cheng, B.xing_ming as banJiLaoShiXingMing
+        from ban_ji A
+        left join zhang_hao B
+        on A.ban_ji_lao_shi_id = B.id
+        <where>
+            A.is_deleted = 0
+            and A.ke_cheng_id = #{keChengId}
         </where>
     </select>
 
