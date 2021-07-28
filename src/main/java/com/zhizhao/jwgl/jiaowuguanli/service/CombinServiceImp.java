@@ -354,40 +354,44 @@ public class CombinServiceImp implements CombineService {
      *
      * @param xueYuanId        学员Id
      * @param xueYuanKeChengId 学员课程Id
-     * @param selectedBanJiId  当前选择班级Id
-     * @param previousBanJiId 原来班级Id，可为空
+     * @param targetBanJiId  目标班级Id
      */
     @Transactional
     @Override
-    public void xueYuanXuanBan(Long xueYuanId, Long xueYuanKeChengId, Long selectedBanJiId, Long previousBanJiId) {
+    public void xueYuanXuanBan(Long xueYuanId, Long xueYuanKeChengId, Long targetBanJiId) {
         if(xueYuanId == null) {
             throw new BusinessException("请指定选班学员");
         }
         if(xueYuanKeChengId == null) {
             throw new BusinessException("请指定选班课程");
         }
-        if(selectedBanJiId == null) {
+        if(targetBanJiId == null) {
             throw new BusinessException("请指定目标班级");
         }
 
-        XueYuanKeCheng currentXueYuanKeCheng = xueYuanKeChengService.getById(xueYuanKeChengId);
-        if(currentXueYuanKeCheng == null) {
+        // 当前报读的班级Id
+        Long currentBanJiId = null;
+        DtoXueYuanKeCheng dtoXueYuanKeCheng = xueYuanKeChengService.getXueYuanKeChengById(xueYuanKeChengId);
+        if(dtoXueYuanKeCheng == null) {
             throw new BusinessException("当前学员所选课程已结课，或不存在");
         }
-        if(currentXueYuanKeCheng.getShengYuKeShi() <= 0) {
+        if(dtoXueYuanKeCheng.getShengYuKeShi() <= 0) {
             throw new BusinessException("当前学员所选课程，剩余课时不足");
         }
+        if(dtoXueYuanKeCheng.getBanJi() != null) {
+            currentBanJiId = dtoXueYuanKeCheng.getBanJi().getId();
+        }
 
-        if(previousBanJiId == null) {
+        if(currentBanJiId == null) {
             // 学员课程未选择过班级
 
             // 班级，新增学员
-            banJiService.tianJiaBanJiXueYuan(selectedBanJiId, xueYuanId);
+            banJiService.tianJiaBanJiXueYuan(targetBanJiId, xueYuanId);
             // 更改学员课程状态
             xueYuanKeChengService.xuanBanGengGaiKeChengZhuangTai(xueYuanKeChengId);
 
             // 目标班级的排课记录
-            List<PaiKeJiLu> paiKeJiLuList = huoQuPaiKeJiLuList(selectedBanJiId);
+            List<PaiKeJiLu> paiKeJiLuList = huoQuPaiKeJiLuList(targetBanJiId);
             // 排课记录添加上课学员
             for(PaiKeJiLu paiKeJiLu : paiKeJiLuList) {
                 PaiKeJiLu.TianJiaShangKeXueYuanCmd cmd = new PaiKeJiLu.TianJiaShangKeXueYuanCmd();
@@ -398,11 +402,11 @@ public class CombinServiceImp implements CombineService {
             }
             paiKeJiLuService.saveAllPaiKeJiLu(paiKeJiLuList);
         } else {
-            if(!selectedBanJiId.equals(previousBanJiId)) {
+            if(!targetBanJiId.equals(currentBanJiId)) {
                 // 新班级，加入学员
-                banJiService.tianJiaBanJiXueYuan(selectedBanJiId, xueYuanId);
+                banJiService.tianJiaBanJiXueYuan(targetBanJiId, xueYuanId);
                 // 目标班级的排课记录List
-                List<PaiKeJiLu> paiKeJiLuList = huoQuPaiKeJiLuList(selectedBanJiId);
+                List<PaiKeJiLu> paiKeJiLuList = huoQuPaiKeJiLuList(targetBanJiId);
                 // 排课记录添加上课学员
                 for(PaiKeJiLu paiKeJiLu : paiKeJiLuList) {
                     PaiKeJiLu.TianJiaShangKeXueYuanCmd cmd = new PaiKeJiLu.TianJiaShangKeXueYuanCmd();
@@ -413,9 +417,9 @@ public class CombinServiceImp implements CombineService {
                 }
 
                 // 原班级，删除学员
-                banJiService.shanChuBanJiXueYuan(previousBanJiId, xueYuanId);
+                banJiService.shanChuBanJiXueYuan(currentBanJiId, xueYuanId);
                 // 原班级的排课记录List
-                List<PaiKeJiLu> paiKeJiLuPreviousList = huoQuPaiKeJiLuList(selectedBanJiId);
+                List<PaiKeJiLu> paiKeJiLuPreviousList = huoQuPaiKeJiLuList(currentBanJiId);
                 // 原班级的排课记录List，删除上课学员
                 for(PaiKeJiLu paiKeJiLu : paiKeJiLuPreviousList) {
                     PaiKeJiLu.ShanChuXueYuanCmd cmd = new PaiKeJiLu.ShanChuXueYuanCmd();
@@ -454,5 +458,55 @@ public class CombinServiceImp implements CombineService {
         // 获取排课记录
         List<PaiKeJiLu> paiKeJiLuList = paiKeJiLuService.getAllByPaiKeXinXinId(paiKeXinXiIdList);
         return paiKeJiLuList;
+    }
+
+    /**
+     * 缴费记录确认
+     *
+     * @param jiaoFeiJiLuId        缴费记录Id
+     * @param jiaoFeiJiLuZhuangTai 缴费记录状态
+     */
+    @Transactional
+    @Override
+    public void jiaoFeiJiLuQueRen(Long jiaoFeiJiLuId, JiaoFeiJiLuZhuangTai jiaoFeiJiLuZhuangTai) {
+        if(jiaoFeiJiLuId == null) {
+            throw new BusinessException("请指定缴费记录");
+        }
+        if(jiaoFeiJiLuZhuangTai == null) {
+            throw new BusinessException("请指定缴费记录状态");
+        }
+        // 更改缴费记录状态
+        jiaoFeiJiLuService.gengGaiJiaoFenJiLuZhuangTai(jiaoFeiJiLuId, jiaoFeiJiLuZhuangTai);
+        JiaoFeiJiLu jiaoFeiJiLu = jiaoFeiJiLuService.getById(jiaoFeiJiLuId);
+        List<Long> xueYuanKeChengIds = jiaoFeiJiLu.getXueYuanKeChengZu();
+
+        //缴费记录状态说明：
+            //未交费：学员已完成报名，但会计未确认收费，此时状态为“未交费”状态，该状态下学员不能加入班级上课。
+            //课程状态为：待确认
+            //
+            //部分缴费：学员已完成报名，但会计只收到缴费金额的一部分，此时状态为“部分缴费”，状态，该状态下学员可以加入班级上课。不论学员报名了多少课程，在“部分缴费”状态下，所有报名的课程均可加入班级。
+            //课程状态为：待补缴
+            //
+            //全部已缴：学员已完成报名，会计确认收到全部缴费金额，此时学员可加入对应报名的课程班级上课。
+            //课程状态为： 待排课
+        XueYuanKeChengZhuangTai xueYuanKeChengZhuangTai = null;
+        if(jiaoFeiJiLuZhuangTai.equals(JiaoFeiJiLuZhuangTai.WEI_JIAO_FEI)) {
+            xueYuanKeChengZhuangTai = XueYuanKeChengZhuangTai.DAI_QUE_REN;
+        }
+        if(jiaoFeiJiLuZhuangTai.equals(JiaoFeiJiLuZhuangTai.BU_FEN_JIAO_FEI)) {
+            xueYuanKeChengZhuangTai = XueYuanKeChengZhuangTai.DAI_BU_JIAO;
+        }
+        if(jiaoFeiJiLuZhuangTai.equals(JiaoFeiJiLuZhuangTai.QUAN_BU_YI_JIAO)) {
+            xueYuanKeChengZhuangTai = XueYuanKeChengZhuangTai.DAI_PAI_KE;
+        }
+
+        List<XueYuanKeCheng> xueYuanKeChengList = xueYuanKeChengService.getByIds(xueYuanKeChengIds);
+        for(XueYuanKeCheng xueYuanKeCheng: xueYuanKeChengList) {
+            XueYuanKeCheng.GengGaiKeChengZhuangTaiCmd cmd = new XueYuanKeCheng.GengGaiKeChengZhuangTaiCmd();
+            cmd.setKeChengZhuangTai(xueYuanKeChengZhuangTai);
+            xueYuanKeCheng.jiaoFeiQueRenGengGaiZhuangTai(cmd);
+        }
+
+        xueYuanKeChengService.saveAllXueYuanKeCheng(xueYuanKeChengList);
     }
 }

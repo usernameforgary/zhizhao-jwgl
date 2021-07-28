@@ -27,6 +27,9 @@ public class LaoShi extends AggRoot {
     @NotNull
     Long id;
 
+    @NotNull
+    String xingMing;
+
     //所属账号
     @Column(nullable = false)
     Long zhangHaoId;
@@ -44,6 +47,7 @@ public class LaoShi extends AggRoot {
         LaoShi laoShi = LaoShi.builder()
                 .id(cmd.id)
                 .zhangHaoId(cmd.zhangHaoId)
+                .xingMing(cmd.xingMing)
                 .shanChangKeMuZu(cmd.shanChangKeMuZu)
                 .build();
         return laoShi;
@@ -57,6 +61,8 @@ public class LaoShi extends AggRoot {
         Long id;
         @NotNull
         Long zhangHaoId;
+        @NotNull
+        String xingMing;
         @NotNull
         Set<Long> shanChangKeMuZu;
     }

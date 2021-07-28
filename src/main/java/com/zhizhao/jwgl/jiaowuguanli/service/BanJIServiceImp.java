@@ -90,9 +90,9 @@ public class BanJIServiceImp implements BanJiService{
         if(banJiOptional.isPresent()) {
             BanJi banJi = banJiOptional.get();
 
-            BanJi.TianJiaXueYuanCmd tianJiaXueYuanCmd = new BanJi.TianJiaXueYuanCmd();
-            tianJiaXueYuanCmd.setXueYuanId(xueYuanId);
-            banJi.tianJiaXueYuan(tianJiaXueYuanCmd);
+            BanJi.ShanChuXueYuanCmd shanChuXueYuanCmd = new BanJi.ShanChuXueYuanCmd();
+            shanChuXueYuanCmd.setXueYuanId(xueYuanId);
+            banJi.shanChuXueYuan(shanChuXueYuanCmd);
             banJiRepository.save(banJi);
         } else {
             throw new BusinessException("未找到指定班级");

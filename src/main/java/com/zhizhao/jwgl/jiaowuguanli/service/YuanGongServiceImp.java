@@ -51,6 +51,7 @@ public class YuanGongServiceImp implements YuanGongService {
             Long laoShiId = SnowflakeIdUtil.nextId();
             laoShiChuangJianCmd.setId(laoShiId);
             laoShiChuangJianCmd.setZhangHaoId(zhangHaoId);
+            laoShiChuangJianCmd.setXingMing(dto.getXingMing());
             laoShiChuangJianCmd.setShanChangKeMuZu(dto.getShanChangKeMuZu());
 
             laoShiService.chuangJianLaoShi(laoShiChuangJianCmd);

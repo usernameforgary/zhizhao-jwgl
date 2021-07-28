@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 public class JiaoFeiJiLuServiceImp implements JiaoFeiJiLuService {
@@ -52,5 +53,43 @@ public class JiaoFeiJiLuServiceImp implements JiaoFeiJiLuService {
         IPage<DtoJiaoFeiJiLu> page = new Page<>(pageNum, pageSize);
 
         return jiaoFeiJiLuMapper.huoQuJiaoFeiJiLu(page);
+    }
+
+    /**
+     * 根据Id获取缴费记录
+     *
+     * @param id 缴费记录Id
+     * @return
+     */
+    @Override
+    public JiaoFeiJiLu getById(Long id) {
+        Optional<JiaoFeiJiLu> jiaoFeiJiLuOptional = jiaoFeiJiLuRepository.findById(id);
+        if(!jiaoFeiJiLuOptional.isPresent()) {
+           throw new BusinessException("对应缴费记录未找到");
+        }
+        return jiaoFeiJiLuOptional.get();
+    }
+
+    /**
+     * 更改缴费记录状态
+     *
+     * @param id                   缴费记录Id
+     * @param jiaoFeiJiLuZhuangTai 缴费记录状态
+     */
+    @Transactional
+    @Override
+    public void gengGaiJiaoFenJiLuZhuangTai(Long id, JiaoFeiJiLuZhuangTai jiaoFeiJiLuZhuangTai) {
+        if(id == null) {
+            throw new BusinessException("请指定要查询的缴费记录");
+        }
+        if(jiaoFeiJiLuZhuangTai == null) {
+            throw new BusinessException("请指定缴费记录状态");
+        }
+        JiaoFeiJiLu jiaoFeiJiLu = getById(id);
+        JiaoFeiJiLu.GengGaiZhangTaiCmd cmd = new JiaoFeiJiLu.GengGaiZhangTaiCmd();
+        cmd.setJiaoFeiJiLuZhuangTai(jiaoFeiJiLuZhuangTai);
+        jiaoFeiJiLu.gengGaiJiaoFeiJiLuZhuangTai(cmd);
+
+        jiaoFeiJiLuRepository.save(jiaoFeiJiLu);
     }
 }

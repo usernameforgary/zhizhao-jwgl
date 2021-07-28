@@ -39,4 +39,11 @@ public interface XueYuanKeChengService {
      * @return
      */
     XueYuanKeCheng getById(Long id);
+
+    /**
+     * 根据id组获取学员课程
+     * @param ids 学员课程id列表
+     * @return
+     */
+    List<XueYuanKeCheng> getByIds(List<Long> ids);
 }

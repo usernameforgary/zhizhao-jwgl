@@ -92,6 +92,26 @@ public class JiaoFeiJiLu extends AggRoot {
         @NotNull
         Set<JiaoFeiLiShi> jiaoFeiLiShiZu;
     }
+
+    /**
+     * 更改缴费记录状态
+     * @param cmd
+     */
+    public void gengGaiJiaoFeiJiLuZhuangTai(GengGaiZhangTaiCmd cmd) {
+       if(cmd.jiaoFeiJiLuZhuangTai == null)  {
+           throw new BusinessException("请指定缴费记录状态");
+       }
+       setJiaoFeiJiLuZhuangTai(cmd.jiaoFeiJiLuZhuangTai);
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GengGaiZhangTaiCmd {
+        @NotNull
+        JiaoFeiJiLuZhuangTai jiaoFeiJiLuZhuangTai;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

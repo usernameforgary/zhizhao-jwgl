@@ -181,20 +181,14 @@ public class PaiKeJiLu extends AggRoot {
         shangKeXueYuan.setXueYuanId(cmd.xueYuanId);
         shangKeXueYuan.setIsDeleted(cmd.isDeleted);
         shangKeXueYuan.setShangKeXueYuanLeiXing(cmd.shangKeXueYuanLeiXing);
-        ShangKeXueYuan existShangKeXueYuan = null;
         if(!shangKeXueYuanZu.contains(shangKeXueYuan)) {
-            throw new BusinessException("上课学员中，不存在该学员");
+            throw new BusinessException("排课上课学员中，不存在该学员");
         }
         for(ShangKeXueYuan shangKeXueYuan1 : shangKeXueYuanZu) {
             if(shangKeXueYuan1.equals(shangKeXueYuan)) {
-                existShangKeXueYuan = shangKeXueYuan1;
+                shangKeXueYuan1.setIsDeleted(true);
                 return;
             }
-        }
-        if(existShangKeXueYuan == null) {
-            throw new BusinessException("上课学员中，未找到该学员");
-        } else {
-            existShangKeXueYuan.setIsDeleted(true);
         }
     }
 

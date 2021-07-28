@@ -179,10 +179,18 @@ public class XueYuanKeCheng extends AggRoot {
         if(keChengZhuangTai.equals(XueYuanKeChengZhuangTai.YI_JIE_KE)) {
             throw new BusinessException("学员课程【已结课】，不能选班");
         }
-        if(!(keChengZhuangTai.equals(XueYuanKeChengZhuangTai.DAI_BU_JIAO) || keChengZhuangTai.equals(XueYuanKeChengZhuangTai.DAI_PAI_KE))) {
-            throw new BusinessException("学员课程【待补缴】或【待排课】时，才能选班");
-        }
+//        if(!(keChengZhuangTai.equals(XueYuanKeChengZhuangTai.DAI_BU_JIAO) || keChengZhuangTai.equals(XueYuanKeChengZhuangTai.DAI_PAI_KE))) {
+//            throw new BusinessException("学员课程【待补缴】或【待排课】时，才能选班");
+//        }
         setKeChengZhuangTai(XueYuanKeChengZhuangTai.DAI_SHANG_KE);
+    }
+
+    /**
+     * 缴费确认更改学员课程状态
+     * @param cmd
+     */
+    public void jiaoFeiQueRenGengGaiZhuangTai(GengGaiKeChengZhuangTaiCmd cmd) {
+        setKeChengZhuangTai(cmd.keChengZhuangTai);
     }
 
     @Data

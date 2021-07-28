@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.controller;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.JiaoFeiJiLuZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.BanJiPaiKeXinXi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoTianJiaYuanGong;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
@@ -69,11 +70,22 @@ public class CombineController {
      * @param xueYuanId 学员Id
      * @param xueYuanKeChengId 学员课程id
      * @param banJiId 班级Id
-     * @param previousBanJiId 原来班级Id
      */
     @GetMapping("xueYuanXuanBan")
-    public PPResult xueYuanXuanBan(@RequestParam Long xueYuanId, @RequestParam Long xueYuanKeChengId, @RequestParam Long banJiId, @RequestParam(required = false) Long previousBanJiId) {
-        combineService.xueYuanXuanBan(xueYuanId, xueYuanKeChengId, banJiId, previousBanJiId);
+    public PPResult xueYuanXuanBan(@RequestParam Long xueYuanId, @RequestParam Long xueYuanKeChengId, @RequestParam Long banJiId) {
+        combineService.xueYuanXuanBan(xueYuanId, xueYuanKeChengId, banJiId);
+        return PPResult.Ok();
+    }
+
+    /**
+     * 缴费记录确认
+     * @param id 缴费记录Id
+     * @param jiaoFeiJiLuZhuangTai 缴费记录状态
+     * @return
+     */
+    @GetMapping("jiaoFeiJiLuQueRen")
+    public PPResult jiaoFeiJiLuQueRen(@RequestParam Long id, @RequestParam JiaoFeiJiLuZhuangTai jiaoFeiJiLuZhuangTai) {
+        combineService.jiaoFeiJiLuQueRen(id, jiaoFeiJiLuZhuangTai);
         return PPResult.Ok();
     }
 }

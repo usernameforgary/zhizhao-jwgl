@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.JiaoFeiJiLuZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.BanJiPaiKeXinXi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanBaoMing;
@@ -28,8 +29,14 @@ public interface CombineService {
      * 学员课程选择班级
      * @param xueYuanId 学员Id
      * @param xueYuanKeChengId 学员课程Id
-     * @param selectedBanJiId 当前选择班级Id
-     * @param previousBanJiId 原来选择班级Id
+     * @param targetBanJiId 目标班级Id
      */
-    void xueYuanXuanBan(Long xueYuanId, Long xueYuanKeChengId, Long selectedBanJiId, Long previousBanJiId);
+    void xueYuanXuanBan(Long xueYuanId, Long xueYuanKeChengId, Long targetBanJiId);
+
+    /**
+     * 缴费记录确认
+     * @param jiaoFeiJiLuId 缴费记录Id
+     * @param jiaoFeiJiLuZhuangTai 缴费记录状态
+     */
+    void jiaoFeiJiLuQueRen(Long jiaoFeiJiLuId, JiaoFeiJiLuZhuangTai jiaoFeiJiLuZhuangTai);
 }

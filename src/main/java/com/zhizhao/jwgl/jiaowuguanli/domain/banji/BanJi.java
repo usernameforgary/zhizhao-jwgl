@@ -141,7 +141,7 @@ public class BanJi extends AggRoot {
      */
     public void shanChuXueYuan(ShanChuXueYuanCmd cmd) {
         if(cmd.xueYuanId == null) {
-            throw new BusinessException("请指定要添加的学员");
+            throw new BusinessException("请指定要移除的学员");
         }
         if(banJiZhuangTai.equals(BanJiZhuangTai.JIE_KE)) {
             throw new BusinessException("班级已结课");
@@ -149,20 +149,14 @@ public class BanJi extends AggRoot {
         BanJiXueYuan banJiXueYuan = new BanJiXueYuan();
         banJiXueYuan.setXueYuanId(cmd.xueYuanId);
         banJiXueYuan.setIsDeleted(false);
-        BanJiXueYuan existBanJiXueYuan = null;
         if(!banJiXueYuanZu.contains(banJiXueYuan)) {
-            throw new BusinessException("当前班级中未找到该学员");
+            throw new BusinessException("当前班级中未找到该学员信息");
         }
         for(BanJiXueYuan banJiXueYuan1: banJiXueYuanZu) {
             if(banJiXueYuan1.equals(banJiXueYuan)) {
-                existBanJiXueYuan = banJiXueYuan1;
+                banJiXueYuan1.setIsDeleted(true);
                 return;
             }
-        }
-        if(existBanJiXueYuan != null) {
-            existBanJiXueYuan.setIsDeleted(true);
-        } else {
-            throw new BusinessException("当前班级中未找到该学员");
         }
     }
 

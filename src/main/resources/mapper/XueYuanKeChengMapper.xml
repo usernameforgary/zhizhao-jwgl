@@ -20,9 +20,12 @@
                    C.xing_ming as banJiLaoShiXingMing
             from ban_ji A
             join ban_ji_ban_ji_xue_yuan_zu B on B.ban_ji_id = A.id
-            left join zhang_hao C
+            left join lao_shi C
                 on A.ban_ji_lao_shi_id = C.id
-            and B.xue_yuan_id = #{xueYuanId}
+            <where>
+                B.xue_yuan_id = #{xueYuanId}
+                and B.is_deleted = 0
+            </where>
         ) CC
         on B.id = CC.ke_cheng_id
         join xue_yuan D
@@ -37,41 +40,35 @@
         from ban_ji A
         join ban_ji_ban_ji_xue_yuan_zu B
             on B.ban_ji_id = A.id
-        left join zhang_hao C
+        left join lao_shi C
             on A.ban_ji_lao_shi_id = C.id
         <where>
             A.id = #{banJiId}
             and B.xue_yuan_id = #{xueYuanId}
+            and B.is_deleted = 0
         </where>
     </select>
 
     <!-- 根据Id，获取学员课程信息（包含所属课程信息，班级信息，班级老师信息) -->
     <select id="getXueYuanKeChengById" resultMap="xueYuanKeChengResult">
         select
-        A.id, A.xue_yuan_id as xueYuanId,
-        A.ke_cheng_id as keChengId, A.ke_cheng_zhuang_tai,A.ke_cheng_lei_xing, A.dan_jia,
-        A.ke_cheng_shu_liang, A.zeng_song_ke_shi, A.you_hui_lei_xing, A.you_hui_shu_liang,
-        A.sheng_yu_ke_shi,
-        B.ming_cheng as keChengMingCheng,
-        CC.*,
-        D.xing_ming as xueYuanXingMing
+            A.id, A.xue_yuan_id as xueYuanId,
+            A.ke_cheng_id as keChengId, A.ke_cheng_zhuang_tai,A.ke_cheng_lei_xing, A.dan_jia,
+            A.ke_cheng_shu_liang, A.zeng_song_ke_shi, A.you_hui_lei_xing, A.you_hui_shu_liang,
+            A.sheng_yu_ke_shi,
+            B.ming_cheng as keChengMingCheng,
+            C.ban_ji_id as banJiId,
+            D.ming_cheng as banJiMingCheng,
+            E.xing_ming as banJiLaoShiXingMing,
+            F.xing_ming as xueYuanXingMing
         from xue_yuan_ke_cheng A
-        join ke_cheng B on A.ke_cheng_id = B.id
-        left join (
-        select A.id as banJiId, A.ming_cheng as banJiMingCheng, A.ke_cheng_id,
-        C.xing_ming as banJiLaoShiXingMing
-        from ban_ji A
-        join ban_ji_ban_ji_xue_yuan_zu B on B.ban_ji_id = A.id
-        join zhang_hao C
-        on A.ban_ji_lao_shi_id = C.id
-        and B.xue_yuan_id = #{xueYuanId}
-        ) CC
-        on B.id = CC.ke_cheng_id
-        join xue_yuan D
-        on A.xue_yuan_id = D.id
-        <where>
+                 join ke_cheng B on A.ke_cheng_id = B.id
+                 left join ban_ji_ban_ji_xue_yuan_zu C on A.xue_yuan_id = C.xue_yuan_id and C.is_deleted = 0
+                 left join ban_ji D on C.ban_ji_id = D.id
+                 left join lao_shi E on D.ban_ji_lao_shi_id = E.id
+                 join xue_yuan F on A.xue_yuan_id = F.id
+        WHERE
             A.is_deleted = 0
             and A.id = #{id}
-        </where>
     </select>
 </mapper>
