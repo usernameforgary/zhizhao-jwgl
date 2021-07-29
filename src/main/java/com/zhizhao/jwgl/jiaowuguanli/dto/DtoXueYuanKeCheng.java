@@ -72,4 +72,7 @@ public class DtoXueYuanKeCheng {
 
     // 备注
     String beiZhu;
+
+    // 学员课程有效期限
+    Long keChengYouXiaoQi;
 }

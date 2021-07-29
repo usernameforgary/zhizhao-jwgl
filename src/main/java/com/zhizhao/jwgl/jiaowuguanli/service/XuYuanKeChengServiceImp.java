@@ -36,11 +36,12 @@ public class XuYuanKeChengServiceImp implements XueYuanKeChengService {
     /**
      * 根据学员Id，获取学员已选课程，信息（包含所属课程信息，班级信息，班级老师信息)
      * @param xueYuanId 学员Id
+     * @param isLiShi 是否是历史课程（已结课的课程，XueYuanKeChengZhuangTai.YI_JIE_KE）
      * @return
      */
     @Override
-    public List<DtoXueYuanKeCheng> getXueYuanKeChengByXueYuanId(Long xueYuanId) {
-        return xueYuanKeChengMapper.getXueYuanKeChengByXueYuanId(xueYuanId);
+    public List<DtoXueYuanKeCheng> getXueYuanKeChengByXueYuanId(Long xueYuanId, boolean isLiShi) {
+        return xueYuanKeChengMapper.getXueYuanKeChengByXueYuanId(xueYuanId, isLiShi);
     }
 
     /**

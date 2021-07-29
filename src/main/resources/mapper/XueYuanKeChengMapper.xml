@@ -9,7 +9,7 @@
             A.id, A.xue_yuan_id as xueYuanId,
             A.ke_cheng_id as keChengId, A.ke_cheng_zhuang_tai,A.ke_cheng_lei_xing, A.dan_jia,
             A.ke_cheng_shu_liang, A.zeng_song_ke_shi, A.you_hui_lei_xing, A.you_hui_shu_liang,
-            A.sheng_yu_ke_shi,
+            A.sheng_yu_ke_shi, A.ke_cheng_you_xiao_qi,
             B.ming_cheng as keChengMingCheng,
             CC.*,
             D.xing_ming as xueYuanXingMing
@@ -32,6 +32,12 @@
             on A.xue_yuan_id = D.id
         <where>
             A.is_deleted = 0
+            <if test="isLiShi == true">
+                and A.ke_cheng_zhuang_tai = 'YI_JIE_KE'
+            </if>
+            <if test="isLiShi != true">
+                and A.ke_cheng_zhuang_tai != 'YI_JIE_KE'
+            </if>
             and A.xue_yuan_id = #{xueYuanId}
         </where>
     </select>
@@ -55,7 +61,7 @@
             A.id, A.xue_yuan_id as xueYuanId,
             A.ke_cheng_id as keChengId, A.ke_cheng_zhuang_tai,A.ke_cheng_lei_xing, A.dan_jia,
             A.ke_cheng_shu_liang, A.zeng_song_ke_shi, A.you_hui_lei_xing, A.you_hui_shu_liang,
-            A.sheng_yu_ke_shi,
+            A.sheng_yu_ke_shi, A.ke_cheng_you_xiao_qi,
             B.ming_cheng as keChengMingCheng,
             C.ban_ji_id as banJiId,
             D.ming_cheng as banJiMingCheng,

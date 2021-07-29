@@ -15,9 +15,15 @@ public class XueYuanKeChengController {
     @Autowired
     XueYuanKeChengService xueYuanKeChengService;
 
+    /**
+     *
+     * @param xueYuanId 学员id
+     * @param isLiShi 是否是历史课程（已结课的课程，XueYuanKeChengZhuangTai.YI_JIE_KE）
+     * @return
+     */
     @GetMapping("getXueYuanKeChengByXueYuanId")
-    public PPResult getXueYuanKeChengByXueYuanId(@RequestParam Long xueYuanId) {
-        List<DtoXueYuanKeCheng> dtoXueYuanKeChengList = xueYuanKeChengService.getXueYuanKeChengByXueYuanId(xueYuanId);
+    public PPResult getXueYuanKeChengByXueYuanId(@RequestParam Long xueYuanId, @RequestParam(required = false) boolean isLiShi) {
+        List<DtoXueYuanKeCheng> dtoXueYuanKeChengList = xueYuanKeChengService.getXueYuanKeChengByXueYuanId(xueYuanId, isLiShi);
         return PPResult.getPPResultOK(dtoXueYuanKeChengList);
     }
 }
