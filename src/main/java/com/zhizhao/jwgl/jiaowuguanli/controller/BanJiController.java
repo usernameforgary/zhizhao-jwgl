@@ -3,6 +3,7 @@ package com.zhizhao.jwgl.jiaowuguanli.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJiXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.service.BanJiService;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
@@ -81,5 +82,16 @@ public class BanJiController {
     public PPResult huoQuBanJiLieBiaoByKeChengId(@RequestParam Long keChengId) {
         List<DtoBanJi> dtoBanJiList = banJiService.huoQuBanJiByKeChengId(keChengId);
         return PPResult.getPPResultOK(dtoBanJiList);
+    }
+
+    /**
+     * 根据班级id，获取班级学员
+     * @param banJiId 班级Id
+     * @return
+     */
+    @GetMapping("houQuBanJiXueYuanByBanJiId")
+    public PPResult houQuBanJiXueYuanByBanJiId(@RequestParam Long banJiId) {
+        List<DtoBanJiXueYuan> dtoBanJiXueYuanList = banJiService.huoQuBanJiXueYuanByBanJiId(banJiId);
+        return PPResult.getPPResultOK(dtoBanJiXueYuanList);
     }
 }

@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.dto;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.biaoqian.BiaoQian;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XingBie;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
 import lombok.AllArgsConstructor;
@@ -51,4 +52,6 @@ public class DtoXueYuan {
     Double xiaoKeJinE;
     // 学员课程
     Set<DtoXueYuanKeCheng> dtoXueYuanKeChengSet;
+    // 学员标签组
+    Set<DtoCommon> xueYuanBiaoQianZu;
 }

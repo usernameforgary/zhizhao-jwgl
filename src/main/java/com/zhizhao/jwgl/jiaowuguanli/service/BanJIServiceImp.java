@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJiXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.BanJiMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.BanJiRepository;
@@ -44,7 +45,7 @@ public class BanJIServiceImp implements BanJiService{
     }
 
     /**
-     * 根据课程Id，获取班级列表
+     * 根据课程Id，获取选择了该课程的班级列表
      * @param keChengId 课程Id
      * @return
      */
@@ -97,5 +98,20 @@ public class BanJIServiceImp implements BanJiService{
         } else {
             throw new BusinessException("未找到指定班级");
         }
+    }
+
+    /**
+     * 根据班级id，获取班级学员
+     *
+     * @param banJiId 班级Id
+     * @return
+     */
+    @Override
+    public List<DtoBanJiXueYuan> huoQuBanJiXueYuanByBanJiId(Long banJiId) {
+        if(banJiId == null) {
+            throw new BusinessException("请指定要查找的班级");
+        }
+        List<DtoBanJiXueYuan> result = banJiMapper.huoQuBanJiXueYuanByBanJiId(banJiId);
+        return result;
     }
 }

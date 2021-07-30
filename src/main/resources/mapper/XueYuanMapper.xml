@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.XueYuanMapper">
-    <select id="huoQuXueYuanXinXi" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan">
+    <!-- 根据学员Id，获取学员基本信息 -->
+    <resultMap id="xueYuanJiBenXinXiResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan">
+        <collection property="xueYuanBiaoQianZu" select="getXueYuanBiaoQianById" column="{xueYuanId=id}"></collection>
+    </resultMap>
+    <select id="huoQuXueYuanXinXi" resultMap="xueYuanJiBenXinXiResult">
         select A.id, A.bei_zhu_xin_xi, A.danq_qian_nian_ji, A.gen_jin_ren_id, A.jia_ting_zhu_zhi,
                A.jiu_du_xue_xiao, A.nan_ling, A.tou_xiang, A.xing_bie, A.xing_ming, A.xue_yuan_lai_yuan, A.zhang_hao_id, A.xue_yuan_zhuang_tai,
                B.shou_ji as zhangHaoShouJi,
@@ -17,6 +21,17 @@
             and B.zhang_hao_lei_xing = 'XUE_YUAN'
         </where>
     </select>
+    <select id="getXueYuanBiaoQianById" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoCommon">
+        select B.id, B.ming_cheng
+        from xue_yuan_biao_qian_zu A
+        join biao_qian B on A.biao_qian_id = B.id
+        <where>
+            A.xue_yuan_id = #{xueYuanId}
+            and B.is_deleted = 0
+        </where>
+    </select>
+    <!-- 根据学员Id，获取学员基本信息 end -->
+
     <!-- 获取所有在读学员 -->
     <select id="huoQuXueYuanAll" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan">
         select A.id, A.bei_zhu_xin_xi, A.danq_qian_nian_ji, A.gen_jin_ren_id, A.jia_ting_zhu_zhi,

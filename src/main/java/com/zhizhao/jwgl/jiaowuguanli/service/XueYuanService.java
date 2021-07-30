@@ -18,7 +18,7 @@ public interface XueYuanService {
     Long chuangJianXueYuan(XueYuan.ChuangJianCmd cmd);
 
     /**
-     * 获取学员信息
+     * 根据学员Id获取学员信息
      * @param xueYuanId
      * @return
      */

@@ -42,12 +42,14 @@
         </where>
     </select>
     <select id="getBanJiXinXi" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi">
-        select A.*, C.id as banJiLaoShiId, C.xing_ming as banJiLaoShiXingMing
+        select A.*, C.id as banJiLaoShiId, C.xing_ming as banJiLaoShiXingMing, D.ming_cheng as banJiFenLeiMingCheng
         from ban_ji A
         join ban_ji_ban_ji_xue_yuan_zu B
             on B.ban_ji_id = A.id
         left join lao_shi C
             on A.ban_ji_lao_shi_id = C.id
+        left join ban_ji_fen_lei D
+            on A.ban_ji_fen_lei_id = D.id
         <where>
             A.id = #{banJiId}
             and B.xue_yuan_id = #{xueYuanId}
