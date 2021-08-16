@@ -1,6 +1,9 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.PaiKeJiLu;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPaiKeJiLu;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPaiKeJiLuQuery;
 
 import java.util.List;
 
@@ -17,4 +20,18 @@ public interface PaiKeJiLuService {
      * @return
      */
     List<PaiKeJiLu> getAllByPaiKeXinXinId(List<Long> paiKeXinXiIdList);
+
+    /**
+     * 分页获取排课记录
+     * @param dtoPaiKeJiLuQuery 查询参数Dto
+     * @return
+     */
+    DtoPageResult<DtoPaiKeJiLu> getPaiKeJiLuList(DtoPaiKeJiLuQuery dtoPaiKeJiLuQuery);
+
+    /**
+     * 根据Id获取排课记录
+     * @param id 排课记录Id
+     * @return
+     */
+    PaiKeJiLu getPaiKeJiLuById(Long id);
 }

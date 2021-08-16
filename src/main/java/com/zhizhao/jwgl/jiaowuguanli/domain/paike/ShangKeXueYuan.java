@@ -19,10 +19,12 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ShangKeXueYuan {
     //学员id
     @NotNull
     Long xueYuanId;
+
     //删除
     @NotNull
     @Column(columnDefinition = "boolean default false")
@@ -33,12 +35,11 @@ public class ShangKeXueYuan {
     @Enumerated(EnumType.STRING)
     ShangKeXueYuanLeiXing shangKeXueYuanLeiXing;
 
-    // 学员到课状态
-    @Enumerated(EnumType.STRING)
-    XueYuanDaoKeZhuangTai xueYuanDaoKeZhuangTai;
+    // 补课学员的补课记录Id，上课学员类型为补课学员时需要提供补课记录Id
+    Long buKeJiLuId;
 
-    // 备注
-    String beiZhu;
+    // 试听学员的试听记录Id, 上课学员类型为试听学员时需要提供试听记录Id
+    Long shiTingJiLuId;
 
     @Override
     public boolean equals(Object o) {

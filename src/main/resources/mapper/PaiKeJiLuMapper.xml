@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.PaiKeJiLuMapper">
+    <resultMap id="dtoPaiKeJiLu" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoPaiKeJiLu">
+        <result column="pai_ke_gui_ze" property="paiKeGuiZe" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"></result>
+        <association property="shangKeXueYuanZu" column="{pai_ke_ji_lu_id=id, ke_cheng_id=ke_cheng_id}" select="getPaiKeJiLuShangKeXueYuan"/>
+    </resultMap>
+    <select id="getPaiKeJiLuList" resultMap="dtoPaiKeJiLu">
+        select A.id, A.ban_ji_pai_ke_xin_xi_id, A.shang_ke_ri_qi, A.shang_ke_lao_shi_id, A.shang_ke_jiao_shi_id,
+               A.shang_ke_shi_jian_start, A.shang_ke_shi_jian_end, A.shou_ke_ke_shi, A.shang_ke_nei_rong, A.pai_ke_ji_lu_zhuang_tai,
+               A.dian_ming_shi_jian,
+               B.pai_ke_gui_ze,
+               C.xing_ming as shangKeLaoShiXingMing,
+               D.ming_cheng as shangKeJiaoShiMingCheng,
+               E.ke_cheng_id, E.id as banJiId
+        from ban_ji_pai_ke_xin_xi B
+        join pai_ke_ji_lu A
+            on A.ban_ji_pai_ke_xin_xi_id = B.id
+        left join lao_shi C
+            on A.shang_ke_lao_shi_id = C.id
+        left join shang_ke_jiao_shi D
+            on A.shang_ke_jiao_shi_id = D.id
+        join ban_ji E on B.ban_ji_id = E.id
+        <where>
+            A.is_deleted = 0
+            and B.is_deleted = 0
+            <if test="banJiId!=null">
+                and B.ban_ji_id = #{banJiId}
+            </if>
+            <if test="shangKeLaoShiId!=null">
+                and A.shang_ke_lao_shi_id=#{shangKeLaoShiId}
+            </if>
+            <if test="paiKeJiLuZhuangTai!=null">
+                and A.pai_ke_ji_lu_zhuang_tai = #{paiKeJiLuZhuangTai}
+            </if>
+            <if test="shangKeRiQiBegin!=null">
+                and A.shang_ke_ri_qi <![CDATA[ > ]]> #{shangKeRiQiBegin}
+            </if>
+            <if test="shangKeRiQiEnd!=null">
+               and A.shang_ke_ri_qi <![CDATA[ < ]]> #{shangKeRiQiEnd}
+            </if>
+            <if test="shangKeRiQiEnd==null">
+                order by A.update_time desc
+            </if>
+        </where>
+    </select>
+    <select id="getPaiKeJiLuShangKeXueYuan" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoShangKeXueYuan">
+        select A.pai_ke_ji_lu_id, A.shang_ke_xue_yuan_lei_xing, A.xue_yuan_id, A.bu_ke_ji_lu_id, A.shi_ting_ji_lu_id,
+               B.xing_ming as xueYuanXingMing,
+               C.bei_zhu, C.kou_chu_ke_shi, C.shang_ke_xue_yuan_lei_xing, C.xue_yuan_dao_ke_zhuang_tai,
+               D.sheng_yu_ke_shi,
+               E.shou_ji
+        from pai_ke_ji_lu_shang_ke_xue_yuan_zu A
+        join xue_yuan B
+            on A.xue_yuan_id = B.id
+        left join dian_ming_ji_lu C on A.xue_yuan_id = C.xue_yuan_id and C.pai_ke_ji_lu_id = #{pai_ke_ji_lu_id}
+        left join xue_yuan_ke_cheng D on A.xue_yuan_id = D.xue_yuan_id and D.ke_cheng_id = #{ke_cheng_id} and D.is_deleted = 0
+        join zhang_hao E on B.zhang_hao_id = E.id
+        <where>
+            A.is_deleted = 0
+            and B.is_deleted = 0
+            and A.pai_ke_ji_lu_id = #{pai_ke_ji_lu_id}
+        </where>
+    </select>
+</mapper>

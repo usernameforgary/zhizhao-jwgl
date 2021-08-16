@@ -2,6 +2,7 @@ package com.zhizhao.jwgl.jiaowuguanli.service;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.JiaoFeiJiLuZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.BanJiPaiKeXinXi;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPaiKeJiLu;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanBaoMing;
 
@@ -39,4 +40,10 @@ public interface CombineService {
      * @param jiaoFeiJiLuZhuangTai 缴费记录状态
      */
     void jiaoFeiJiLuQueRen(Long jiaoFeiJiLuId, JiaoFeiJiLuZhuangTai jiaoFeiJiLuZhuangTai);
+
+    /**
+     * 排课记录点名
+     * @param dtoPaiKeJiLu 排课记录点名信息
+     */
+    void paiKeJiLuDianMing(DtoPaiKeJiLu dtoPaiKeJiLu);
 }

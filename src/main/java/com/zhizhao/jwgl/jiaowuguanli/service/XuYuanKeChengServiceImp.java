@@ -96,4 +96,16 @@ public class XuYuanKeChengServiceImp implements XueYuanKeChengService {
     public List<XueYuanKeCheng> getByIds(List<Long> ids) {
         return xueYuanKeChengRepository.findByIdIn(ids);
     }
+
+    /**
+     * 根据学员Id和课程Id获取学员课程
+     *
+     * @param xueYuanId
+     * @param keChengId
+     * @return
+     */
+    @Override
+    public XueYuanKeCheng getXueYuanKeChengByXueYuanIdAndKeChengId(Long xueYuanId, Long keChengId) {
+        return xueYuanKeChengRepository.findByXueYuanIdAndKeChengIdAndIsDeletedIsFalse(xueYuanId, keChengId);
+    }
 }

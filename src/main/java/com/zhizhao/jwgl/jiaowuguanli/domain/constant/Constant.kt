@@ -153,3 +153,28 @@ enum class LiuShuiLieXing {
     XIN_JIAO,
     BU_JIAO
 }
+
+/**
+ * 补课记录状态
+ */
+enum class BuKeZhuangTai {
+    DAI_BU_KE,
+    BU_KE_ZHONG,
+    YI_BU_KE
+}
+
+/**
+ * 试听记录状态
+ * 已预约
+ * 已过期：安排学员试听后，已过试听上课的时间，但老师点名为“未到”，则该状态为“已过期”
+ * 已体验：安排学员试听后，给该试听学员点名为“到课或迟到”，则该状态为“已体验”
+ * 已报名：安排学员试听后，给该试听学员点名为“到课或迟到”，其次再给试听学员报名该课程，则会由“已体验”变成“已报名”。
+ * 已取消：安排试听后，如果未上课点名，直接给学员报名该课程，则会由“已预约”变成“已取消”
+ */
+enum class ShiTingZhuangTai {
+    YI_YU_YUE,
+    YI_GUO_QI,
+    YI_TI_YAN,
+    YI_BAO_MING,
+    YI_QU_XIAO
+}

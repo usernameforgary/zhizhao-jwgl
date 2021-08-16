@@ -193,6 +193,62 @@ public class XueYuanKeCheng extends AggRoot {
         setKeChengZhuangTai(cmd.keChengZhuangTai);
     }
 
+    /**
+     * 点名扣课时，更新剩余课时、消课金额、课程状态
+     * @param kouChuKeShi 扣除课时数量
+     * @return 本次课消金额
+     */
+    public Double dianMingGengXinShengYuKeShiXiaoKeJinE(Double kouChuKeShi) {
+        if(!XueYuanKeChengZhuangTai.DAI_SHANG_KE.equals(getKeChengZhuangTai())) {
+            throw new BusinessException("当前学员课程状态不能点名");
+        }
+        Double keXiaoJinE = 0.0;
+        // 赠送课时
+        Double zengSongKeShi = getZengSongKeShi();
+        // 剩余课时
+        Double shengYuKeShi = getShengYuKeShi();
+        // 剩余课时大于等于赠送课时
+        if(shengYuKeShi >= zengSongKeShi) {
+            // 实际课程单价
+            Double shiJiKeChengDanJia = this.jiSuanShiJiDanJia();
+            keXiaoJinE = shiJiKeChengDanJia * kouChuKeShi;
+        }
+        setShengYuKeShi(getShengYuKeShi() - kouChuKeShi);
+        setXiaoKeJinE(getXiaoKeJinE() + keXiaoJinE);
+        // 更改课程状态
+//        if(getShengYuKeShi() <= 0 ) {
+//            setKeChengZhuangTai(XueYuanKeChengZhuangTai.DAI_JIE_KE);
+//        }
+        return keXiaoJinE;
+    }
+
+    /**
+     * 计算课程实际单价
+     * @return
+     */
+    public Double jiSuanShiJiDanJia() {
+        // 单价
+        Double danJia = getDanJia();
+        // 课程数量
+        Double keChengShuLiang = getKeChengShuLiang();
+        // 赠送课时
+        Double zengSongKeShi = getZengSongKeShi();
+        // 优惠类型
+        YouHuiLeiXing youHuiLeiXing = getYouHuiLeiXing();
+        // 优惠数量
+        Double youHuiShuLiang = getYouHuiShuLiang();
+        // 实际单价
+        Double shiJiDanJia = 0.0;
+        if(YouHuiLeiXing.ZHI_JIAN.equals(youHuiLeiXing)) {
+            shiJiDanJia = (danJia * keChengShuLiang - youHuiShuLiang) / keChengShuLiang;
+        } else if (YouHuiLeiXing.ZHE_KOU.equals(youHuiLeiXing)){
+            shiJiDanJia = ((danJia * keChengShuLiang) * (1 - youHuiShuLiang/100)) / keChengShuLiang;
+        } else {
+            throw new BusinessException("未知的优惠类型");
+        }
+        return shiJiDanJia;
+    }
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

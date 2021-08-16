@@ -1,6 +1,7 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJiXueYuan;
 
@@ -37,4 +38,18 @@ public interface BanJiService {
      * @return
      */
     List<DtoBanJiXueYuan> huoQuBanJiXueYuanByBanJiId(Long banJiId);
+
+    /**
+     * 根据Id获取班级
+     * @param id
+     * @return
+     */
+    BanJi getBanJiById(Long id);
+
+    /**
+     * 根据学员Id，获取班级列表
+     * @param xueYuanId 学员Id
+     * @return
+     */
+    List<DtoBanJi> huoQuBanJiByXueYuanId(Long xueYuanId);
 }

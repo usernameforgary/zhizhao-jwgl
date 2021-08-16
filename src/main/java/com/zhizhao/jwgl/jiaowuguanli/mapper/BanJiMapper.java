@@ -25,4 +25,12 @@ public interface BanJiMapper extends MyBaseMapper<BanJi> {
      * @return
      */
     List<DtoBanJiXueYuan> huoQuBanJiXueYuanByBanJiId(Long banJiId);
+
+    /**
+     * 根据学员Id，获取班级列表
+     *
+     * @param xueYuanId 学员Id
+     * @return
+     */
+    List<DtoBanJi> huoQuBanJiByXueYuanId(Long xueYuanId);
 }

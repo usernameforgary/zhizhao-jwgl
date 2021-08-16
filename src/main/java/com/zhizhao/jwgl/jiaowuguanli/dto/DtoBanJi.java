@@ -44,4 +44,8 @@ public class DtoBanJi {
     String shangKeJiaoShi;
     // 备注
     String beiZhu;
+    // 请假扣课时
+    boolean qingJiaKouKeShi;
+    // 未到扣课时
+    boolean weiDaoKouKeShi;
 }

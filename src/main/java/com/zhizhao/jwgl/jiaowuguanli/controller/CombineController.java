@@ -2,6 +2,7 @@ package com.zhizhao.jwgl.jiaowuguanli.controller;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.JiaoFeiJiLuZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.BanJiPaiKeXinXi;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPaiKeJiLu;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoTianJiaYuanGong;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanBaoMing;
@@ -86,6 +87,17 @@ public class CombineController {
     @GetMapping("jiaoFeiJiLuQueRen")
     public PPResult jiaoFeiJiLuQueRen(@RequestParam Long id, @RequestParam JiaoFeiJiLuZhuangTai jiaoFeiJiLuZhuangTai) {
         combineService.jiaoFeiJiLuQueRen(id, jiaoFeiJiLuZhuangTai);
+        return PPResult.Ok();
+    }
+
+    /**
+     * 排课记录点名
+     * @param dtoPaiKeJiLu 排课记录点名信息
+     * @return
+     */
+    @PostMapping("paiKeJiLuDianMing")
+    public PPResult paiKeJiLuDianMing(@RequestBody DtoPaiKeJiLu dtoPaiKeJiLu) {
+        combineService.paiKeJiLuDianMing(dtoPaiKeJiLu);
         return PPResult.Ok();
     }
 }

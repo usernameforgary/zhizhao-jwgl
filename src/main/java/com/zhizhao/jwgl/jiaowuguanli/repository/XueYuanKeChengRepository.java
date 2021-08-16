@@ -22,4 +22,13 @@ public interface XueYuanKeChengRepository extends JpaRepository<XueYuanKeCheng, 
      * @return
      */
     List<XueYuanKeCheng> findByIdIn(List<Long> ids);
+
+    /**
+     * 根据学员Id和课程Id获取学员课程
+     *
+     * @param xueYuanId
+     * @param keChengId
+     * @return
+     */
+    XueYuanKeCheng findByXueYuanIdAndKeChengIdAndIsDeletedIsFalse(Long xueYuanId, Long keChengId);
 }

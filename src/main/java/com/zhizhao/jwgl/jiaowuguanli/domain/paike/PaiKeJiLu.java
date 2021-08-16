@@ -8,6 +8,7 @@ import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -141,10 +142,18 @@ public class PaiKeJiLu extends AggRoot {
         if(cmd.shangKeXueYuanLeiXing == null) {
             throw new BusinessException("请指定上课学员类型");
         }
+        if(cmd.shangKeXueYuanLeiXing.equals(ShangKeXueYuanLeiXing.BU_KE) && cmd.buKeJiLuId == null) {
+            throw new BusinessException("请指定补课学员的补课记录");
+        }
+        if(cmd.shangKeXueYuanLeiXing.equals(ShangKeXueYuanLeiXing.SHI_TING) && cmd.shiTingJiLuId == null) {
+            throw new BusinessException("请指定试听学员的试听记录");
+        }
         ShangKeXueYuan shangKeXueYuan = new ShangKeXueYuan();
         shangKeXueYuan.setXueYuanId(cmd.xueYuanId);
-        shangKeXueYuan.setIsDeleted(cmd.isDeleted);
+        shangKeXueYuan.setIsDeleted(false);
         shangKeXueYuan.setShangKeXueYuanLeiXing(cmd.shangKeXueYuanLeiXing);
+        shangKeXueYuan.setBuKeJiLuId(cmd.buKeJiLuId);
+        shangKeXueYuan.setShiTingJiLuId(cmd.shiTingJiLuId);
         if(shangKeXueYuanZu.contains(shangKeXueYuan)) {
             throw new BusinessException("排课记录中，该学员已存在");
         }
@@ -161,6 +170,10 @@ public class PaiKeJiLu extends AggRoot {
         Boolean isDeleted;
         @NotNull
         ShangKeXueYuanLeiXing shangKeXueYuanLeiXing;
+        // 补课学员的补课记录Id，上课学员类型为补课学员时需要提供补课记录Id
+        Long buKeJiLuId;
+        // 试听学员的试听记录Id, 上课学员类型为试听学员时需要提供试听记录Id
+        Long shiTingJiLuId;
     }
 
     /**
@@ -202,6 +215,55 @@ public class PaiKeJiLu extends AggRoot {
         Boolean isDeleted;
         @NotNull
         ShangKeXueYuanLeiXing shangKeXueYuanLeiXing;
+    }
+
+    /**
+     * 更新排课记录基本信息
+     * @param cmd 基本信息
+     */
+    public void gengXinJiBenXinXi(GengXinJiBenXinXiCmd cmd) {
+        if(cmd.getShangKeLaoShiId() == null) { throw new BusinessException("请指定上课老师");}
+        if(cmd.getShangKeRiQi() == null) {throw new BusinessException("请指定上课日期");}
+        shangKeRiQi = cmd.getShangKeRiQi();
+        shangKeLaoShiId = cmd.getShangKeLaoShiId();
+        // 上课教室
+        shangKeJiaoShiId = cmd.getShangKeJiaoShiId();
+        // 上课开始时间
+        shangKeShiJianStart = cmd.getShangKeShiJianStart();
+        // 上课结束时间
+        shangKeShiJianEnd = cmd.getShangKeShiJianEnd();
+        // 授课课时
+        shouKeKeShi = cmd.getShouKeKeShi();
+        // 上课内容
+        shangKeNeiRong = cmd.getShangKeNeiRong();
+        // 排课记录状态
+        paiKeJiLuZhuangTai = cmd.getPaiKeJiLuZhuangTai();
+        // 点名时间
+        dianMingShiJian = cmd.getDianMingShiJian();
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GengXinJiBenXinXiCmd {
+        // 上课日期
+        Long shangKeRiQi;
+        // 上课老师
+        Long shangKeLaoShiId;
+        // 上课教室
+        Long shangKeJiaoShiId;
+        // 上课开始时间
+        Long shangKeShiJianStart;
+        // 上课结束时间
+        Long shangKeShiJianEnd;
+        // 授课课时
+        Double shouKeKeShi;
+        // 上课内容
+        String shangKeNeiRong;
+        // 排课记录状态
+        PaiKeJiLuZhuangTai paiKeJiLuZhuangTai;
+        // 点名时间
+        Long dianMingShiJian;
     }
 
     @Override

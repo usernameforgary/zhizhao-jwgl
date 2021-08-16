@@ -94,4 +94,15 @@ public class BanJiController {
         List<DtoBanJiXueYuan> dtoBanJiXueYuanList = banJiService.huoQuBanJiXueYuanByBanJiId(banJiId);
         return PPResult.getPPResultOK(dtoBanJiXueYuanList);
     }
+
+    /**
+     * 根据学员Id，获取班级列表
+     * @param xueYuanId 学员Id
+     * @return
+     */
+    @GetMapping("huoQuBanJiLieBiaoByXueYuanId")
+    public PPResult huoQuBanJiLieBiaoByXueYuanId(@RequestParam Long xueYuanId) {
+        List<DtoBanJi> dtoBanJiList = banJiService.huoQuBanJiByXueYuanId(xueYuanId);
+        return PPResult.getPPResultOK(dtoBanJiList);
+    }
 }

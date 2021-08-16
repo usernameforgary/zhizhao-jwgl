@@ -114,4 +114,35 @@ public class BanJIServiceImp implements BanJiService{
         List<DtoBanJiXueYuan> result = banJiMapper.huoQuBanJiXueYuanByBanJiId(banJiId);
         return result;
     }
+
+    /**
+     * 根据Id获取班级
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public BanJi getBanJiById(Long id) {
+        BanJi banJi = null;
+        Optional<BanJi> banJiOptional = banJiRepository.findById(id);
+        if(banJiOptional.isPresent()) {
+            banJi = banJiOptional.get();
+        }
+        return banJi;
+    }
+
+    /**
+     * 根据学员Id，获取班级列表
+     *
+     * @param xueYuanId 学员Id
+     * @return
+     */
+    @Override
+    public List<DtoBanJi> huoQuBanJiByXueYuanId(Long xueYuanId) {
+        if(xueYuanId == null) {
+            throw new BusinessException("请提供学员Id");
+        }
+        List<DtoBanJi> dtoBanJiList = banJiMapper.huoQuBanJiByXueYuanId(xueYuanId);
+        return dtoBanJiList;
+    }
 }

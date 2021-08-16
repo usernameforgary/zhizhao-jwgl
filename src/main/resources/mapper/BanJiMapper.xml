@@ -63,7 +63,7 @@
     <select id="huoQuBanJiXiangQing" resultMap="banJiXiangQingResult">
         select
         A.id, A.ming_cheng, A.rong_liang, A.shou_ke_ke_shi as moRenShouKeKeShi, A.bei_zhu,
-        B.id as keChengId, B.ming_cheng as keChengMingCheng,
+        B.id as keChengId, B.ming_cheng as keChengMingCheng, B.qing_jia_kou_ke_shi, B.wei_dao_kou_ke_shi,
         C.id as shangKeJiaoShiId, C.ming_cheng as shangKeJiaoShi,
         D.id as banJiLaoShiId, E.xing_ming as banJiLaoShiXingMing,
         F.ming_cheng as banJiFenLeiMingCheng
@@ -139,4 +139,15 @@
     </select>
     <!-- 根据班级id，获取班级学员 end -->
 
+    <!-- 根据学员id，获取班级列表 -->
+    <select id="huoQuBanJiByXueYuanId" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi">
+        select distinct A.id, A.ming_cheng
+        from ban_ji A
+        join ban_ji_ban_ji_xue_yuan_zu B
+        on B.ban_ji_id = A.id
+        <where>
+            B.xue_yuan_id = #{xueYuanId}
+        </where>
+    </select>
+    <!-- 根据学员id，获取班级列表 end -->
 </mapper>

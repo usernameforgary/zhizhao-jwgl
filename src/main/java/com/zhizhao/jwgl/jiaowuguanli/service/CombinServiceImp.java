@@ -1,8 +1,11 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
 import cn.hutool.core.date.Week;
+import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJi;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXueYuan;
+import com.zhizhao.jwgl.jiaowuguanli.domain.bukejilu.BuKeJiLu;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.*;
+import com.zhizhao.jwgl.jiaowuguanli.domain.dianmingjilu.DianMingJiLu;
 import com.zhizhao.jwgl.jiaowuguanli.domain.jiaofeijilu.JiaoFeiJiLu;
 import com.zhizhao.jwgl.jiaowuguanli.domain.jiaofeijilu.JiaoFeiLiShi;
 import com.zhizhao.jwgl.jiaowuguanli.domain.kecheng.XueYuanKeCheng;
@@ -43,6 +46,12 @@ public class CombinServiceImp implements CombineService {
     @Autowired
     JiaoFeiJiLuService jiaoFeiJiLuService;
 
+    @Autowired
+    DianMingJiLuService dianMingJiLuService;
+
+    @Autowired
+    BuKeJiLuService buKeJiLuService;
+
     /**
      * 创建班级排课信息
      * @param cmd
@@ -69,6 +78,7 @@ public class CombinServiceImp implements CombineService {
             ShangKeXueYuan shangKeXueYuan = new ShangKeXueYuan();
             shangKeXueYuan.setXueYuanId(banJiXuYuan.getXueYuanId());
             shangKeXueYuan.setShangKeXueYuanLeiXing(ShangKeXueYuanLeiXing.BEN_BAN);
+            shangKeXueYuan.setIsDeleted(false);
             shangKeXueYuanSet.add(shangKeXueYuan);
         }
         // 默认授课课时
@@ -508,5 +518,185 @@ public class CombinServiceImp implements CombineService {
         }
 
         xueYuanKeChengService.saveAllXueYuanKeCheng(xueYuanKeChengList);
+    }
+
+    /**
+     * 排课记录点名
+     *
+     * @param dtoPaiKeJiLu 排课记录点名信息
+     */
+    @Transactional
+    @Override
+    public void paiKeJiLuDianMing(DtoPaiKeJiLu dtoPaiKeJiLu) {
+        Long paiKeJiLuId = dtoPaiKeJiLu.getId();
+        if(paiKeJiLuId == null) {
+            throw new BusinessException("请指定要点名的排课记录");
+        }
+        // 当前排课记录
+        PaiKeJiLu paiKeJiLu = paiKeJiLuService.getPaiKeJiLuById(paiKeJiLuId);
+        if(paiKeJiLu == null) {
+            throw new BusinessException("对应排课记录未找到");
+        }
+
+        // 点名时间，取当前时间
+        Date date = new Date();
+        Long nowMilli = date.getTime();
+        dtoPaiKeJiLu.setDianMingShiJian(nowMilli);
+
+        // 更新排课记录
+        Set<DtoShangKeXueYuan> dtoShangKeXueYuanSet = dtoPaiKeJiLu.getShangKeXueYuanZu();
+        Set<ShangKeXueYuan> shangKeXueYuanSet = paiKeJiLu.getShangKeXueYuanZu();
+        for (DtoShangKeXueYuan dtoShangKeXueYuan : dtoShangKeXueYuanSet) {
+             Optional<ShangKeXueYuan> optionalShangKeXueYuan = shangKeXueYuanSet.stream().filter(a -> a.getXueYuanId().equals(dtoShangKeXueYuan.getXueYuanId())).findAny();
+             // 如果当前排课记录中未找到该上课学员（前端添加的临时学员或补课学员）
+             if(!optionalShangKeXueYuan.isPresent()) {
+                 PaiKeJiLu.TianJiaShangKeXueYuanCmd tianJiaShangKeXueYuanCmd = new PaiKeJiLu.TianJiaShangKeXueYuanCmd();
+                 tianJiaShangKeXueYuanCmd.setXueYuanId(dtoShangKeXueYuan.getXueYuanId());
+                 tianJiaShangKeXueYuanCmd.setIsDeleted(false);
+                 tianJiaShangKeXueYuanCmd.setShangKeXueYuanLeiXing(dtoShangKeXueYuan.getShangKeXueYuanLeiXing());
+                 tianJiaShangKeXueYuanCmd.setShiTingJiLuId(dtoShangKeXueYuan.getShiTingJiLuId());
+                 tianJiaShangKeXueYuanCmd.setBuKeJiLuId(dtoShangKeXueYuan.getBuKeJiLuId());
+                 // 添加学员
+                 paiKeJiLu.tianJiaShangKeXueYuan(tianJiaShangKeXueYuanCmd);
+             }
+        }
+        // 基本信息
+        PaiKeJiLu.GengXinJiBenXinXiCmd gengXinJiBenXinXiCmd = new PaiKeJiLu.GengXinJiBenXinXiCmd();
+        // 上课日期
+        gengXinJiBenXinXiCmd.setShangKeRiQi(dtoPaiKeJiLu.getShangKeRiQi());
+        // 上课老师
+        gengXinJiBenXinXiCmd.setShangKeLaoShiId(dtoPaiKeJiLu.getShangKeLaoShiId());
+        // 上课教室
+        gengXinJiBenXinXiCmd.setShangKeJiaoShiId(dtoPaiKeJiLu.getShangKeJiaoShiId());
+        // 上课开始时间
+        gengXinJiBenXinXiCmd.setShangKeShiJianStart(dtoPaiKeJiLu.getShangKeShiJianStart());
+        // 上课结束时间
+        gengXinJiBenXinXiCmd.setShangKeShiJianEnd(dtoPaiKeJiLu.getShangKeShiJianEnd());
+        // 授课课时
+        gengXinJiBenXinXiCmd.setShouKeKeShi(dtoPaiKeJiLu.getShouKeKeShi());
+        // 上课内容
+        gengXinJiBenXinXiCmd.setShangKeNeiRong(dtoPaiKeJiLu.getShangKeNeiRong());
+        // 排课记录状态
+        gengXinJiBenXinXiCmd.setPaiKeJiLuZhuangTai(PaiKeJiLuZhuangTai.YI_DIAN_MING);
+        // 点名时间
+        gengXinJiBenXinXiCmd.setDianMingShiJian(dtoPaiKeJiLu.getDianMingShiJian());
+        paiKeJiLu.gengXinJiBenXinXi(gengXinJiBenXinXiCmd);
+        // 更新排课记录 end
+
+        // 班级 - 已授课时
+        Double banJiYiShouKeShi = 0.0;
+
+        for(DtoShangKeXueYuan dtoShangKeXueYuan : dtoShangKeXueYuanSet) {
+            // 上课学员类型
+            ShangKeXueYuanLeiXing shangKeXueYuanLeiXing = dtoShangKeXueYuan.getShangKeXueYuanLeiXing();
+            // 学员到课状态
+            XueYuanDaoKeZhuangTai xueYuanDaoKeZhuangTai = dtoShangKeXueYuan.getXueYuanDaoKeZhuangTai();
+
+            // 点名记录创建
+            DianMingJiLu.ChuangJianCmd dianMingJiLuChuangJianCmd = new DianMingJiLu.ChuangJianCmd();
+            dianMingJiLuChuangJianCmd.setId(SnowflakeIdUtil.nextId());
+            dianMingJiLuChuangJianCmd.setPaiKeJiLuId(dtoPaiKeJiLu.getId());
+            dianMingJiLuChuangJianCmd.setXueYuanId(dtoShangKeXueYuan.getXueYuanId());
+            dianMingJiLuChuangJianCmd.setShangKeXueYuanLeiXing(dtoShangKeXueYuan.getShangKeXueYuanLeiXing());
+            dianMingJiLuChuangJianCmd.setXueYuanDaoKeZhuangTai(dtoShangKeXueYuan.getXueYuanDaoKeZhuangTai());
+            dianMingJiLuChuangJianCmd.setKouChuKeShi(dtoShangKeXueYuan.getKouChuKeShi());
+            dianMingJiLuChuangJianCmd.setBeiZhu(dtoShangKeXueYuan.getBeiZhu());
+
+            if(shangKeXueYuanLeiXing.equals(ShangKeXueYuanLeiXing.SHI_TING)) {
+                // 试听学员
+                // 点名记录 - 课消金额
+                dianMingJiLuChuangJianCmd.setKeXiaoJinE(0.0);
+                // 点名记录 - 课消金额 end
+                //TODO 更新试听记录
+            } else if(shangKeXueYuanLeiXing.equals(ShangKeXueYuanLeiXing.BU_KE)){
+                // 补课学员
+                // 学员课程_更新剩余课时&消课金额
+                XueYuanKeCheng xueYuanKeCheng = xueYuanKeChengService.getXueYuanKeChengByXueYuanIdAndKeChengId(dtoShangKeXueYuan.getXueYuanId(), dtoPaiKeJiLu.getKeChengId());
+                if(xueYuanKeCheng == null) {
+                    throw new BusinessException("学员：" + dtoShangKeXueYuan.getXueYuanXingMing() + ", 未找到当前班级对应的课程");
+                }
+                // 本次课消金额
+                Double keXiaoJinE = 0.0;
+                keXiaoJinE = xueYuanKeCheng.dianMingGengXinShengYuKeShiXiaoKeJinE(dtoShangKeXueYuan.getKouChuKeShi());
+                // 学员课程_更新剩余课时&消课金额 end
+
+                // 点名记录 - 课消金额
+                dianMingJiLuChuangJianCmd.setKeXiaoJinE(keXiaoJinE);
+                // 点名记录 - 课消金额 end
+
+                // 班级已授课时
+                banJiYiShouKeShi += dtoShangKeXueYuan.getKouChuKeShi();
+                // TODO 更新补课记录
+            } else {
+                // 本班学员或临时学员
+                // 学员课程_更新剩余课时&消课金额
+                XueYuanKeCheng xueYuanKeCheng = xueYuanKeChengService.getXueYuanKeChengByXueYuanIdAndKeChengId(dtoShangKeXueYuan.getXueYuanId(), dtoPaiKeJiLu.getKeChengId());
+                if(xueYuanKeCheng == null) {
+                    throw new BusinessException("学员：" + dtoShangKeXueYuan.getXueYuanXingMing() + ", 未找到当前班级对应的课程");
+                }
+                // 本次课消金额
+                Double keXiaoJinE = 0.0;
+                keXiaoJinE = xueYuanKeCheng.dianMingGengXinShengYuKeShiXiaoKeJinE(dtoShangKeXueYuan.getKouChuKeShi());
+                // 学员课程_更新剩余课时&消课金额 end
+
+                // 点名记录 - 课消金额
+                dianMingJiLuChuangJianCmd.setKeXiaoJinE(keXiaoJinE);
+                // 点名记录 - 课消金额 end
+
+                // 班级已授课时
+                banJiYiShouKeShi += dtoShangKeXueYuan.getKouChuKeShi();
+
+                // 创建点名记录
+                DianMingJiLu dianMingJiLu = dianMingJiLuService.chuangJian(dianMingJiLuChuangJianCmd);
+                // 创建点名记录
+
+                // 请假||未到 创建补课记录
+                if(dtoShangKeXueYuan.getXueYuanDaoKeZhuangTai().equals(XueYuanDaoKeZhuangTai.QING_JIA) || dtoShangKeXueYuan.getXueYuanDaoKeZhuangTai().equals(XueYuanDaoKeZhuangTai.WEI_DAO) ) {
+                    BuKeJiLu.ChuangJianCmd buKeJiLuChuangJianCmd = new BuKeJiLu.ChuangJianCmd();
+                    buKeJiLuChuangJianCmd.setId(SnowflakeIdUtil.nextId());
+                    buKeJiLuChuangJianCmd.setXueYuanId(dtoShangKeXueYuan.getXueYuanId());
+                    buKeJiLuChuangJianCmd.setYuanPaiKeJiLuId(dtoPaiKeJiLu.getId());
+                    buKeJiLuChuangJianCmd.setYuanDianMingJiLuId(dianMingJiLu.getId());
+                    buKeJiLuService.chuangJian(buKeJiLuChuangJianCmd);
+                }
+                // 请假||未到 创建补课记录 end
+            }
+        }
+
+        // 更新班级已授课时
+        BanJi banJi = banJiService.getBanJiById(dtoPaiKeJiLu.getBanJiId());
+        if(banJi == null) {
+            throw new BusinessException("对应班级没有找到");
+        }
+        banJi.setYiShouKeShi(banJiYiShouKeShi);
+        // 更新班级已授课时 end
+    }
+
+    /**
+     * 获取课程实际单价
+     * @param xueYuanKeCheng
+     * @return
+     */
+    private Double getXueYuanKeChengDanJia(XueYuanKeCheng xueYuanKeCheng) {
+        // 单价
+        Double danJia = xueYuanKeCheng.getDanJia();
+        // 课程数量
+        Double keChengShuLiang = xueYuanKeCheng.getKeChengShuLiang();
+        // 赠送课时
+        Double zengSongKeShi = xueYuanKeCheng.getZengSongKeShi();
+        // 优惠类型
+        YouHuiLeiXing youHuiLeiXing = xueYuanKeCheng.getYouHuiLeiXing();
+        // 优惠数量
+        Double youHuiShuLiang = xueYuanKeCheng.getYouHuiShuLiang();
+        // 实际单价
+        Double shiJiDanJia = 0.0;
+        if(YouHuiLeiXing.ZHI_JIAN.equals(youHuiLeiXing)) {
+            shiJiDanJia = (danJia * keChengShuLiang - youHuiShuLiang) / keChengShuLiang;
+        } else if (YouHuiLeiXing.ZHE_KOU.equals(youHuiLeiXing)){
+            shiJiDanJia = ((danJia * keChengShuLiang) * (1 - youHuiShuLiang/100)) / keChengShuLiang;
+        } else {
+            throw new BusinessException("未知的优惠类型");
+        }
+        return shiJiDanJia;
     }
 }

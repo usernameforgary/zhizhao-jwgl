@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.XueYuanKeChengMapper">
     <resultMap id="xueYuanKeChengResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanKeCheng">
-        <association property="banJi" column="{banJiId=banJiId, xueYuanId=xueYuanId}" select="getBanJiXinXi"></association>
+        <association property="banJi" column="{banJiId=banJiId, xueYuanId=xueYuanId, keChengId=keChengId}" select="getBanJiXinXi"></association>
     </resultMap>
     <select id="getXueYuanKeChengByXueYuanId" resultMap="xueYuanKeChengResult">
         select
@@ -52,6 +52,7 @@
             on A.ban_ji_fen_lei_id = D.id
         <where>
             A.id = #{banJiId}
+            and A.ke_cheng_id = #{keChengId}
             and B.xue_yuan_id = #{xueYuanId}
             and B.is_deleted = 0
         </where>
