@@ -4,16 +4,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.DianMingJiLuMapper">
     <select id="getDianMingJiLuList" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoDianMingJiLu">
-        select A.id, A.pai_ke_ji_lu_id, A.xue_yuan_id, A.shang_ke_xue_yuan_lei_xing, A.xue_yuan_dao_ke_zhuang_tai, A.kou_chu_ke_shi, A.ke_xiao_jine, A.bei_zhu,
-        B.dian_ming_shi_jian, B.shang_ke_shi_jian_start, B.shang_ke_shi_jian_end, B.shang_ke_lao_shi_id,
-        C.ban_ji_id,
-        D.ming_cheng as banJiMingCheng,
-        E.xing_ming as shangKeLaoShiXingMing
+        select
+            A.id, A.pai_ke_ji_lu_id, A.xue_yuan_id, A.shang_ke_xue_yuan_lei_xing, A.xue_yuan_dao_ke_zhuang_tai, A.kou_chu_ke_shi, A.ke_xiao_jine, A.bei_zhu,
+            B.shang_ke_ri_qi, B.dian_ming_shi_jian, B.shang_ke_shi_jian_start, B.shang_ke_shi_jian_end, B.shang_ke_lao_shi_id,
+            C.ban_ji_id,
+            D.ming_cheng as banJiMingCheng,
+            E.xing_ming as shangKeLaoShiXingMing,
+            F.xing_ming as xueXueYuanXingMing,
+            G.shou_ji,
+            H.ming_cheng as keChengMingCheng
         from dian_ming_ji_lu A
         join pai_ke_ji_lu B on A.pai_ke_ji_lu_id = B.id
         join ban_ji_pai_ke_xin_xi C on B.ban_ji_pai_ke_xin_xi_id = C.id
         join ban_ji D on C.ban_ji_id = D.id
         join lao_shi E on B.shang_ke_lao_shi_id = E.id
+        join xue_yuan F on A.xue_yuan_id = F.id
+        join zhang_hao G on F.zhang_hao_id = G.id
+        join ke_cheng H on D.ke_cheng_id = H.id
+        left join cheng_zhang_ji_lu I on I.pai_ke_ji_lu_id = B.id and I.xue_yuan_id = A.xue_yuan_id and I.cheng_zhang_ji_lu_lei_xing = 'KE_HOU_DIAN_PING'
         <where>
             A.is_deleted = 0
             <if test="xueYuanId!=null">

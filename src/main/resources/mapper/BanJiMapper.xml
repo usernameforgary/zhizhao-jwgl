@@ -150,4 +150,12 @@
         </where>
     </select>
     <!-- 根据学员id，获取班级列表 end -->
+
+    <!-- 获取所有班级 -->
+    <select id="huoQuBanJiAll" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoBanJi">
+        select A.id, A.ming_cheng
+        from ban_ji A
+        order by A.update_time desc
+    </select>
+    <!-- 获取所有班级 end-->
 </mapper>

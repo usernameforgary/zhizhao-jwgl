@@ -67,7 +67,9 @@ enum class YouHuiLeiXing {
 enum class PaiKeJiLuZhuangTai {
     DAI_DIAN_MING,
     // 查询班级列表的，【已上/排课课次】时，会用到 YI_DIAN_MING这个状态
-    YI_DIAN_MING
+    YI_DIAN_MING,
+    // 已点评
+    YI_DIAN_PING
 }
 
 // 排课记录里，上课学员的类型
@@ -177,4 +179,20 @@ enum class ShiTingZhuangTai {
     YI_TI_YAN,
     YI_BAO_MING,
     YI_QU_XIAO
+}
+
+/**
+ * 成长记录类型
+ * KE_HOU_DIAN_PING： 课后点评
+ * HUO_LI_KE_TANG：活力课堂
+ * XUE_YUAN_FENG_CAI：学员风采
+ * ZUO_PIN_ZHAN_SHI：作品展示
+ * SHENG_HUO_JI_LU：生活记录
+ */
+enum class ChengZhangJiLuLeiXing {
+    KE_HOU_DIAN_PING,
+    HUO_LI_KE_TANG,
+    XUE_YUAN_FENG_CAI,
+    ZUO_PIN_ZHAN_SHI,
+    SHENG_HUO_JI_LU
 }

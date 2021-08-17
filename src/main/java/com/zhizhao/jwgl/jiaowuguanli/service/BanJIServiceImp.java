@@ -145,4 +145,15 @@ public class BanJIServiceImp implements BanJiService{
         List<DtoBanJi> dtoBanJiList = banJiMapper.huoQuBanJiByXueYuanId(xueYuanId);
         return dtoBanJiList;
     }
+
+    /**
+     * 获取所有班级
+     *
+     * @return
+     */
+    @Override
+    public List<DtoBanJi> huoQuBanJiAll() {
+        List<DtoBanJi> dtoBanJiList = banJiMapper.huoQuBanJiAll();
+        return dtoBanJiList;
+    }
 }

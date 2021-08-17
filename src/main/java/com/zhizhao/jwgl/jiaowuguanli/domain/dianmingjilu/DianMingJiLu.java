@@ -32,9 +32,11 @@ public class DianMingJiLu extends AggRoot {
     Long id;
 
     // 排课记录Id
+    @NotNull
     Long paiKeJiLuId;
 
     // 学员Id
+    @NotNull
     Long xueYuanId;
 
     // 上课学员类型

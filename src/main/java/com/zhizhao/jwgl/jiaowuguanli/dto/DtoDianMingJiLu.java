@@ -42,6 +42,8 @@ public class DtoDianMingJiLu {
     String banJiMingCheng;
     // 班级Id
     Long banJiId;
+    // 上课日期
+    Long shangKeRiQi;
     // 上课开始时间
     Long shangKeShiJianStart;
     // 上课结束时间
@@ -50,4 +52,12 @@ public class DtoDianMingJiLu {
     Long shangKeLaoShiId;
     // 上课老师姓名
     String shangKeLaoShiXingMing;
+    // 学员姓名
+    String xueXueYuanXingMing;
+    // 联系电话
+    String shouJi;
+    // 课程名称
+    String keChengMingCheng;
+    // 点评内容
+    String dianPingNeiRong;
 }

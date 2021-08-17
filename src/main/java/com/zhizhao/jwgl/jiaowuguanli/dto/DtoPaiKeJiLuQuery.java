@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 排课记录查询参数Dto
  */
@@ -23,5 +25,5 @@ public class DtoPaiKeJiLuQuery {
     // 上课老师Id
     Long shangKeLaoShiId;
     // 点名状态
-    PaiKeJiLuZhuangTai paiKeJiLuZhuangTai;
+    List<PaiKeJiLuZhuangTai> paiKeJiLuZhuangTaiZu;
 }

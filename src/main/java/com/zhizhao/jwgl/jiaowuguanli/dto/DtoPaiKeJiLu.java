@@ -51,6 +51,10 @@ public class DtoPaiKeJiLu {
     Long dianMingShiJian;
     // 班级所属课程id
     Long keChengId;
+    // 课程名称
+    String keChengMingCheng;
     // 班级Id
     Long banJiId;
+    // 班级名称
+    String banJiMingCheng;
 }

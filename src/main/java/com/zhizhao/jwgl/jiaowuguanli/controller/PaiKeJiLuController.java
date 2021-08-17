@@ -9,6 +9,8 @@ import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("paikejilu")
 public class PaiKeJiLuController {
@@ -24,7 +26,7 @@ public class PaiKeJiLuController {
      * @param shangKeRiQiEnd 上课日期 结束
      * @param banJiId 班级Id
      * @param shangKeLaoShiId 上课老师Id
-     * @param paiKeJiLuZhuangTai 排课记录状态（待点名 | 已点名）
+     * @param paiKeJiLuZhuangTaiZu 排课记录状态列表（[待点名 | 已点名 | 已点评]）
      * @return
      */
     @GetMapping("huoQuPaiKeJiLu")
@@ -34,7 +36,7 @@ public class PaiKeJiLuController {
                                    @RequestParam(required = false) Long shangKeRiQiEnd,
                                    @RequestParam(required = false) Long banJiId,
                                    @RequestParam(required = false) Long shangKeLaoShiId,
-                                   @RequestParam(required = false) PaiKeJiLuZhuangTai paiKeJiLuZhuangTai) {
+                                   @RequestParam(required = false) List<PaiKeJiLuZhuangTai> paiKeJiLuZhuangTaiZu) {
         DtoPaiKeJiLuQuery dtoPaiKeJiLuQuery = new DtoPaiKeJiLuQuery();
         dtoPaiKeJiLuQuery.setPageNum(pageNum);
         dtoPaiKeJiLuQuery.setPageSize(pageSize);
@@ -42,7 +44,7 @@ public class PaiKeJiLuController {
         dtoPaiKeJiLuQuery.setShangKeRiQiEnd(shangKeRiQiEnd);
         dtoPaiKeJiLuQuery.setBanJiId(banJiId);
         dtoPaiKeJiLuQuery.setShangKeLaoShiId(shangKeLaoShiId);
-        dtoPaiKeJiLuQuery.setPaiKeJiLuZhuangTai(paiKeJiLuZhuangTai);
+        dtoPaiKeJiLuQuery.setPaiKeJiLuZhuangTaiZu(paiKeJiLuZhuangTaiZu);
 
         DtoPageResult<DtoPaiKeJiLu> dtoPageResult =  paiKeJiLuService.getPaiKeJiLuList(dtoPaiKeJiLuQuery);
         return PPResult.getPPResultOK(dtoPageResult);

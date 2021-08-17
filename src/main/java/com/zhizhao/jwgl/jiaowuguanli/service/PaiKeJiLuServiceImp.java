@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -57,13 +58,16 @@ public class PaiKeJiLuServiceImp implements PaiKeJiLuService{
     @Override
     public DtoPageResult<DtoPaiKeJiLu> getPaiKeJiLuList(DtoPaiKeJiLuQuery dtoPaiKeJiLuQuery) {
         Page<DtoPaiKeJiLu> page = new Page<>(dtoPaiKeJiLuQuery.getPageNum(), dtoPaiKeJiLuQuery.getPageSize());
-        String paiKeJiLuZhuangTaiStr = null;
-        if(dtoPaiKeJiLuQuery.getPaiKeJiLuZhuangTai() != null) {
-            paiKeJiLuZhuangTaiStr = dtoPaiKeJiLuQuery.getPaiKeJiLuZhuangTai().toString();
+        List<String> paiKeJiLuZhuangTaiZu = new ArrayList<>();
+        if(dtoPaiKeJiLuQuery.getPaiKeJiLuZhuangTaiZu() != null && dtoPaiKeJiLuQuery.getPaiKeJiLuZhuangTaiZu().size() > 0) {
+            for(PaiKeJiLuZhuangTai paiKeJiLuZhuangTai : dtoPaiKeJiLuQuery.getPaiKeJiLuZhuangTaiZu()) {
+                String paiKeJiLuZhuangTaiStr = paiKeJiLuZhuangTai.toString();
+                paiKeJiLuZhuangTaiZu.add(paiKeJiLuZhuangTaiStr);
+            }
         }
         IPage<DtoPaiKeJiLu> paiKeJiLuPageResult = paiKeJiLuMapper.getPaiKeJiLuList(
                 page,
-                paiKeJiLuZhuangTaiStr,
+                paiKeJiLuZhuangTaiZu,
                 dtoPaiKeJiLuQuery.getShangKeRiQiBegin(),
                 dtoPaiKeJiLuQuery.getShangKeRiQiEnd(),
                 dtoPaiKeJiLuQuery.getBanJiId(),

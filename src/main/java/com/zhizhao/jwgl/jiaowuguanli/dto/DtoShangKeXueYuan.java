@@ -6,9 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
-
 /**
  * 排课记录，上课学员Dto
  */
@@ -35,6 +32,8 @@ public class DtoShangKeXueYuan {
 
     // 扣除课时
     Double kouChuKeShi;
+    // 课消金额
+    Double keXiaoJinE;
     // 备注
     String beiZhu;
     // 剩余课时
