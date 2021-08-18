@@ -1,11 +1,9 @@
 package com.zhizhao.jwgl.jiaowuguanli.controller;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.JiaoFeiJiLuZhuangTai;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.PaiKeJiLuZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.BanJiPaiKeXinXi;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPaiKeJiLu;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoTianJiaYuanGong;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanBaoMing;
+import com.zhizhao.jwgl.jiaowuguanli.dto.*;
 import com.zhizhao.jwgl.jiaowuguanli.service.CombineService;
 import com.zhizhao.jwgl.jiaowuguanli.service.YuanGongService;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -98,6 +97,63 @@ public class CombineController {
     @PostMapping("paiKeJiLuDianMing")
     public PPResult paiKeJiLuDianMing(@RequestBody DtoPaiKeJiLu dtoPaiKeJiLu) {
         combineService.paiKeJiLuDianMing(dtoPaiKeJiLu);
+        return PPResult.Ok();
+    }
+
+    /**
+     * 导出班级排课记录
+     * @param shangKeRiQiBegin 上课日期 开始
+     * @param shangKeRiQiEnd 上课日期 结束
+     * @param banJiId 班级Id
+     * @param shangKeLaoShiId 上课老师Id
+     * @param paiKeJiLuZhuangTaiZu 排课记录状态列表（[待点名 | 已点名 | 已点评]）
+     * @return
+     */
+    @GetMapping("daoChuBanJiPaiKeJiLu")
+    public PPResult daoChuBanJiPaiKeJiLu(@RequestParam(required = false) Long shangKeRiQiBegin,
+                                         @RequestParam(required = false) Long shangKeRiQiEnd,
+                                         @RequestParam(required = false) Long banJiId,
+                                         @RequestParam(required = false) Long shangKeLaoShiId,
+                                         @RequestParam(required = false) List<PaiKeJiLuZhuangTai> paiKeJiLuZhuangTaiZu) {
+        DtoPaiKeJiLuQuery dtoPaiKeJiLuQuery = new DtoPaiKeJiLuQuery();
+
+        dtoPaiKeJiLuQuery.setShangKeRiQiBegin(shangKeRiQiBegin);
+        dtoPaiKeJiLuQuery.setShangKeRiQiEnd(shangKeRiQiEnd);
+        dtoPaiKeJiLuQuery.setBanJiId(banJiId);
+        dtoPaiKeJiLuQuery.setShangKeLaoShiId(shangKeLaoShiId);
+        dtoPaiKeJiLuQuery.setPaiKeJiLuZhuangTaiZu(paiKeJiLuZhuangTaiZu);
+
+        combineService.daoChuPaiKeJiLu(dtoPaiKeJiLuQuery);
+        return PPResult.Ok();
+    }
+
+
+    /**
+     * 导出学员点名记录
+     * @param xueYuanId 学员Id
+     * @param shangKeRiQiBegin
+     * @param shangKeRiQiEnd
+     * @param banJiId
+     * @param shangKeLaoShiId
+     * @return
+     */
+    @GetMapping("daoChuXueYuanDianMingJiLu")
+    public PPResult daoChuXueYuanDianMingJiLu(@RequestParam(required = false) Long xueYuanId,
+                                             @RequestParam(required = false) Long shangKeRiQiBegin,
+                                             @RequestParam(required = false) Long shangKeRiQiEnd,
+                                             @RequestParam(required = false) Long banJiId,
+                                             @RequestParam(required = false) Long shangKeLaoShiId
+    ) {
+        DtoDianMingJiLuQuery dianMingJiLuQuery = new DtoDianMingJiLuQuery();
+
+        dianMingJiLuQuery.setXueYuanId(xueYuanId);
+        dianMingJiLuQuery.setShangKeRiQiBegin(shangKeRiQiBegin);
+        dianMingJiLuQuery.setShangKeRiQiEnd(shangKeRiQiEnd);
+        dianMingJiLuQuery.setBanJiId(banJiId);
+        dianMingJiLuQuery.setShangKeLaoShiId(shangKeLaoShiId);
+
+        combineService.daoChuXueYuanDianMingJiLu(dianMingJiLuQuery);
+
         return PPResult.Ok();
     }
 }

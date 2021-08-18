@@ -60,4 +60,6 @@ public class DtoDianMingJiLu {
     String keChengMingCheng;
     // 点评内容
     String dianPingNeiRong;
+    // 上课内容
+    String shangKeNeiRong;
 }

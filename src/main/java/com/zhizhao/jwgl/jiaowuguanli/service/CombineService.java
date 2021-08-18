@@ -2,9 +2,7 @@ package com.zhizhao.jwgl.jiaowuguanli.service;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.JiaoFeiJiLuZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.BanJiPaiKeXinXi;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPaiKeJiLu;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanBaoMing;
+import com.zhizhao.jwgl.jiaowuguanli.dto.*;
 
 public interface CombineService {
     /**
@@ -46,4 +44,17 @@ public interface CombineService {
      * @param dtoPaiKeJiLu 排课记录点名信息
      */
     void paiKeJiLuDianMing(DtoPaiKeJiLu dtoPaiKeJiLu);
+
+    /**
+     * 导出排课记录
+     * @param dtoPaiKeJiLuQuery
+     */
+    void daoChuPaiKeJiLu(DtoPaiKeJiLuQuery dtoPaiKeJiLuQuery);
+
+    /**
+     * 导出学员点名记录
+     * @param dtoDianMingJiLuQuery
+     * @return
+     */
+    void daoChuXueYuanDianMingJiLu(DtoDianMingJiLuQuery dtoDianMingJiLuQuery);
 }

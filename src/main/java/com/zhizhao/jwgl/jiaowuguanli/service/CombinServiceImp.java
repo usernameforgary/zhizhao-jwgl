@@ -1,11 +1,13 @@
 package com.zhizhao.jwgl.jiaowuguanli.service;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.Week;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJi;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.bukejilu.BuKeJiLu;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.*;
 import com.zhizhao.jwgl.jiaowuguanli.domain.dianmingjilu.DianMingJiLu;
+import com.zhizhao.jwgl.jiaowuguanli.domain.downloaduploadfile.DownloadUploadFile;
 import com.zhizhao.jwgl.jiaowuguanli.domain.jiaofeijilu.JiaoFeiJiLu;
 import com.zhizhao.jwgl.jiaowuguanli.domain.jiaofeijilu.JiaoFeiLiShi;
 import com.zhizhao.jwgl.jiaowuguanli.domain.kecheng.XueYuanKeCheng;
@@ -14,14 +16,24 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
 import com.zhizhao.jwgl.jiaowuguanli.dto.*;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
+import com.zhizhao.jwgl.jiaowuguanli.service.oss.OSSUtil;
+import com.zhizhao.jwgl.jiaowuguanli.service.oss.aliyun.OSSHelper;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import com.zhizhao.jwgl.jiaowuguanli.utils.MyDateUtil;
 import com.zhizhao.jwgl.jiaowuguanli.utils.SnowflakeIdUtil;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CombinServiceImp implements CombineService {
@@ -51,6 +63,12 @@ public class CombinServiceImp implements CombineService {
 
     @Autowired
     BuKeJiLuService buKeJiLuService;
+
+    @Autowired
+    DownloadUploadFileService downloadUploadFileService;
+
+    @Autowired
+    OSSHelper ossHelper;
 
     /**
      * 创建班级排课信息
@@ -698,5 +716,315 @@ public class CombinServiceImp implements CombineService {
             throw new BusinessException("未知的优惠类型");
         }
         return shiJiDanJia;
+    }
+
+
+    /**
+     * 导出排课记录
+     *
+     * @param dtoPaiKeJiLuQuery
+     */
+    @Transactional
+    @Override
+    public void daoChuPaiKeJiLu(DtoPaiKeJiLuQuery dtoPaiKeJiLuQuery) {
+        // pageSize设置为-1时，mybatis plus不分页
+        dtoPaiKeJiLuQuery.setPageNum(1);
+        dtoPaiKeJiLuQuery.setPageSize(-1);
+
+        DtoPageResult<DtoPaiKeJiLu> paiKeJiLuPageResult = paiKeJiLuService.getPaiKeJiLuList(dtoPaiKeJiLuQuery);
+        List<DtoPaiKeJiLu> paiKeJiLuList = paiKeJiLuPageResult.getRecords();
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("上课记录");
+        sheet.setDefaultRowHeightInPoints(25);
+
+        CellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setFillPattern(FillPatternType.NO_FILL);
+
+        XSSFFont font = ((XSSFWorkbook) workbook).createFont();
+        font.setFontName("SimSun");
+        font.setFontHeightInPoints((short) 10);
+        font.setBold(true);
+        headerStyle.setFont(font);
+
+        Row header = sheet.createRow(0);
+        // 文件列名
+        String[] titles = {
+                "上课日期","时间段","班级", "课程名称", "老师",
+                "实到/应到", "到课（人）", "请假（人）", "旷课（人）", "迟到（人）",
+                "学员课时","教师课时","学费消耗（元）",
+                "上课内容"
+        };
+        Cell headerCell;
+        for(int i = 0; i < titles.length; i++) {
+            sheet.setColumnWidth(i, 4000);
+            headerCell = header.createCell(i);
+            headerCell.setCellValue(titles[i]);
+            headerCell.setCellStyle(headerStyle);
+        }
+
+        for(int i = 0; i < paiKeJiLuList.size(); i++) {
+            Row dataRow = sheet.createRow(i+1);
+            DtoPaiKeJiLu dtoPaiKeJiLu = paiKeJiLuList.get(i);
+            //"上课日期"
+            Cell dataCell = dataRow.createCell(0);
+            String shangKeRiQiString = cn.hutool.core.date.DateUtil.format(cn.hutool.core.date.DateUtil.date(dtoPaiKeJiLu.getShangKeRiQi()), "yyyy-MM-dd");
+            dataCell.setCellValue(shangKeRiQiString);
+            // "时间段"
+            dataCell = dataRow.createCell(1);
+            String shangKeKaiShiShiJianStr = cn.hutool.core.date.DateUtil.format(cn.hutool.core.date.DateUtil.date(dtoPaiKeJiLu.getShangKeShiJianStart()), "HH:mm");
+            String shangKeJieShuShiJianStr = cn.hutool.core.date.DateUtil.format(cn.hutool.core.date.DateUtil.date(dtoPaiKeJiLu.getShangKeShiJianEnd()), "HH:mm");
+            dataCell.setCellValue(shangKeKaiShiShiJianStr + "-" + shangKeJieShuShiJianStr);
+            // "班级"
+            dataCell = dataRow.createCell(2);
+            dataCell.setCellValue(dtoPaiKeJiLu.getBanJiMingCheng());
+            //"课程名称"
+            dataCell = dataRow.createCell(3);
+            dataCell.setCellValue(dtoPaiKeJiLu.getKeChengMingCheng());
+            // "老师"
+            dataCell = dataRow.createCell(4);
+            dataCell.setCellValue(dtoPaiKeJiLu.getShangKeLaoShiXingMing());
+
+            //到课学员组
+            List<DtoShangKeXueYuan> daoKeXueYuanZu = dtoPaiKeJiLu.getShangKeXueYuanZu().stream().filter(v -> (XueYuanDaoKeZhuangTai.DAO_KE.equals(v.getXueYuanDaoKeZhuangTai()))).collect(Collectors.toList());
+            List<DtoShangKeXueYuan> chiDaoXueYuanZu = dtoPaiKeJiLu.getShangKeXueYuanZu().stream().filter(v -> (XueYuanDaoKeZhuangTai.CHI_DAO.equals(v.getXueYuanDaoKeZhuangTai()))).collect(Collectors.toList());
+            List<DtoShangKeXueYuan> weiDaoXueYuanZu = dtoPaiKeJiLu.getShangKeXueYuanZu().stream().filter(v -> (XueYuanDaoKeZhuangTai.WEI_DAO.equals(v.getXueYuanDaoKeZhuangTai()))).collect(Collectors.toList());
+            List<DtoShangKeXueYuan> qingJiaXueYuanZu = dtoPaiKeJiLu.getShangKeXueYuanZu().stream().filter(v -> (XueYuanDaoKeZhuangTai.QING_JIA.equals(v.getXueYuanDaoKeZhuangTai()))).collect(Collectors.toList());
+
+            //"实到/应到"
+            dataCell = dataRow.createCell(5);
+            dataCell.setCellValue(daoKeXueYuanZu.size() + chiDaoXueYuanZu.size() + "/" + dtoPaiKeJiLu.getShangKeXueYuanZu().size());
+            // "到课（人）"
+            dataCell = dataRow.createCell(6);
+            dataCell.setCellValue(daoKeXueYuanZu.size());
+            // "请假（人）"
+            dataCell = dataRow.createCell(7);
+            dataCell.setCellValue(qingJiaXueYuanZu.size());
+            // "旷课（人）"
+            dataCell = dataRow.createCell(8);
+            dataCell.setCellValue(weiDaoXueYuanZu.size());
+            // "迟到（人）"
+            dataCell = dataRow.createCell(9);
+            dataCell.setCellValue(chiDaoXueYuanZu.size());
+            // "学员课时"
+            dataCell = dataRow.createCell(10);
+            dataCell.setCellValue(dtoPaiKeJiLu.getShangKeXueYuanZu().stream().mapToDouble(v -> v.getKouChuKeShi()).sum());
+            // "教师课时"
+            dataCell = dataRow.createCell(11);
+            dataCell.setCellValue(dtoPaiKeJiLu.getShouKeKeShi());
+            // "学费消耗（元）",
+            dataCell = dataRow.createCell(12);
+            dataCell.setCellValue(dtoPaiKeJiLu.getShangKeXueYuanZu().stream().mapToDouble(v -> v.getKeXiaoJinE()).sum());
+            // "上课内容"
+            dataCell = dataRow.createCell(13);
+            dataCell.setCellValue(dtoPaiKeJiLu.getShangKeNeiRong());
+        }
+        String fileName = "上课记录_";
+        String fileExt = ".xls";
+        if(dtoPaiKeJiLuQuery.getShangKeRiQiBegin() != null) {
+            fileName += "从" + cn.hutool.core.date.DateUtil.format(cn.hutool.core.date.DateUtil.date(dtoPaiKeJiLuQuery.getShangKeRiQiBegin()), "yyyy-MM-dd");
+        }
+        if( dtoPaiKeJiLuQuery.getShangKeRiQiEnd() != null) {
+            fileName += "至" + cn.hutool.core.date.DateUtil.format(DateUtil.date(dtoPaiKeJiLuQuery.getShangKeRiQiEnd()), "yyyy-MM-dd");
+        }
+        if(dtoPaiKeJiLuQuery.getShangKeRiQiBegin() != null || dtoPaiKeJiLuQuery.getShangKeRiQiEnd() != null) {
+        } else {
+            fileName += "全部";
+        }
+        String fileLocation = "/Users/garychen/Desktop/export_excel/" + fileName + fileExt;
+
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(fileLocation);
+        } catch (FileNotFoundException e) {
+            throw new BusinessException("文件路径未找到");
+        }
+        try {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            throw new BusinessException("文件写入失败");
+        }
+        try {
+            workbook.close();
+        } catch (IOException e) {
+            throw new BusinessException("文件关闭失败");
+        }
+
+        // 获取文件大小
+        File fileLocal = new File(fileLocation);
+        Long fileSize = fileLocal.length();
+
+        String ossFileKey = null;
+        try {
+            ossFileKey = OSSUtil.generateFileName(fileExt);
+        } catch (Exception e) {
+            throw new BusinessException("生成OSS文件名失败，" + e.getMessage());
+        }
+
+        try {
+            ossHelper.uploadLocalFile(fileLocal, ossFileKey);
+        } catch (Exception e) {
+            throw new BusinessException("上传文件失败，" + e.getMessage());
+        }
+
+        // 创建下载文件
+        DownloadUploadFile.ChuangJianCmd wenJianChuangJianCmd = new DownloadUploadFile.ChuangJianCmd();
+        Long wenJianId = SnowflakeIdUtil.nextId();
+        wenJianChuangJianCmd.setId(wenJianId);
+        wenJianChuangJianCmd.setMingCheng(fileName);
+        wenJianChuangJianCmd.setHouZhui(fileExt);
+        wenJianChuangJianCmd.setDaXiao(fileSize);
+        wenJianChuangJianCmd.setWenJianFenLei(WenJianFenLei.DOWNLOAD);
+        wenJianChuangJianCmd.setWenJianZhuangTai(WenJianZhuangTai.WEI_XIA_ZAI);
+        wenJianChuangJianCmd.setOssKey(ossFileKey);
+        downloadUploadFileService.chuangJian(wenJianChuangJianCmd);
+        // 创建下载文件 end
+    }
+
+    /**
+     * 导出学员点名记录
+     *
+     * @param dtoDianMingJiLuQuery
+     * @return
+     */
+    @Override
+    public void daoChuXueYuanDianMingJiLu(DtoDianMingJiLuQuery dtoDianMingJiLuQuery) {
+        // pageSize设置为-1时，mybatis plus不分页
+        dtoDianMingJiLuQuery.setPageNum(1);
+        dtoDianMingJiLuQuery.setPageSize(-1);
+        DtoPageResult<DtoDianMingJiLu> dtoPageResult = dianMingJiLuService.huoQuDianMingJiLu(dtoDianMingJiLuQuery);
+        List<DtoDianMingJiLu> dtoDianMingJiLuList = dtoPageResult.getRecords();
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("上课记录");
+        sheet.setDefaultRowHeightInPoints(25);
+
+        CellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setFillPattern(FillPatternType.NO_FILL);
+
+        XSSFFont font = ((XSSFWorkbook) workbook).createFont();
+        font.setFontName("SimSun");
+        font.setFontHeightInPoints((short) 10);
+        font.setBold(true);
+        headerStyle.setFont(font);
+
+        Row header = sheet.createRow(0);
+        // 文件列名
+        String[] titles = {
+                "上课日期","时间段","学员姓名","联系电话","班级", "课程", "到课状态","学员课时","学费消耗（元）", "老师","上课内容","教师留言"
+        };
+        Cell headerCell;
+        for(int i = 0; i < titles.length; i++) {
+            sheet.setColumnWidth(i, 4000);
+            headerCell = header.createCell(i);
+            headerCell.setCellValue(titles[i]);
+            headerCell.setCellStyle(headerStyle);
+        }
+
+        for(int i = 0; i < dtoDianMingJiLuList.size(); i++) {
+            Row dataRow = sheet.createRow(i+1);
+            DtoDianMingJiLu dtoDianMingJiLu = dtoDianMingJiLuList.get(i);
+            //"上课日期"
+            Cell dataCell = dataRow.createCell(0);
+            String shangKeRiQiString = cn.hutool.core.date.DateUtil.format(cn.hutool.core.date.DateUtil.date(dtoDianMingJiLu.getShangKeRiQi()), "yyyy-MM-dd");
+            dataCell.setCellValue(shangKeRiQiString);
+            // "时间段"
+            dataCell = dataRow.createCell(1);
+            String shangKeKaiShiShiJianStr = cn.hutool.core.date.DateUtil.format(cn.hutool.core.date.DateUtil.date(dtoDianMingJiLu.getShangKeShiJianStart()), "HH:mm");
+            String shangKeJieShuShiJianStr = cn.hutool.core.date.DateUtil.format(cn.hutool.core.date.DateUtil.date(dtoDianMingJiLu.getShangKeShiJianEnd()), "HH:mm");
+            dataCell.setCellValue(shangKeKaiShiShiJianStr + "-" + shangKeJieShuShiJianStr);
+            // "学员姓名"
+            dataCell = dataRow.createCell(2);
+            dataCell.setCellValue(dtoDianMingJiLu.getXueXueYuanXingMing());
+            //"联系电话"
+            dataCell = dataRow.createCell(3);
+            dataCell.setCellValue(dtoDianMingJiLu.getShouJi());
+            // "班级"
+            dataCell = dataRow.createCell(4);
+            dataCell.setCellValue(dtoDianMingJiLu.getBanJiMingCheng());
+
+            //"课程"
+            dataCell = dataRow.createCell(5);
+            dataCell.setCellValue(dtoDianMingJiLu.getKeChengMingCheng());
+            // "到课状态"
+            dataCell = dataRow.createCell(6);
+            dataCell.setCellValue(Converter.convertXueYuanDaoKeZhuangTai2String(dtoDianMingJiLu.getXueYuanDaoKeZhuangTai()));
+            // "学员课时"
+            dataCell = dataRow.createCell(7);
+            dataCell.setCellValue(dtoDianMingJiLu.getKouChuKeShi());
+            // "学费消耗（元）"
+            dataCell = dataRow.createCell(8);
+            dataCell.setCellValue(dtoDianMingJiLu.getKeXiaoJinE());
+            // "老师"
+            dataCell = dataRow.createCell(9);
+            dataCell.setCellValue(dtoDianMingJiLu.getShangKeLaoShiXingMing());
+            // "上课内容"
+            dataCell = dataRow.createCell(10);
+            dataCell.setCellValue(dtoDianMingJiLu.getShangKeNeiRong());
+            // "教师留言（点评内容）"
+            dataCell = dataRow.createCell(11);
+            dataCell.setCellValue(dtoDianMingJiLu.getDianPingNeiRong());
+        }
+
+        String fileName = "上课记录_";
+        String fileExt = ".xls";
+        if(dtoDianMingJiLuQuery.getShangKeRiQiBegin() != null) {
+            fileName += "从" + cn.hutool.core.date.DateUtil.format(cn.hutool.core.date.DateUtil.date(dtoDianMingJiLuQuery.getShangKeRiQiBegin()), "yyyy-MM-dd");
+        }
+        if( dtoDianMingJiLuQuery.getShangKeRiQiEnd() != null) {
+            fileName += "至" + cn.hutool.core.date.DateUtil.format(DateUtil.date(dtoDianMingJiLuQuery.getShangKeRiQiEnd()), "yyyy-MM-dd");
+        }
+        if(dtoDianMingJiLuQuery.getShangKeRiQiBegin() != null || dtoDianMingJiLuQuery.getShangKeRiQiEnd() != null) {
+        } else {
+            fileName += "全部";
+        }
+        String fileLocation = "/Users/garychen/Desktop/export_excel/" + fileName + fileExt;
+
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(fileLocation);
+        } catch (FileNotFoundException e) {
+            throw new BusinessException("文件路径未找到");
+        }
+        try {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            throw new BusinessException("文件写入失败");
+        }
+        try {
+            workbook.close();
+        } catch (IOException e) {
+            throw new BusinessException("文件关闭失败");
+        }
+
+        // 获取文件大小
+        File fileLocal = new File(fileLocation);
+        Long fileSize = fileLocal.length();
+
+        String ossFileKey = null;
+        try {
+            ossFileKey = OSSUtil.generateFileName(fileExt);
+        } catch (Exception e) {
+            throw new BusinessException("生成OSS文件名失败，" + e.getMessage());
+        }
+
+        try {
+            ossHelper.uploadLocalFile(fileLocal, ossFileKey);
+        } catch (Exception e) {
+            throw new BusinessException("上传文件失败，" + e.getMessage());
+        }
+
+        // 创建下载文件
+        DownloadUploadFile.ChuangJianCmd wenJianChuangJianCmd = new DownloadUploadFile.ChuangJianCmd();
+        Long wenJianId = SnowflakeIdUtil.nextId();
+        wenJianChuangJianCmd.setId(wenJianId);
+        wenJianChuangJianCmd.setMingCheng(fileName);
+        wenJianChuangJianCmd.setHouZhui(fileExt);
+        wenJianChuangJianCmd.setDaXiao(fileSize);
+        wenJianChuangJianCmd.setWenJianFenLei(WenJianFenLei.DOWNLOAD);
+        wenJianChuangJianCmd.setWenJianZhuangTai(WenJianZhuangTai.WEI_XIA_ZAI);
+        wenJianChuangJianCmd.setOssKey(ossFileKey);
+        downloadUploadFileService.chuangJian(wenJianChuangJianCmd);
+        // 创建下载文件 end
     }
 }

@@ -3,6 +3,7 @@ package com.zhizhao.jwgl.jiaowuguanli.utils;
 import cn.hutool.core.date.Week;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.PaiKeShangKeTian;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanDaoKeZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -91,5 +92,26 @@ public class Converter {
                 break;
         }
         return week;
+    }
+
+    /**
+     * 学员到课状态转换
+     * @param xueYuanDaoKeZhuangTai
+     * @return
+     */
+    public static String convertXueYuanDaoKeZhuangTai2String(XueYuanDaoKeZhuangTai xueYuanDaoKeZhuangTai) {
+        String daoKeZhuangTaiStr = null;
+        if(XueYuanDaoKeZhuangTai.DAO_KE.equals(xueYuanDaoKeZhuangTai)) {
+            daoKeZhuangTaiStr = "到课";
+        } else if(XueYuanDaoKeZhuangTai.CHI_DAO.equals(xueYuanDaoKeZhuangTai)) {
+            daoKeZhuangTaiStr = "迟到";
+        } else if(XueYuanDaoKeZhuangTai.QING_JIA.equals(xueYuanDaoKeZhuangTai)) {
+            daoKeZhuangTaiStr = "请假";
+        } else if(XueYuanDaoKeZhuangTai.WEI_DAO.equals(xueYuanDaoKeZhuangTai)) {
+            daoKeZhuangTaiStr = "旷课";
+        } else {
+            daoKeZhuangTaiStr = "未知";
+        }
+        return daoKeZhuangTaiStr;
     }
 }

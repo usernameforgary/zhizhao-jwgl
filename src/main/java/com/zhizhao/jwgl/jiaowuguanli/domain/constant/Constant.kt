@@ -196,3 +196,19 @@ enum class ChengZhangJiLuLeiXing {
     ZUO_PIN_ZHAN_SHI,
     SHENG_HUO_JI_LU
 }
+
+/**
+ * 上传下载文件分类: 上传 | 下载
+ */
+enum class WenJianFenLei {
+    DOWNLOAD,
+    UPLOAD
+}
+
+/**
+ * 上传下载文件状态: 未下载 | 已下载
+ */
+enum class WenJianZhuangTai {
+    WEI_XIA_ZAI,
+    YI_XIA_ZAI
+}
