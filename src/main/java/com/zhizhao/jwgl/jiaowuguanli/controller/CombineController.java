@@ -102,6 +102,7 @@ public class CombineController {
 
     /**
      * 导出班级排课记录
+     * @param zhangHaoId 操作者系统账号Id
      * @param shangKeRiQiBegin 上课日期 开始
      * @param shangKeRiQiEnd 上课日期 结束
      * @param banJiId 班级Id
@@ -110,13 +111,15 @@ public class CombineController {
      * @return
      */
     @GetMapping("daoChuBanJiPaiKeJiLu")
-    public PPResult daoChuBanJiPaiKeJiLu(@RequestParam(required = false) Long shangKeRiQiBegin,
+    public PPResult daoChuBanJiPaiKeJiLu(@RequestParam Long zhangHaoId,
+                                         @RequestParam(required = false) Long shangKeRiQiBegin,
                                          @RequestParam(required = false) Long shangKeRiQiEnd,
                                          @RequestParam(required = false) Long banJiId,
                                          @RequestParam(required = false) Long shangKeLaoShiId,
                                          @RequestParam(required = false) List<PaiKeJiLuZhuangTai> paiKeJiLuZhuangTaiZu) {
         DtoPaiKeJiLuQuery dtoPaiKeJiLuQuery = new DtoPaiKeJiLuQuery();
 
+        dtoPaiKeJiLuQuery.setZhangHaoId(zhangHaoId);
         dtoPaiKeJiLuQuery.setShangKeRiQiBegin(shangKeRiQiBegin);
         dtoPaiKeJiLuQuery.setShangKeRiQiEnd(shangKeRiQiEnd);
         dtoPaiKeJiLuQuery.setBanJiId(banJiId);
@@ -130,6 +133,7 @@ public class CombineController {
 
     /**
      * 导出学员点名记录
+     * @param zhangHaoId 操作者系统账号Id
      * @param xueYuanId 学员Id
      * @param shangKeRiQiBegin
      * @param shangKeRiQiEnd
@@ -138,9 +142,10 @@ public class CombineController {
      * @return
      */
     @GetMapping("daoChuXueYuanDianMingJiLu")
-    public PPResult daoChuXueYuanDianMingJiLu(@RequestParam(required = false) Long xueYuanId,
-                                             @RequestParam(required = false) Long shangKeRiQiBegin,
-                                             @RequestParam(required = false) Long shangKeRiQiEnd,
+    public PPResult daoChuXueYuanDianMingJiLu(@RequestParam(required = false) Long zhangHaoId,
+                                              @RequestParam(required = false) Long xueYuanId,
+                                              @RequestParam(required = false) Long shangKeRiQiBegin,
+                                              @RequestParam(required = false) Long shangKeRiQiEnd,
                                              @RequestParam(required = false) Long banJiId,
                                              @RequestParam(required = false) Long shangKeLaoShiId
     ) {
@@ -151,6 +156,7 @@ public class CombineController {
         dianMingJiLuQuery.setShangKeRiQiEnd(shangKeRiQiEnd);
         dianMingJiLuQuery.setBanJiId(banJiId);
         dianMingJiLuQuery.setShangKeLaoShiId(shangKeLaoShiId);
+        dianMingJiLuQuery.setZhangHaoId(zhangHaoId);
 
         combineService.daoChuXueYuanDianMingJiLu(dianMingJiLuQuery);
 

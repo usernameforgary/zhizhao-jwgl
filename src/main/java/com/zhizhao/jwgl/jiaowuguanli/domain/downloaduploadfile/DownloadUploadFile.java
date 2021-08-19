@@ -58,10 +58,17 @@ public class DownloadUploadFile extends AggRoot {
     @Enumerated(EnumType.STRING)
     WenJianZhuangTai wenJianZhuangTai;
 
+    // 操作者Id
+    @NotNull
+    Long zhangHaoId;
+
     // 创建
     public static DownloadUploadFile chuangJian(ChuangJianCmd cmd) {
         if(cmd.id == null) {
             throw new BusinessException("请提供文件Id");
+        }
+        if(cmd.zhangHaoId == null) {
+            throw new BusinessException("请提供操作者Id");
         }
         if(cmd.mingCheng == null) {
             throw new BusinessException("文件名称不能为空");
@@ -83,6 +90,7 @@ public class DownloadUploadFile extends AggRoot {
         }
         DownloadUploadFile downloadUploadFile = DownloadUploadFile.builder()
                 .id(cmd.id)
+                .zhangHaoId(cmd.zhangHaoId)
                 .mingCheng(cmd.mingCheng)
                 .ossKey(cmd.ossKey)
                 .houZhui(cmd.houZhui)
@@ -119,6 +127,9 @@ public class DownloadUploadFile extends AggRoot {
         @NotNull
         @Enumerated(EnumType.STRING)
         WenJianZhuangTai wenJianZhuangTai;
+        // 操作者Id
+        @NotNull
+        Long zhangHaoId;
     }
 
     @Override

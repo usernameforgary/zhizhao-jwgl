@@ -871,6 +871,8 @@ public class CombinServiceImp implements CombineService {
         DownloadUploadFile.ChuangJianCmd wenJianChuangJianCmd = new DownloadUploadFile.ChuangJianCmd();
         Long wenJianId = SnowflakeIdUtil.nextId();
         wenJianChuangJianCmd.setId(wenJianId);
+        // 操作者账号Id
+        wenJianChuangJianCmd.setZhangHaoId(dtoPaiKeJiLuQuery.getZhangHaoId());
         wenJianChuangJianCmd.setMingCheng(fileName);
         wenJianChuangJianCmd.setHouZhui(fileExt);
         wenJianChuangJianCmd.setDaXiao(fileSize);
@@ -1018,6 +1020,8 @@ public class CombinServiceImp implements CombineService {
         DownloadUploadFile.ChuangJianCmd wenJianChuangJianCmd = new DownloadUploadFile.ChuangJianCmd();
         Long wenJianId = SnowflakeIdUtil.nextId();
         wenJianChuangJianCmd.setId(wenJianId);
+        // 操作者账号Id
+        wenJianChuangJianCmd.setZhangHaoId(dtoDianMingJiLuQuery.getZhangHaoId());
         wenJianChuangJianCmd.setMingCheng(fileName);
         wenJianChuangJianCmd.setHouZhui(fileExt);
         wenJianChuangJianCmd.setDaXiao(fileSize);

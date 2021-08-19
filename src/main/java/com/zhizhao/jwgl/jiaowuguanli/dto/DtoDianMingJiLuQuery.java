@@ -1,6 +1,5 @@
 package com.zhizhao.jwgl.jiaowuguanli.dto;
 
-import com.zhizhao.jwgl.jiaowuguanli.domain.constant.PaiKeJiLuZhuangTai;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +20,6 @@ public class DtoDianMingJiLuQuery {
     Long shangKeLaoShiId;
     // 学员Id
     Long xueYuanId;
+    // 操作者账号Id
+    Long zhangHaoId;
 }

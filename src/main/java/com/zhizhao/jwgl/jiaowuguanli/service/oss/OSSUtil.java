@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class OSSUtil {
     public static String generateFileName(String ext) throws  Exception {
-        return md5String(UUID.randomUUID() + "-" + OffsetDateTime.now().toInstant().toEpochMilli()) + "." + ext;
+        return md5String(UUID.randomUUID() + "-" + OffsetDateTime.now().toInstant().toEpochMilli()) + ext;
     }
 
     public static String md5String(String str) throws Exception {

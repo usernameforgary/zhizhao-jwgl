@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.DownloadUploadFileMapper">
+
+    <!-- 根据账号Id，文件分类，文件状态获取文件信息 -->
+    <select id="getByZhangHaoIdAndFenLeiAndZhuangTai"
+            resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoDownloadUploadFile">
+        select
+            A.id, A.create_time, A.da_xiao, A.hou_zhui, A.ming_cheng, A.oss_key, A.wen_jian_fen_lei, A.wen_jian_zhuang_tai
+        from download_upload_file A
+        <where>
+            A.zhang_hao_id = #{zhangHaoId}
+            <if test="wenJianFenLei != null">
+                and A.wen_jian_fen_lei = #{wenJianFenLei}
+            </if>
+            <if test="wenJianZhuangTai != null">
+                and A.wen_jian_zhuang_tai = #{wenJianZhuangTai}
+            </if>
+            order by A.create_time desc
+        </where>
+    </select>
+    <!-- 根据账号Id，文件分类，文件状态获取文件信息 end -->
+</mapper>

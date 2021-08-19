@@ -26,4 +26,6 @@ public class DtoPaiKeJiLuQuery {
     Long shangKeLaoShiId;
     // 点名状态
     List<PaiKeJiLuZhuangTai> paiKeJiLuZhuangTaiZu;
+    // 操作者系统账号Id
+    Long zhangHaoId;
 }
