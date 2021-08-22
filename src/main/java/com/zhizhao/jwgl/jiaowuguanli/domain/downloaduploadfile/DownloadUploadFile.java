@@ -44,6 +44,9 @@ public class DownloadUploadFile extends AggRoot {
     @NotNull
     String ossKey;
 
+    // oss的bucket名称 [暂时存下来，可能会用到]
+    String ossBucketName;
+
     // 大小
     @NotNull
     Long daXiao;
@@ -93,6 +96,7 @@ public class DownloadUploadFile extends AggRoot {
                 .zhangHaoId(cmd.zhangHaoId)
                 .mingCheng(cmd.mingCheng)
                 .ossKey(cmd.ossKey)
+                .ossBucketName(cmd.ossBucketName)
                 .houZhui(cmd.houZhui)
                 .daXiao(cmd.daXiao)
                 .wenJianFenLei(cmd.wenJianFenLei)
@@ -116,6 +120,8 @@ public class DownloadUploadFile extends AggRoot {
         // oss上key(文件名)
         @NotNull
         String ossKey;
+        // oss上bucket名称
+        String ossBucketName;
         // 大小
         @NotNull
         Long daXiao;

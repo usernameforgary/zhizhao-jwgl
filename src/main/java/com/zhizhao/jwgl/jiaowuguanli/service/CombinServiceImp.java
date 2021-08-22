@@ -2,6 +2,8 @@ package com.zhizhao.jwgl.jiaowuguanli.service;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.Week;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJi;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.bukejilu.BuKeJiLu;
@@ -17,6 +19,7 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
 import com.zhizhao.jwgl.jiaowuguanli.dto.*;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.service.oss.OSSUtil;
+import com.zhizhao.jwgl.jiaowuguanli.service.oss.aliyun.AliyunOssProperties;
 import com.zhizhao.jwgl.jiaowuguanli.service.oss.aliyun.OSSHelper;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import com.zhizhao.jwgl.jiaowuguanli.utils.MyDateUtil;
@@ -831,11 +834,13 @@ public class CombinServiceImp implements CombineService {
         } else {
             fileName += "全部";
         }
-        String fileLocation = "/Users/garychen/Desktop/export_excel/" + fileName + fileExt;
+
+        String randomFileName = RandomUtil.randomString(16);
+        String tempFilePath = FileUtil.getTmpDirPath() + randomFileName + fileExt;
 
         FileOutputStream outputStream = null;
         try {
-            outputStream = new FileOutputStream(fileLocation);
+            outputStream = new FileOutputStream(tempFilePath);
         } catch (FileNotFoundException e) {
             throw new BusinessException("文件路径未找到");
         }
@@ -851,7 +856,7 @@ public class CombinServiceImp implements CombineService {
         }
 
         // 获取文件大小
-        File fileLocal = new File(fileLocation);
+        File fileLocal = new File(tempFilePath);
         Long fileSize = fileLocal.length();
 
         String ossFileKey = null;
@@ -867,7 +872,10 @@ public class CombinServiceImp implements CombineService {
             throw new BusinessException("上传文件失败，" + e.getMessage());
         }
 
-        // 创建下载文件
+        FileUtil.del(fileLocal);
+
+        AliyunOssProperties ossProperties = ossHelper.getOssProperties();
+        // 创建下载文件记录
         DownloadUploadFile.ChuangJianCmd wenJianChuangJianCmd = new DownloadUploadFile.ChuangJianCmd();
         Long wenJianId = SnowflakeIdUtil.nextId();
         wenJianChuangJianCmd.setId(wenJianId);
@@ -879,6 +887,7 @@ public class CombinServiceImp implements CombineService {
         wenJianChuangJianCmd.setWenJianFenLei(WenJianFenLei.DOWNLOAD);
         wenJianChuangJianCmd.setWenJianZhuangTai(WenJianZhuangTai.WEI_XIA_ZAI);
         wenJianChuangJianCmd.setOssKey(ossFileKey);
+        wenJianChuangJianCmd.setOssBucketName(ossProperties.getBucketPublicName());
         downloadUploadFileService.chuangJian(wenJianChuangJianCmd);
         // 创建下载文件 end
     }
@@ -980,11 +989,15 @@ public class CombinServiceImp implements CombineService {
         } else {
             fileName += "全部";
         }
-        String fileLocation = "/Users/garychen/Desktop/export_excel/" + fileName + fileExt;
+
+        // 随机文件名
+        String randomName = RandomUtil.randomString(16);
+        // 临时文件路径
+        String tempFilePath = FileUtil.getTmpDirPath() + randomName + fileExt;
 
         FileOutputStream outputStream = null;
         try {
-            outputStream = new FileOutputStream(fileLocation);
+            outputStream = new FileOutputStream(tempFilePath);
         } catch (FileNotFoundException e) {
             throw new BusinessException("文件路径未找到");
         }
@@ -1000,7 +1013,7 @@ public class CombinServiceImp implements CombineService {
         }
 
         // 获取文件大小
-        File fileLocal = new File(fileLocation);
+        File fileLocal = new File(tempFilePath);
         Long fileSize = fileLocal.length();
 
         String ossFileKey = null;
@@ -1016,6 +1029,10 @@ public class CombinServiceImp implements CombineService {
             throw new BusinessException("上传文件失败，" + e.getMessage());
         }
 
+        // 删除临时文件
+        FileUtil.del(fileLocal.getAbsolutePath());
+
+        AliyunOssProperties ossProperties = ossHelper.getOssProperties();
         // 创建下载文件
         DownloadUploadFile.ChuangJianCmd wenJianChuangJianCmd = new DownloadUploadFile.ChuangJianCmd();
         Long wenJianId = SnowflakeIdUtil.nextId();
@@ -1028,6 +1045,7 @@ public class CombinServiceImp implements CombineService {
         wenJianChuangJianCmd.setWenJianFenLei(WenJianFenLei.DOWNLOAD);
         wenJianChuangJianCmd.setWenJianZhuangTai(WenJianZhuangTai.WEI_XIA_ZAI);
         wenJianChuangJianCmd.setOssKey(ossFileKey);
+        wenJianChuangJianCmd.setOssBucketName(ossProperties.getBucketPublicName());
         downloadUploadFileService.chuangJian(wenJianChuangJianCmd);
         // 创建下载文件 end
     }

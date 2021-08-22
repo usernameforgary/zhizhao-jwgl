@@ -34,4 +34,11 @@ public interface PaiKeJiLuService {
      * @return
      */
     PaiKeJiLu getPaiKeJiLuById(Long id);
+
+    /**
+     * 根据排课记录Id，查询排课记录，课后点评
+     * @param id
+     * @return
+     */
+    DtoPaiKeJiLu getPaiKeJiLuKeHouDianPingById(Long id);
 }

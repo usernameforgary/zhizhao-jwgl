@@ -69,4 +69,53 @@
             and A.pai_ke_ji_lu_id = #{pai_ke_ji_lu_id}
         </where>
     </select>
+
+    <!-- 根据排课记录Id，查询排课记录，课后点评 -->
+    <resultMap id="paiKeJiLuKeHouDianPingResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoPaiKeJiLu">
+        <!-- 上课学员组 -->
+        <association property="shangKeXueYuanZu" column="{pai_ke_ji_lu_id=id}" select="getShangKeXueYuanZu"/>
+        <!-- 课后点评组 -->
+        <association property="chengZhangJiLuZu" column="{pai_ke_ji_lu_id=id}" select="getPaiKeJiLuShangKeXueYuanKeHouDianPing" />
+    </resultMap>
+    <resultMap id="xueYuanKeHouDianPingResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoChengZhangJiLu">
+        <association property="chengZhangJiLuWenJianZu" column="{chen_zhang_ji_lu_id=id}" select="getChengZhangJiLuWenJian"/>
+    </resultMap>
+    <select id="getPaiKeJiLuKeHouDianPingById" resultMap="paiKeJiLuKeHouDianPingResult">
+        select A.id, A.shang_ke_ri_qi, A.shang_ke_shi_jian_start, A.shang_ke_shi_jian_end, A.shang_ke_lao_shi_id, A.shang_ke_nei_rong, A.pai_ke_ji_lu_zhuang_tai,
+               B.xing_ming as shangKeLaoShiXingMing
+        from pai_ke_ji_lu A
+        join lao_shi B on A.shang_ke_lao_shi_id = B.id
+        <where>
+            A.id = #{id}
+        </where>
+    </select>
+    <select id="getShangKeXueYuanZu" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoShangKeXueYuan">
+        select A.pai_ke_ji_lu_id, A.xue_yuan_id, A.shang_ke_xue_yuan_lei_xing,
+               B.xue_yuan_dao_ke_zhuang_tai,
+               C.xing_ming as xueYuanXingMing, C.tou_xiang
+        from pai_ke_ji_lu_shang_ke_xue_yuan_zu A
+        left join dian_ming_ji_lu B on B.xue_yuan_id = A.xue_yuan_id and B.pai_ke_ji_lu_id = A.pai_ke_ji_lu_id
+        left join xue_yuan C on C.id = A.xue_yuan_id
+        <where>
+            A.pai_ke_ji_lu_id = #{pai_ke_ji_lu_id}
+            and A.is_deleted = 0
+        </where>
+    </select>
+    <select id="getPaiKeJiLuShangKeXueYuanKeHouDianPing" resultMap="xueYuanKeHouDianPingResult">
+        select A.id, A.cheng_zhang_ji_lu_lei_xing, A.jia_zhang_yi_du, A.nei_rong, A.xue_yuan_id, A.pai_ke_ji_lu_id
+        from cheng_zhang_ji_lu A
+        <where>
+            A.pai_ke_ji_lu_id = #{pai_ke_ji_lu_id}
+            and A.cheng_zhang_ji_lu_lei_xing = 'KE_HOU_DIAN_PING'
+        </where>
+    </select>
+    <select id="getChengZhangJiLuWenJian" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoChengZhangJiLuWenJian">
+        select A.cheng_zhang_ji_lu_id, B.id, B.ming_cheng, B.hou_zhui, B.oss_key, B.oss_bucket_name, B.da_xiao
+        from cheng_zhang_ji_lu_cheng_zhang_ji_lu_wen_jian_zu A
+        join cheng_zhang_ji_lu_wen_jian B on A.cheng_zhang_ji_lu_wen_jian_id = B.id and B.is_deleted = 0
+        <where>
+            A.chen_zhang_ji_lu_id = #{chen_zhang_ji_lu_id}
+        </where>
+    </select>
+    <!-- 根据排课记录Id，查询排课记录，课后点评 end -->
 </mapper>

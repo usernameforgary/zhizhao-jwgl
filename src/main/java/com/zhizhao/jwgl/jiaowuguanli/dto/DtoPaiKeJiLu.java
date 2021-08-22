@@ -2,12 +2,10 @@ package com.zhizhao.jwgl.jiaowuguanli.dto;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.PaiKeJiLuZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.PaiKeGuiZe;
-import com.zhizhao.jwgl.jiaowuguanli.domain.paike.ShangKeXueYuan;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.util.Set;
@@ -57,4 +55,6 @@ public class DtoPaiKeJiLu {
     Long banJiId;
     // 班级名称
     String banJiMingCheng;
+    // 成长记录组（其实是当前排课记录，上课学员的，成长记录类型为课后点评[KE_HOU_DIAN_PING]的记录）
+    Set<DtoChengZhangJiLu> chengZhangJiLuZu;
 }

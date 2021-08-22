@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.PaiKeJiLuZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.PaiKeJiLu;
 import com.zhizhao.jwgl.jiaowuguanli.dto.*;
+import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.PaiKeJiLuMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.PaiKeJiLuRepository;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
@@ -85,5 +86,20 @@ public class PaiKeJiLuServiceImp implements PaiKeJiLuService{
     public PaiKeJiLu getPaiKeJiLuById(Long id) {
         PaiKeJiLu paiKeJiLu = paiKeJiLuRepository.getById(id);
         return paiKeJiLu;
+    }
+
+    /**
+     * 根据排课记录Id，查询排课记录，课后点评
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public DtoPaiKeJiLu getPaiKeJiLuKeHouDianPingById(Long id) {
+        if(id == null) {
+            throw new BusinessException("请提供要查询的排课记录");
+        }
+        DtoPaiKeJiLu dtoPaiKeJiLu = paiKeJiLuMapper.getPaiKeJiLuKeHouDianPingById(id);
+        return dtoPaiKeJiLu;
     }
 }

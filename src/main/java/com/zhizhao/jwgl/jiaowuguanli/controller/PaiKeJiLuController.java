@@ -49,4 +49,15 @@ public class PaiKeJiLuController {
         DtoPageResult<DtoPaiKeJiLu> dtoPageResult =  paiKeJiLuService.getPaiKeJiLuList(dtoPaiKeJiLuQuery);
         return PPResult.getPPResultOK(dtoPageResult);
     }
+
+    /**
+     * 根据排课记录Id，查询排课记录，课后点评
+     * @param id
+     * @return
+     */
+    @GetMapping("huoQuPaiKeJiLuKeHouDianPingById")
+    public PPResult huoQuPaiKeJiLuKeHouDianPingById(@RequestParam Long id) {
+        DtoPaiKeJiLu dtoPaiKeJiLu = paiKeJiLuService.getPaiKeJiLuKeHouDianPingById(id);
+        return PPResult.getPPResultOK(dtoPaiKeJiLu);
+    }
 }

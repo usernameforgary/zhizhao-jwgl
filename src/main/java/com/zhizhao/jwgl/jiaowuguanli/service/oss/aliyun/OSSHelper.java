@@ -73,11 +73,20 @@ public class OSSHelper {
         ossClient.shutdown();
     }
 
+    /**
+     * 返回OSS配置信息
+     * @return
+     */
+    public AliyunOssProperties getOssProperties() {
+        return aliyunOssProperties;
+    }
+
     //TODO 临时用公共的
     public String getFileUrl(String bucketFileKey) {
         return aliyunOssProperties.getBucketPublicDomain() + bucketFileKey;
     }
 
+    //TODO 获取bucket上文件的有过期信息的url，暂时未调通
     public String getBucketFileUrl(String bucketFileKey) {
         String accessKeyId = aliyunOssProperties.getAccessKeyID();
         String accessKeySecret = aliyunOssProperties.getAccessKeySecret();

@@ -6,9 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -27,7 +25,6 @@ public class ChengZhangJiLuWenJian extends AggRoot {
     Long id;
 
     // 名称
-    @NotNull
     String mingCheng;
 
     // 后缀
@@ -37,6 +34,9 @@ public class ChengZhangJiLuWenJian extends AggRoot {
     // oss上key
     @NotNull
     String ossKey;
+
+    // oss的bucket名称
+    String ossBucketName;
 
     // 大小
     @NotNull

@@ -18,4 +18,12 @@ public interface PaiKeJiLuMapper extends MyBaseMapper<PaiKeJiLu> {
      * @return
      */
     IPage<DtoPaiKeJiLu> getPaiKeJiLuList(IPage page, List<String> paiKeJiLuZhuangTaiZu, Long shangKeRiQiBegin, Long shangKeRiQiEnd, Long banJiId, Long shangKeLaoShiId);
+
+    /**
+     * 根据排课记录Id，查询排课记录，课后点评
+     *
+     * @param id
+     * @return
+     */
+    DtoPaiKeJiLu getPaiKeJiLuKeHouDianPingById(Long id);
 }
