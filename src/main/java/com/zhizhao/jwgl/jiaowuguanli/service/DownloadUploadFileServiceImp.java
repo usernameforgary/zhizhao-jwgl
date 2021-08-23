@@ -6,10 +6,12 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.constant.WenJianFenLei;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.WenJianZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.downloaduploadfile.DownloadUploadFile;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoDownloadUploadFile;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoOssSignature;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.DownloadUploadFileMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.DownLoadUploadFileRepository;
+import com.zhizhao.jwgl.jiaowuguanli.service.oss.OSSUtil;
 import com.zhizhao.jwgl.jiaowuguanli.service.oss.aliyun.OSSHelper;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -105,13 +109,13 @@ public class DownloadUploadFileServiceImp implements DownloadUploadFileService {
         downloadUploadFile.setWenJianZhuangTai(WenJianZhuangTai.YI_XIA_ZAI);
         String fileName = downloadUploadFile.getMingCheng();
         String ossFileKey = downloadUploadFile.getOssKey();
-        String fileUrl = ossHelper.getFileUrl(ossFileKey);
 
+        URL url = ossHelper.getObjectDownloadUrl(ossFileKey);
+        if(url == null) {
+            throw new BusinessException("获取下载文件失败");
+        }
 
-        // 下载文件到本地
-        //ossHelper.downloadFileToLocal(fileLocalPath, ossFileKey);
-        //TODO
-        // String fileUrl = ossHelper.getBucketFileUrl(ossFileKey);
+        String fileUrl = url.toString();
         return fileUrl;
     }
 
@@ -128,5 +132,23 @@ public class DownloadUploadFileServiceImp implements DownloadUploadFileService {
         } catch (MalformedURLException ex) {
             throw new BusinessException("未找到下载文件");
         }
+    }
+
+    /**
+     * 根据文件名，获取文件上传到oss需要用到的签名信息
+     * @return
+     */
+    @Override
+    public DtoOssSignature huoQuWenJianShangChuanXinXi(String fileName) {
+        // 获取文件后缀名
+        String houZhui = fileName.substring(fileName.lastIndexOf("."));
+        String ossFileName = null;
+        try {
+            ossFileName = OSSUtil.generateFileName(houZhui);
+        } catch (Exception e) {
+            throw new BusinessException("生成oss文件名失败");
+        }
+
+        return ossHelper.getPutObjectUrlPolicy(ossFileName);
     }
 }

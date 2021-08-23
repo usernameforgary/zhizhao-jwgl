@@ -9,6 +9,7 @@ import com.zhizhao.jwgl.jiaowuguanli.dto.*;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.PaiKeJiLuMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.PaiKeJiLuRepository;
+import com.zhizhao.jwgl.jiaowuguanli.service.oss.aliyun.OSSHelper;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PaiKeJiLuServiceImp implements PaiKeJiLuService{
@@ -26,6 +28,9 @@ public class PaiKeJiLuServiceImp implements PaiKeJiLuService{
 
     @Resource
     PaiKeJiLuMapper paiKeJiLuMapper;
+
+    @Autowired
+    OSSHelper ossHelper;
 
     @Transactional
     @Override
@@ -100,6 +105,15 @@ public class PaiKeJiLuServiceImp implements PaiKeJiLuService{
             throw new BusinessException("请提供要查询的排课记录");
         }
         DtoPaiKeJiLu dtoPaiKeJiLu = paiKeJiLuMapper.getPaiKeJiLuKeHouDianPingById(id);
+        // 处理课后点评文件组，添加url
+        Set<DtoChengZhangJiLu> dtoChengZhangJiLuSet = dtoPaiKeJiLu.getChengZhangJiLuZu();
+        String ossPublicDomain = ossHelper.getOssProperties().getBucketPublicDomain();
+        for(DtoChengZhangJiLu dtoChengZhangJiLu: dtoChengZhangJiLuSet) {
+            Set<DtoChengZhangJiLuWenJian> dtoChengZhangJiLuWenJianSet = dtoChengZhangJiLu.getChengZhangJiLuWenJianZu();
+            for(DtoChengZhangJiLuWenJian dtoChengZhangJiLuWenJian: dtoChengZhangJiLuWenJianSet) {
+                dtoChengZhangJiLuWenJian.setUrl(ossPublicDomain);
+            }
+        }
         return dtoPaiKeJiLu;
     }
 }

@@ -2,8 +2,11 @@ package com.zhizhao.jwgl.jiaowuguanli.service;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.downloaduploadfile.DownloadUploadFile;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoDownloadUploadFile;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoOssSignature;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
 import org.springframework.core.io.Resource;
+
+import java.util.Map;
 
 public interface DownloadUploadFileService {
      /**
@@ -35,4 +38,10 @@ public interface DownloadUploadFileService {
      * @return
      */
     String xiaZaiWenJianById(Long id);
+
+    /**
+     * 根据文件名，获取文件上传到oss需要用到的签名信息
+     * @return
+     */
+    DtoOssSignature huoQuWenJianShangChuanXinXi(String fileName);
 }

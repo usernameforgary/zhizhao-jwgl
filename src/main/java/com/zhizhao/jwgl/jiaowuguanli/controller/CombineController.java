@@ -162,4 +162,15 @@ public class CombineController {
 
         return PPResult.Ok();
     }
+
+    /**
+     * 保存课后点评信息，保存为类型为【课后点评】的
+     * @param dtoDianPingJiLu
+     * @return
+     */
+    @PostMapping("baoCunKeHouDianPingXinXi")
+    public PPResult baoCunKeHouDianPingXinXi(@RequestBody DtoDianPingJiLu dtoDianPingJiLu) {
+        combineService.baoCunKeHouDianPingXinXi(dtoDianPingJiLu.getChengZhangJiLuZu());
+        return PPResult.Ok();
+    }
 }

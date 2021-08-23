@@ -1,6 +1,7 @@
 package com.zhizhao.jwgl.jiaowuguanli.controller;
 
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoDownloadUploadFile;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoOssSignature;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
 import com.zhizhao.jwgl.jiaowuguanli.service.DownloadUploadFileService;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
@@ -67,4 +68,15 @@ public class DownloadUploadFileController {
         result.put("url", fileUrl);
         return PPResult.getPPResultOK(result);
     }
+
+    /**
+     * 根据文件名，获取文件上传到oss需要用到的签名信息
+     * @return
+     */
+    @GetMapping("huoQuShangChuanWenJianOssXinXi")
+    public PPResult huoQuShangChuanWenJianOssXinXi(@RequestParam String fileName) {
+        DtoOssSignature dtoOssSignature = downloadUploadFileService.huoQuWenJianShangChuanXinXi(fileName);
+        return PPResult.getPPResultOK(dtoOssSignature);
+    }
+
 }

@@ -7,6 +7,8 @@ import cn.hutool.core.util.RandomUtil;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJi;
 import com.zhizhao.jwgl.jiaowuguanli.domain.banji.BanJiXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.bukejilu.BuKeJiLu;
+import com.zhizhao.jwgl.jiaowuguanli.domain.chengzhangjilu.ChengZhangJiLu;
+import com.zhizhao.jwgl.jiaowuguanli.domain.chengzhangjiluwenjian.ChengZhangJiLuWenJian;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.*;
 import com.zhizhao.jwgl.jiaowuguanli.domain.dianmingjilu.DianMingJiLu;
 import com.zhizhao.jwgl.jiaowuguanli.domain.downloaduploadfile.DownloadUploadFile;
@@ -69,6 +71,12 @@ public class CombinServiceImp implements CombineService {
 
     @Autowired
     DownloadUploadFileService downloadUploadFileService;
+
+    @Autowired
+    ChengZhangJiLuWenJianService chengZhangJiLuWenJianService;
+
+    @Autowired
+    ChengZhangJiLuService chengZhangJiLuService;
 
     @Autowired
     OSSHelper ossHelper;
@@ -1048,5 +1056,59 @@ public class CombinServiceImp implements CombineService {
         wenJianChuangJianCmd.setOssBucketName(ossProperties.getBucketPublicName());
         downloadUploadFileService.chuangJian(wenJianChuangJianCmd);
         // 创建下载文件 end
+    }
+
+    /**
+     * 保存课后点评信息，保存为类型为【课后点评】的
+     *
+     * @param chengZhangJiLuZu 成长记录组，类型为【课后点评】的成长记录
+     * @return
+     */
+    @Transactional
+    @Override
+    public void baoCunKeHouDianPingXinXi(List<DtoChengZhangJiLu> chengZhangJiLuZu) {
+        if(chengZhangJiLuZu == null || chengZhangJiLuZu.size() == 0) {
+            throw new BusinessException("成长记录不能为空");
+        }
+        Long paiKeJiLuId = null;
+        for (DtoChengZhangJiLu chengZhangJiLu : chengZhangJiLuZu) {
+            // 课后点评，排课记录Id不能为空
+            if(chengZhangJiLu.getPaiKeJiLuId() == null) {
+                throw new BusinessException("请指定要点评的上课记录");
+            }
+            paiKeJiLuId = chengZhangJiLu.getPaiKeJiLuId();
+            // 创建成长记录文件
+            Set<Long> chengZhangJiLuWenJianIds = new HashSet<>();
+            Set<DtoChengZhangJiLuWenJian> chengZhangJiLuWenJianSet = chengZhangJiLu.getChengZhangJiLuWenJianZu();
+            if(chengZhangJiLuWenJianSet != null || chengZhangJiLuWenJianSet.size() > 0) {
+                for(DtoChengZhangJiLuWenJian dtoChengZhangJiLuWenJian: chengZhangJiLuWenJianSet) {
+                    ChengZhangJiLuWenJian.ChuangJianCmd chuangJianCmd = new ChengZhangJiLuWenJian.ChuangJianCmd();
+                    chuangJianCmd.setId(SnowflakeIdUtil.nextId());
+                    chuangJianCmd.setMingCheng(dtoChengZhangJiLuWenJian.getMingCheng());
+                    chuangJianCmd.setHouZhui(dtoChengZhangJiLuWenJian.getHouZhui());
+                    chuangJianCmd.setDaXiao(dtoChengZhangJiLuWenJian.getDaXiao());
+                    chuangJianCmd.setOssKey(dtoChengZhangJiLuWenJian.getOssKey());
+                    chuangJianCmd.setOssBucketName(ossHelper.getOssProperties().getBucketPublicName());
+
+                    ChengZhangJiLuWenJian chengZhangJiLuWenJian = chengZhangJiLuWenJianService.chuangJian(chuangJianCmd);
+                    chengZhangJiLuWenJianIds.add(chengZhangJiLuWenJian.getId());
+                }
+            }
+
+            // 创建成长记录
+            ChengZhangJiLu.ChuangJianCmd chengZhangJiLuChuangJianCmd = new ChengZhangJiLu.ChuangJianCmd();
+            chengZhangJiLuChuangJianCmd.setId(SnowflakeIdUtil.nextId());
+            chengZhangJiLuChuangJianCmd.setXueYuanId(chengZhangJiLu.getXueYuanId());
+            chengZhangJiLuChuangJianCmd.setNeiRong(chengZhangJiLu.getNeiRong());
+            chengZhangJiLuChuangJianCmd.setChengZhangJiLuWenJianZu(chengZhangJiLuWenJianIds);
+            chengZhangJiLuChuangJianCmd.setPaiKeJiLuId(chengZhangJiLu.getPaiKeJiLuId());
+            chengZhangJiLuChuangJianCmd.setChengZhangJiLuLeiXing(chengZhangJiLu.getChengZhangJiLuLeiXing());
+            chengZhangJiLuChuangJianCmd.setJiaZhangYiDu(false);
+            chengZhangJiLuService.chuangJian(chengZhangJiLuChuangJianCmd);
+        }
+
+        // 更新排课记录状态
+        PaiKeJiLu paiKeJiLu = paiKeJiLuService.getPaiKeJiLuById(paiKeJiLuId);
+        paiKeJiLu.setPaiKeJiLuZhuangTai(PaiKeJiLuZhuangTai.YI_DIAN_PING);
     }
 }

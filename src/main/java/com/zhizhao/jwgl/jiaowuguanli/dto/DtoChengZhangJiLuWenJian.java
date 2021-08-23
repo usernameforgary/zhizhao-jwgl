@@ -25,4 +25,6 @@ public class DtoChengZhangJiLuWenJian {
     // 大小
     @NotNull
     Integer daXiao;
+    // 文件Url
+    String url;
 }

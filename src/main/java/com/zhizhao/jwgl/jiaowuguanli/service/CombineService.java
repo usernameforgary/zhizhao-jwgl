@@ -4,6 +4,8 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.constant.JiaoFeiJiLuZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.paike.BanJiPaiKeXinXi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.*;
 
+import java.util.List;
+
 public interface CombineService {
     /**
      * 创建班级排课信息
@@ -57,4 +59,11 @@ public interface CombineService {
      * @return
      */
     void daoChuXueYuanDianMingJiLu(DtoDianMingJiLuQuery dtoDianMingJiLuQuery);
+
+    /**
+     * 保存课后点评信息，保存为类型为【课后点评】的
+     * @param chengZhangJiLuZu 成长记录组，类型为【课后点评】的成长记录
+     * @return
+     */
+    void baoCunKeHouDianPingXinXi(List<DtoChengZhangJiLu> chengZhangJiLuZu);
 }

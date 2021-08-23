@@ -78,7 +78,7 @@
         <association property="chengZhangJiLuZu" column="{pai_ke_ji_lu_id=id}" select="getPaiKeJiLuShangKeXueYuanKeHouDianPing" />
     </resultMap>
     <resultMap id="xueYuanKeHouDianPingResult" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoChengZhangJiLu">
-        <association property="chengZhangJiLuWenJianZu" column="{chen_zhang_ji_lu_id=id}" select="getChengZhangJiLuWenJian"/>
+        <association property="chengZhangJiLuWenJianZu" column="{cheng_zhang_ji_lu_id=id}" select="getChengZhangJiLuWenJian"/>
     </resultMap>
     <select id="getPaiKeJiLuKeHouDianPingById" resultMap="paiKeJiLuKeHouDianPingResult">
         select A.id, A.shang_ke_ri_qi, A.shang_ke_shi_jian_start, A.shang_ke_shi_jian_end, A.shang_ke_lao_shi_id, A.shang_ke_nei_rong, A.pai_ke_ji_lu_zhuang_tai,
@@ -114,7 +114,7 @@
         from cheng_zhang_ji_lu_cheng_zhang_ji_lu_wen_jian_zu A
         join cheng_zhang_ji_lu_wen_jian B on A.cheng_zhang_ji_lu_wen_jian_id = B.id and B.is_deleted = 0
         <where>
-            A.chen_zhang_ji_lu_id = #{chen_zhang_ji_lu_id}
+            A.cheng_zhang_ji_lu_id = #{cheng_zhang_ji_lu_id}
         </where>
     </select>
     <!-- 根据排课记录Id，查询排课记录，课后点评 end -->

@@ -1,11 +1,11 @@
 package com.zhizhao.jwgl.jiaowuguanli.service.oss.aliyun;
 
+import com.aliyun.oss.HttpMethod;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.model.CannedAccessControlList;
-import com.aliyun.oss.model.CreateBucketRequest;
-import com.aliyun.oss.model.GetObjectRequest;
+import com.aliyun.oss.common.utils.BinaryUtil;
+import com.aliyun.oss.model.*;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
@@ -14,12 +14,22 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleRequest;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
 import com.google.gson.Gson;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoOssSignature;
+import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
+import com.zhizhao.jwgl.jiaowuguanli.service.oss.OSSUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Component
 public class OSSHelper {
@@ -81,39 +91,81 @@ public class OSSHelper {
         return aliyunOssProperties;
     }
 
-    //TODO 临时用公共的
-    public String getFileUrl(String bucketFileKey) {
-        return aliyunOssProperties.getBucketPublicDomain() + bucketFileKey;
-    }
+    /**
+     * 获取文件的下载链接
+     * @param bucketFileKey
+     * @return
+     */
+    public URL getObjectDownloadUrl(String bucketFileKey) {
+        URL downloadUrl = null;
 
-    //TODO 获取bucket上文件的有过期信息的url，暂时未调通
-    public String getBucketFileUrl(String bucketFileKey) {
+        // yourEndpoint填写Bucket所在地域对应的Endpoint。以华东1（杭州）为例，Endpoint填写为https://oss-cn-hangzhou.aliyuncs.com。
+        String endpoint = aliyunOssProperties.getEndpoint();
+        // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
         String accessKeyId = aliyunOssProperties.getAccessKeyID();
         String accessKeySecret = aliyunOssProperties.getAccessKeySecret();
-        //构建一个阿里云客户端，用于发起请求。
-        //构建阿里云客户端时需要设置AccessKey ID和AccessKey Secret。
-        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        IAcsClient client = new DefaultAcsClient(profile);
+        String bucketName = aliyunOssProperties.getBucketPublicName();
 
-        //构造请求，设置参数。关于参数含义和设置方法，请参见API参考。
-        AssumeRoleRequest request = new AssumeRoleRequest();
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        Date expiration = new Date(new Date().getTime() + 3600 * 1000);
 
-        request.setRoleArn("acs:ram::1539926392555905:role/dev");
-        request.setRoleSessionName("alice");
+        downloadUrl = ossClient.generatePresignedUrl(bucketName, bucketFileKey, expiration);
 
-        String token = null;
-        //发起请求，并得到响应。
+        return downloadUrl;
+    }
+
+    /**
+     * 获取上传文件
+     * @param bucketFileKey
+     * @return
+     */
+    public DtoOssSignature getPutObjectUrlPolicy(String bucketFileKey) {
+        // yourEndpoint填写Bucket所在地域对应的Endpoint。以华东1（杭州）为例，Endpoint填写为https://oss-cn-hangzhou.aliyuncs.com。
+        String endpoint = aliyunOssProperties.getEndpoint();
+        // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
+        String accessKeyId = aliyunOssProperties.getAccessKeyID();
+        String accessKeySecret = aliyunOssProperties.getAccessKeySecret();
+        String bucketName = aliyunOssProperties.getBucketPublicName();
+
+        String host = "https://" + bucketName + '.' + endpoint;
+
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+
+        // 保存到OSS中的文件路径（包含文件名）
+        String format = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String dir = format + "/" + bucketFileKey;
+
+        DtoOssSignature dtoOssSignature = null;
         try {
-            AssumeRoleResponse response = client.getAcsResponse(request);
-            token = response.getCredentials().getSecurityToken();
-            System.out.println(new Gson().toJson(response));
-        } catch (ServerException e) {
-            e.printStackTrace();
-        } catch (ClientException e) {
-            System.out.println("ErrCode:" + e.getErrCode());
-            System.out.println("ErrMsg:" + e.getErrMsg());
-            System.out.println("RequestId:" + e.getRequestId());
+            long expireTime = 30;
+            long expireEndTime = System.currentTimeMillis() + expireTime * 1000;
+            Date expiration = new Date(expireEndTime);
+            // PostObject请求最大可支持的文件大小为5 GB，即CONTENT_LENGTH_RANGE为5*1024*1024*1024。
+            PolicyConditions policyConds = new PolicyConditions();
+            policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, 1048576000);
+            policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_KEY, dir);
+
+            String postPolicy = ossClient.generatePostPolicy(expiration, policyConds);
+            byte[] binaryData = postPolicy.getBytes("utf-8");
+            String encodedPolicy = BinaryUtil.toBase64String(binaryData);
+            String postSignature = ossClient.calculatePostSignature(postPolicy);
+
+            dtoOssSignature = new DtoOssSignature();
+            dtoOssSignature.setAccessid(accessKeyId);
+            dtoOssSignature.setPolicy(encodedPolicy);
+            dtoOssSignature.setSignature(postSignature);
+            dtoOssSignature.setDir(dir);
+            dtoOssSignature.setHost(host);
+            dtoOssSignature.setExpire(String.valueOf(expireEndTime / 1000));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new BusinessException("获取文件上传信息失败");
+        } finally {
+            ossClient.shutdown();
+            return dtoOssSignature;
         }
-        return token;
+
     }
 }
