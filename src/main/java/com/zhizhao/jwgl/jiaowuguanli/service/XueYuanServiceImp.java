@@ -6,6 +6,7 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanQianZai;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.XueYuanMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.XueYuanRepository;
@@ -133,5 +134,25 @@ public class XueYuanServiceImp implements XueYuanService {
     @Override
     public Optional<XueYuan> huoQuXueYuanById(Long id) {
         return xueYuanRepository.findById(id);
+    }
+
+    /**
+     * 获取潜在学员列表
+     *
+     * @param pageNum
+     * @param pageSize
+     * @param keyword         关键字
+     * @param genJinZhuangTai 跟进状态
+     * @param genJinRenId     跟进人
+     * @return
+     */
+    @Override
+    public DtoPageResult<DtoXueYuanQianZai> huoQuQianZaiXueYuanLieBiao(Integer pageNum, Integer pageSize, String keyword, String genJinZhuangTai, Long genJinRenId) {
+        Page<DtoXueYuanQianZai> page = new Page<>(pageNum, pageSize);
+
+        IPage<DtoXueYuanQianZai> dtoXueYuanQianZaiPageResult = xueYuanMapper.huoQuQianZaiXueYuanLieBiao(page, keyword, genJinZhuangTai, genJinRenId);
+
+        DtoPageResult<DtoXueYuanQianZai> dtoPageResult = Converter.convertPageResultMybatisPlus(dtoXueYuanQianZaiPageResult);
+        return dtoPageResult;
     }
 }

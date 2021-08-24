@@ -3,6 +3,7 @@ package com.zhizhao.jwgl.jiaowuguanli.service;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ZhangHaoLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan.XiTongCaiDan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoZhangHao;
 
 import java.util.List;
 
@@ -22,4 +23,10 @@ public interface ZhangHaoService {
      * @return
      */
     List<ZhangHao> getZhangHaoByLeiXing(ZhangHaoLeiXing zhangHaoLeiXing);
+
+    /**
+     * 获取所有员工
+     * @return
+     */
+    List<DtoZhangHao> houQuYuanGongAll();
 }

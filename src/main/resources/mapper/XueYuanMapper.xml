@@ -147,4 +147,54 @@
         </where>
         order by A.update_time desc
     </select>
+
+    <!-- 获取潜在学员列表 -->
+    <resultMap id="qianZaiXueYuan" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanQianZai">
+        <!-- 最后一次跟进记录 -->
+        <association property="latestGenJinJiLu" select="getLatestGenJiJiLu" column="{xueYuanId=id}"></association>
+        <!-- 下一次跟进记录 -->
+        <association property="nextGenJinJiLu" select="getNextGenJiJiLu" column="{xueYuanId=id}"></association>
+        <!-- 学员标签组 -->
+        <collection property="xueYuanBiaoQianZu" select="getXueYuanBiaoQianById" column="{xueYuanId=id}"></collection>
+    </resultMap>
+    <select id="huoQuQianZaiXueYuanLieBiao" resultMap="qianZaiXueYuan">
+        select
+               A.id, A.xing_ming, A.gen_jin_zhuang_tai, A.yi_xiang_ji_bie, A.gen_jin_ren_id, A.nan_ling, A.create_time, A.xue_yuan_zhuang_tai,
+               B.id as zhangHaoId, B.shou_ji,
+               C.xing_ming as genJinRenXingMing
+        from xue_yuan A
+        join zhang_hao B on A.zhang_hao_id = B.id
+        left join zhang_hao C on A.gen_jin_ren_id = C.id
+        <where>
+            A.is_deleted = 0
+            and A.xue_yuan_zhuang_tai = 'QIAN_ZAI'
+            <if test="keyword != null and keyword != ''">
+                and (
+                    A.xing_ming LIKE CONCAT('%',#{keyword},'%')
+                    or B.shou_ji LIKE CONCAT('%',#{keyword},'%')
+                )
+            </if>
+            <if test="genJinZhuangTai != null and genJinZhuangTai != ''">
+                and A.gen_jin_zhuang_tai = #{genJinZhuangTai}
+            </if>
+            <if test="genJinRenId != null and genJinRenId != ''">
+                and A.gen_jin_ren_id=#{genJinRenId}
+            </if>
+        </where>
+    </select>
+    <select id="getLatestGenJiJiLu" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoGenJinJiLu">
+        select A.*
+        from gen_jin_ji_lu A
+        where A.xue_yuan_id = #{xueYuanId}
+        and A.yi_wan_cheng = 1
+        order by A.gen_jin_shi_jian desc limit 1
+    </select>
+    <select id="getNextGenJiJiLu" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoGenJinJiLu">
+        select A.*
+        from gen_jin_ji_lu A
+        where A.xue_yuan_id = #{xueYuanId}
+          and A.yi_wan_cheng = 0
+        order by A.gen_jin_shi_jian asc limit 1
+    </select>
+    <!-- 获取潜在学员列表 end-->
 </mapper>

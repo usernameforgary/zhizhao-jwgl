@@ -41,4 +41,15 @@
         </where>
         order by A.update_time desc;
     </select>
+
+    <!-- 获取所有员工 -->
+    <select id="huoQuYuanGongAll" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoZhangHao">
+        select A.id, A.bei_zhu,A.is_lao_shi, A.shou_ji,A.xing_bie, A.xing_ming,A.zhang_hao_lei_xing
+        from zhang_hao A
+        <where>
+            A.zhang_hao_lei_xing = 'YUAN_GONG'
+            and A.is_deleted = 0
+        </where>
+        order by A.update_time desc;
+    </select>
 </mapper>

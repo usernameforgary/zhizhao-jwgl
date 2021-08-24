@@ -1,8 +1,10 @@
 package com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.AggRoot;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.GenJinZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XingBie;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.YiXiangJiBie;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -66,6 +68,14 @@ public class XueYuan extends AggRoot {
    Set<Long> biaoQianZu;
    //跟进人
    Long genJinRenId;
+   // 跟进状态
+   @Enumerated(EnumType.STRING)
+   GenJinZhuangTai genJinZhuangTai;
+   // 意向级别
+   @Enumerated(EnumType.STRING)
+   YiXiangJiBie yiXiangJiBie;
+   // 结业时间（学员状态为历史学员时存在）
+   Long jieYeShiJian;
 
    // 创建
    public static XueYuan chuangJian(ChuangJianCmd cmd) {

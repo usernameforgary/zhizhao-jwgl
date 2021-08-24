@@ -1,8 +1,10 @@
 package com.zhizhao.jwgl.jiaowuguanli.controller;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.GenJinZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanQianZai;
 import com.zhizhao.jwgl.jiaowuguanli.service.XueYuanService;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +76,26 @@ public class XueYuanController {
     public PPResult huoQuXueYuanByXinMingAndZhangHaoShouJi(@RequestParam String xingMing, @RequestParam String shouJi) {
         DtoXueYuan dtoXueYuan = xueYuanService.huoQuXueYuanByXinMingAndZhangHaoShouJi(xingMing, shouJi);
         return PPResult.getPPResultOK(dtoXueYuan);
+    }
+
+    /**
+     * 获取潜在学员列表
+     * @param pageNum
+     * @param pageSize
+     * @param keyword 关键字
+     * @param genJinZhuangTai 跟进状态
+     * @param genJinRenId 跟进人
+     * @return
+     */
+    @GetMapping("huoQuQianZaiXueYuanLieBiao")
+    public PPResult huoQuQianZaiXueYuanLieBiao(
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "20") Integer pageSize,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String genJinZhuangTai,
+            @RequestParam(required = false) Long genJinRenId
+            ) {
+        DtoPageResult<DtoXueYuanQianZai> dtoPageResult = xueYuanService.huoQuQianZaiXueYuanLieBiao(pageNum, pageSize, keyword,  genJinZhuangTai, genJinRenId);
+        return PPResult.getPPResultOK(dtoPageResult);
     }
 }

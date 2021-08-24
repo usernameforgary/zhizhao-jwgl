@@ -6,13 +6,14 @@
     <select id="getDianMingJiLuList" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoDianMingJiLu">
         select
             A.id, A.pai_ke_ji_lu_id, A.xue_yuan_id, A.shang_ke_xue_yuan_lei_xing, A.xue_yuan_dao_ke_zhuang_tai, A.kou_chu_ke_shi, A.ke_xiao_jine, A.bei_zhu,
-            B.shang_ke_ri_qi, B.dian_ming_shi_jian, B.shang_ke_shi_jian_start, B.shang_ke_shi_jian_end, B.shang_ke_lao_shi_id, B.shang_ke_nei_rong,
+            B.shang_ke_ri_qi, B.dian_ming_shi_jian, B.shang_ke_shi_jian_start, B.shang_ke_shi_jian_end, B.shang_ke_lao_shi_id, B.shang_ke_nei_rong, B.pai_ke_ji_lu_zhuang_tai,
             C.ban_ji_id,
             D.ming_cheng as banJiMingCheng,
             E.xing_ming as shangKeLaoShiXingMing,
             F.xing_ming as xueXueYuanXingMing,
             G.shou_ji,
-            H.ming_cheng as keChengMingCheng
+            H.ming_cheng as keChengMingCheng,
+            I.nei_rong as dianPingNeiRong, I.id as chengZhangJiLuId
         from dian_ming_ji_lu A
         join pai_ke_ji_lu B on A.pai_ke_ji_lu_id = B.id
         join ban_ji_pai_ke_xin_xi C on B.ban_ji_pai_ke_xin_xi_id = C.id

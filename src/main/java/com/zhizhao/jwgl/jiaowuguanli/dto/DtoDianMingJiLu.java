@@ -1,5 +1,6 @@
 package com.zhizhao.jwgl.jiaowuguanli.dto;
 
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.PaiKeJiLuZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ShangKeXueYuanLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanDaoKeZhuangTai;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,8 @@ public class DtoDianMingJiLu {
     // 排课记录Id
     @NotNull
     Long paiKeJiLuId;
+    // 排课记录状态
+    PaiKeJiLuZhuangTai paiKeJiLuZhuangTai;
     // 学员Id
     @NotNull
     Long xueYuanId;
@@ -60,6 +63,8 @@ public class DtoDianMingJiLu {
     String keChengMingCheng;
     // 点评内容
     String dianPingNeiRong;
+    // 成长记录Id（即点评记录ID）
+    Long chengZhangJiLuId;
     // 上课内容
     String shangKeNeiRong;
 }

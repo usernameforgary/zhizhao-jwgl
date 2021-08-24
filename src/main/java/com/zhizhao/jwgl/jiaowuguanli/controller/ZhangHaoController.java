@@ -8,6 +8,7 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ZhangHaoLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan.XiTongCaiDan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.MyUserDetails;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoZhangHao;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.ZhangHaoMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.ZhangHaoRepository;
 import com.zhizhao.jwgl.jiaowuguanli.service.XiTongCaiDanService;
@@ -84,9 +85,24 @@ public class ZhangHaoController {
         return PPResult.getPPResultOK(result);
     }
 
+    /**
+     * 根据账号类型【员工|学员】获取系统所有账号信息
+     * @param zhangHaoLeiXing
+     * @return
+     */
     @GetMapping("getZhangHaoLeiBiaoByZhangHaoLeiXing")
     public PPResult getZhangHaoLeiBiaoByZhangHaoLeiXing(@RequestParam ZhangHaoLeiXing zhangHaoLeiXing) {
         List<ZhangHao> zhangHaoList = zhangHaoService.getZhangHaoByLeiXing(zhangHaoLeiXing);
+        return PPResult.getPPResultOK(zhangHaoList);
+    }
+
+    /**
+     * 获取所有员工
+     * @return
+     */
+    @GetMapping("houQuYuanGongAll")
+    public PPResult houQuYuanGongAll() {
+        List<DtoZhangHao> zhangHaoList = zhangHaoService.houQuYuanGongAll();
         return PPResult.getPPResultOK(zhangHaoList);
     }
 }

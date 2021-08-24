@@ -3,6 +3,7 @@ package com.zhizhao.jwgl.jiaowuguanli.service;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.ZhangHaoLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xitongcaidan.XiTongCaiDan;
 import com.zhizhao.jwgl.jiaowuguanli.domain.zhanghao.ZhangHao;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoZhangHao;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.ZhangHaoMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.ZhangHaoRepository;
@@ -69,5 +70,15 @@ public class ZhangHaoServiceImp implements ZhangHaoService {
             throw new BusinessException("请指定要查询的账号类型");
         }
         return zhangHaoMapper.getZhangHaoByLeiXing(zhangHaoLeiXing);
+    }
+
+    /**
+     * 获取所有员工
+     *
+     * @return
+     */
+    @Override
+    public List<DtoZhangHao> houQuYuanGongAll() {
+        return zhangHaoMapper.huoQuYuanGongAll();
     }
 }
