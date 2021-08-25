@@ -3,9 +3,7 @@ package com.zhizhao.jwgl.jiaowuguanli.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanQianZai;
+import com.zhizhao.jwgl.jiaowuguanli.dto.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -79,4 +77,25 @@ public interface XueYuanService {
      * @return
      */
     DtoPageResult<DtoXueYuanQianZai> huoQuQianZaiXueYuanLieBiao(Integer pageNum, Integer pageSize, String keyword, String genJinZhuangTai, Long genJinRenId);
+
+    /**
+     * 获取在读学员列表
+     * @param pageNum
+     * @param pageSize
+     * @param keyword 关键字
+     * @param banJiId 班级Id
+     * @return
+     */
+    DtoPageResult<DtoXueYuanZaiDu> huoQuZaiDuXueYuanLieBiao(Integer pageNum, Integer pageSize, String keyword, String banJiId);
+
+    /**
+     * 获取历史学员列表
+     * @param pageNum
+     * @param pageSize
+     * @param keyword 关键字
+     * @param keChengId 课程Id
+     * @param genJinRenId 跟进人Id
+     * @return
+     */
+    DtoPageResult<DtoXuYuanLiShi> huoQuLiShiXueYuanLieBiao(Integer pageNum, Integer pageSize, String keyword, String keChengId, String genJinRenId);
 }

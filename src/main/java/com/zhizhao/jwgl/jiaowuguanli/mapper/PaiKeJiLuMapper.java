@@ -26,4 +26,13 @@ public interface PaiKeJiLuMapper extends MyBaseMapper<PaiKeJiLu> {
      * @return
      */
     DtoPaiKeJiLu getPaiKeJiLuKeHouDianPingById(Long id);
+
+    /**
+     * 根据排课信息Id组，上课学员Id。获取包含该学员的，所有【待点名】的上课排课记录
+     *
+     * @param paiKeXinXinXiIdList 排课信息Id组
+     * @param shangKeXueYuanId 上课学员Id
+     * @return
+     */
+    List<PaiKeJiLu> getPaiKeJiLuByPaiKeXinXiIdZuAndShangKeXueYuan(List<Long> paiKeXinXinXiIdList, Long shangKeXueYuanId);
 }

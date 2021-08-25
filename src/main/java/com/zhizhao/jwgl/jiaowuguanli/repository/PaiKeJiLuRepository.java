@@ -20,4 +20,7 @@ public interface PaiKeJiLuRepository extends JpaRepository<PaiKeJiLu, Long> {
 
     @Query("select a from PaiKeJiLu a join fetch a.shangKeXueYuanZu b where a.id = :id and b.isDeleted = false")
     PaiKeJiLu getById(@Param("id") Long id);
+
+    @Query("select a from PaiKeJiLu as a where a.banJiPaiKeXinXiId in :paiKeXinXiXiIdList and a.paiKeJiLuZhuangTai = 'DAI_DIAN_MING' and a.isDeleted = false")
+    List<PaiKeJiLu> getWeiDianMingPaiKeJiLuByPaiKeXinXiId(@Param("paiKeXinXiXiIdList") List<Long> paiKeXinXinXiIdList);
 }

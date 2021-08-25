@@ -2,9 +2,7 @@ package com.zhizhao.jwgl.jiaowuguanli.controller;
 
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.GenJinZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanQianZai;
+import com.zhizhao.jwgl.jiaowuguanli.dto.*;
 import com.zhizhao.jwgl.jiaowuguanli.service.XueYuanService;
 import com.zhizhao.jwgl.jiaowuguanli.utils.PPResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +94,46 @@ public class XueYuanController {
             @RequestParam(required = false) Long genJinRenId
             ) {
         DtoPageResult<DtoXueYuanQianZai> dtoPageResult = xueYuanService.huoQuQianZaiXueYuanLieBiao(pageNum, pageSize, keyword,  genJinZhuangTai, genJinRenId);
+        return PPResult.getPPResultOK(dtoPageResult);
+    }
+
+    /**
+     * 获取在读学员列表
+     * @param pageNum
+     * @param pageSize
+     * @param keyword 关键字
+     * @param banJiId 班级Id
+     * @return
+     */
+    @GetMapping("huoQuZaiDuXueYuanLieBiao")
+    public PPResult huoQuZaiDuXueYuanLieBiao(
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "20") Integer pageSize,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String banJiId
+    ) {
+        DtoPageResult<DtoXueYuanZaiDu> dtoPageResult = xueYuanService.huoQuZaiDuXueYuanLieBiao(pageNum, pageSize, keyword,  banJiId);
+        return PPResult.getPPResultOK(dtoPageResult);
+    }
+
+    /**
+     * 获取历史学员列表
+     * @param pageNum
+     * @param pageSize
+     * @param keyword 关键字
+     * @param keChengId 课程Id
+     * @param genJinRenId 跟进人Id
+     * @return
+     */
+    @GetMapping("huoQuLiShiXueYuanLieBiao")
+    public PPResult huoQuLiShiXueYuanLieBiao(
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "20") Integer pageSize,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String keChengId,
+            @RequestParam(required = false) String genJinRenId
+    ) {
+        DtoPageResult<DtoXuYuanLiShi> dtoPageResult = xueYuanService.huoQuLiShiXueYuanLieBiao(pageNum, pageSize, keyword,  keChengId, genJinRenId);
         return PPResult.getPPResultOK(dtoPageResult);
     }
 }

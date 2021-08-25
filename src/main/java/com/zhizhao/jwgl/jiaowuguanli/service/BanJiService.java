@@ -58,4 +58,6 @@ public interface BanJiService {
      * @return
      */
     List<DtoBanJi> huoQuBanJiAll();
+
+
 }

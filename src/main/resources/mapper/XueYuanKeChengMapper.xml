@@ -80,4 +80,18 @@
             A.is_deleted = 0
             and A.id = #{id}
     </select>
+    <!-- 根据Id，获取学员课程信息（包含所属课程信息，班级信息，班级老师信息) end -->
+
+    <!-- 根据学员Id, 获取不包含当前学员课程Id的，状态!=【已结课】的学员课程 -->
+    <select id="getQiTaWeiJieKeCheng" resultType="com.zhizhao.jwgl.jiaowuguanli.domain.kecheng.XueYuanKeCheng">
+        select A.*
+        from xue_yuan_ke_cheng A
+        <where>
+            A.is_deleted = 0
+            and A.xue_yuan_id = #{xueYuanId}
+            and A.ke_cheng_zhuang_tai != 'YI_JIE_KE'
+            and A.id != #{excludedXueYuanKeChengId}
+        </where>
+    </select>
+    <!-- 根据学员Id, 获取不包含当前学员课程Id的，状态!=【已结课】的学员课程 end -->
 </mapper>

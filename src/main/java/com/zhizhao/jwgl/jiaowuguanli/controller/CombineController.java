@@ -173,4 +173,16 @@ public class CombineController {
         combineService.baoCunKeHouDianPingXinXi(dtoDianPingJiLu.getChengZhangJiLuZu());
         return PPResult.Ok();
     }
+
+    /**
+     * 学员课程结课
+     * @param xueYuanKeChengId 学员课程Id
+     * @param banJiId 班级Id
+     * @return
+     */
+    @GetMapping("xueYuanKeChengJieKe")
+    public PPResult xueYuanKeChengJieKe(@RequestParam Long xueYuanKeChengId, @RequestParam(required = false) Long banJiId) {
+        combineService.xueYuanKeChengJieKe(xueYuanKeChengId, banJiId);
+        return PPResult.Ok();
+    }
 }

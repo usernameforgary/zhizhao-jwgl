@@ -644,10 +644,21 @@ public class CombinServiceImp implements CombineService {
                 if(xueYuanKeCheng == null) {
                     throw new BusinessException("学员：" + dtoShangKeXueYuan.getXueYuanXingMing() + ", 未找到当前班级对应的课程");
                 }
+
+                // 当前剩余课时
+                Double currentShengYuKeShi = xueYuanKeCheng.getShengYuKeShi();
+
                 // 本次课消金额
                 Double keXiaoJinE = 0.0;
                 keXiaoJinE = xueYuanKeCheng.dianMingGengXinShengYuKeShiXiaoKeJinE(dtoShangKeXueYuan.getKouChuKeShi());
                 // 学员课程_更新剩余课时&消课金额 end
+
+                // 更新学员课程状态
+                if((currentShengYuKeShi - dtoShangKeXueYuan.getKouChuKeShi()) < xueYuanKeCheng.getZengSongKeShi()) {
+                    // (剩余课时 - 扣除课时) <= 赠送课时。更改学员课程状态为【待结课】
+                    xueYuanKeCheng.gengGaiXueYuanKeChengZhangTai(XueYuanKeChengZhuangTai.DAI_JIE_KE);
+                }
+                // 更新学员课程状态 end
 
                 // 点名记录 - 课消金额
                 dianMingJiLuChuangJianCmd.setKeXiaoJinE(keXiaoJinE);
@@ -663,10 +674,21 @@ public class CombinServiceImp implements CombineService {
                 if(xueYuanKeCheng == null) {
                     throw new BusinessException("学员：" + dtoShangKeXueYuan.getXueYuanXingMing() + ", 未找到当前班级对应的课程");
                 }
+
+                // 当前剩余课时
+                Double currentShengYuKeShi = xueYuanKeCheng.getShengYuKeShi();
+
                 // 本次课消金额
                 Double keXiaoJinE = 0.0;
                 keXiaoJinE = xueYuanKeCheng.dianMingGengXinShengYuKeShiXiaoKeJinE(dtoShangKeXueYuan.getKouChuKeShi());
                 // 学员课程_更新剩余课时&消课金额 end
+
+                // 更新学员课程状态
+                if((currentShengYuKeShi - dtoShangKeXueYuan.getKouChuKeShi()) < xueYuanKeCheng.getZengSongKeShi()) {
+                    // (剩余课时 - 扣除课时) <= 赠送课时。更改学员课程状态为【待结课】
+                    xueYuanKeCheng.gengGaiXueYuanKeChengZhangTai(XueYuanKeChengZhuangTai.DAI_JIE_KE);
+                }
+                // 更新学员课程状态 end
 
                 // 点名记录 - 课消金额
                 dianMingJiLuChuangJianCmd.setKeXiaoJinE(keXiaoJinE);
@@ -1110,5 +1132,79 @@ public class CombinServiceImp implements CombineService {
         // 更新排课记录状态
         PaiKeJiLu paiKeJiLu = paiKeJiLuService.getPaiKeJiLuById(paiKeJiLuId);
         paiKeJiLu.setPaiKeJiLuZhuangTai(PaiKeJiLuZhuangTai.YI_DIAN_PING);
+    }
+
+    /**
+     * 学员课程结课
+     *
+     * @param xueYuanKeChengId 学员课程Id
+     * @param banJiId 班级Id
+     * @return
+     */
+    @Transactional
+    @Override
+    public void xueYuanKeChengJieKe(Long xueYuanKeChengId, Long banJiId) {
+        if(xueYuanKeChengId == null) {
+            throw new BusinessException("请提供要结课的学员课程");
+        }
+        XueYuanKeCheng xueYuanKeCheng = xueYuanKeChengService.getById(xueYuanKeChengId);
+        if(xueYuanKeCheng == null) {
+            throw new BusinessException("未找到对应学员课程");
+        }
+
+        // 学员Id
+        Long xueYuanId = xueYuanKeCheng.getXueYuanId();
+
+        if(banJiId == null) {
+            // 班级Id为空，学员课程尚未选班
+        } else {
+            BanJi banJi = banJiService.getBanJiById(banJiId);
+            List<DtoBanJiPaiKeXinXi> dtoBanJiPaiKeXinXiList = banJiPaiKeXinXiService.huoQuBanJiPaiKeXinXi(banJiId);
+            if(dtoBanJiPaiKeXinXiList == null || dtoBanJiPaiKeXinXiList.size() == 0) {
+                // 班级排课信息未空，未排课
+            } else {
+                List<Long> paiKeXinXiIdList = new ArrayList<>();
+                for(DtoBanJiPaiKeXinXi dtoBanJiPaiKeXinXi:dtoBanJiPaiKeXinXiList) {
+                    paiKeXinXiIdList.add(dtoBanJiPaiKeXinXi.getId());
+                }
+                // 查找所有包含该学员，未点名的排课记录
+                List<PaiKeJiLu> paiKeJiLuList = paiKeJiLuService.getWeiDianMingPaiKeJiLuByPaiKeXinXiId(paiKeXinXiIdList);
+                for(PaiKeJiLu paiKeJiLu : paiKeJiLuList) {
+                    PaiKeJiLu.ShanChuXueYuanCmd shanChuXueYuanCmd = new PaiKeJiLu.ShanChuXueYuanCmd();
+                    shanChuXueYuanCmd.setXueYuanId(xueYuanId);
+                    shanChuXueYuanCmd.setIsDeleted(false);
+                    shanChuXueYuanCmd.setShangKeXueYuanLeiXing(ShangKeXueYuanLeiXing.BEN_BAN);
+                    // 排课记录，删除该学员
+                    paiKeJiLu.shanChuShanKeXueYuan(shanChuXueYuanCmd);
+                    System.out.println();
+                }
+            }
+            // 班级，删除该学员
+            BanJi.ShanChuXueYuanCmd banJiShanChuXueYuanCmd = new BanJi.ShanChuXueYuanCmd();
+            banJiShanChuXueYuanCmd.setXueYuanId(xueYuanId);
+            banJi.shanChuXueYuan(banJiShanChuXueYuanCmd);
+        }
+
+        // 学员课程，更新学员状态为【已结课】
+        xueYuanKeCheng.gengGaiXueYuanKeChengZhangTai(XueYuanKeChengZhuangTai.YI_JIE_KE);
+
+        // 如果学员，无其他未结课的课程，更改学员状态为【历史学员】，记录学员结业时间
+        List<XueYuanKeCheng> xueYuanKeChengList = xueYuanKeChengService.getQiTaWeiJieKeCheng(xueYuanId, xueYuanKeChengId);
+        if(xueYuanKeChengList == null || xueYuanKeChengList.size() == 0) {
+            Optional<XueYuan> optionalXueYuan = xueYuanService.huoQuXueYuanById(xueYuanId);
+            if(optionalXueYuan.isPresent()) {
+                XueYuan xueYuan = optionalXueYuan.get();
+
+                // 更改学员状态为【历史学员】
+                xueYuan.gengGaiXueYuanZhuangTai(XueYuanZhuangTai.LI_SHI);
+                // 记录学员结业时间
+                Date now = new Date();
+                long jieYeShiJian = DateUtil.endOfDay(now).getTime();
+                xueYuan.setJieYeShiJian(jieYeShiJian);
+            } else {
+                throw new BusinessException("未找到对应学员");
+            }
+        }
+        // 如果学员，无其他未结课的课程，更改学员状态为【历史学员】，记录学员结业时间 end
     }
 }

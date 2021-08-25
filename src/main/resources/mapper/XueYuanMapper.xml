@@ -197,4 +197,79 @@
         order by A.gen_jin_shi_jian asc limit 1
     </select>
     <!-- 获取潜在学员列表 end-->
+
+    <!-- 获取在读学员列表 -->
+    <resultMap id="zaiDuXueYuan" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanZaiDu">
+        <!-- 最后一次跟进记录 -->
+        <association property="latestGenJinJiLu" select="getLatestGenJiJiLu" column="{xueYuanId=id}"></association>
+    </resultMap>
+    <select id="huoZaiDuXueYuanLieBiao" resultMap="zaiDuXueYuan">
+        select distinct
+            A.id, A.xing_ming, A.gen_jin_ren_id, A.nan_ling, A.xue_yuan_zhuang_tai,
+            B.id as zhangHaoId, B.shou_ji,
+            C.xing_ming as genJinRenXingMing
+        from xue_yuan A
+        join zhang_hao B on A.zhang_hao_id = B.id
+        left join zhang_hao C on A.gen_jin_ren_id = C.id
+        left join ban_ji_ban_ji_xue_yuan_zu D on D.xue_yuan_id = A.id and D.is_deleted = 0
+        <where>
+            A.is_deleted = 0
+            and A.xue_yuan_zhuang_tai = 'ZAI_DU'
+            <if test="keyword != null and keyword != ''">
+                and (
+                A.xing_ming LIKE CONCAT('%',#{keyword},'%')
+                or B.shou_ji LIKE CONCAT('%',#{keyword},'%')
+                )
+            </if>
+            <if test="banJiId != null and banJiId != ''">
+                and D.ban_ji_id = #{banJiId}
+            </if>
+        </where>
+    </select>
+    <!-- 获取在读学员列表 end -->
+
+    <!-- 获取历史学员列表 -->
+    <resultMap id="liShiXueYuan" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXuYuanLiShi">
+        <association property="latestKeCheng" select="getLatestKeCheng" column="{xueYuanId=id}"/>
+    </resultMap>
+    <select id="huoQuLiShiXueYuanLieBiao" resultMap="liShiXueYuan">
+        select
+            A.id, A.xing_ming, A.gen_jin_ren_id, A.nan_ling, A.xue_yuan_zhuang_tai, A.create_time, A.jie_ye_shi_jian,
+            B.id as zhangHaoId, B.shou_ji,
+            C.xing_ming as genJinRenXingMing
+        from xue_yuan A
+        join zhang_hao B on A.zhang_hao_id = B.id
+        left join zhang_hao C on A.gen_jin_ren_id = C.id
+        left join xue_yuan_ke_cheng D on D.xue_yuan_id = A.id
+        <where>
+            A.is_deleted = 0
+            and A.xue_yuan_zhuang_tai = 'LI_SHI'
+            <if test="keyword != null and keyword != ''">
+                and (
+                A.xing_ming LIKE CONCAT('%',#{keyword},'%')
+                or B.shou_ji LIKE CONCAT('%',#{keyword},'%')
+                )
+            </if>
+            <if test="genJinRenId != null and genJinRenId != ''">
+                and A.gen_jin_ren_id=#{genJinRenId}
+            </if>
+            <if test="keChengId != null and keChengId != ''">
+                and D.ke_cheng_id=#{keChengId}
+            </if>
+        </where>
+    </select>
+    <select id="getLatestKeCheng" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanKeCheng">
+        select
+               A.id, A.xue_yuan_id, A.ke_cheng_id,
+               B.ming_cheng as keChengMingCheng
+        from xue_yuan_ke_cheng A
+        join ke_cheng B on A.ke_cheng_id = B.id
+        <where>
+            A.is_deleted = 0
+            and A.xue_yuan_id = #{xueYuanId}
+            and A.ke_cheng_zhuang_tai = 'YI_JIE_KE'
+            order by A.update_time desc limit 1
+        </where>
+    </select>
+    <!-- 获取历史学员列表 end -->
 </mapper>

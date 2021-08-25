@@ -4,6 +4,7 @@ import cn.hutool.core.date.Week;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.PaiKeShangKeTian;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanDaoKeZhuangTai;
+import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanKeChengZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -113,5 +114,30 @@ public class Converter {
             daoKeZhuangTaiStr = "未知";
         }
         return daoKeZhuangTaiStr;
+    }
+
+    /**
+     * 学员课程状态转换
+     * @param xueYuanKeChengZhuangTai
+     * @return
+     */
+    public static String convertXueYuanKeChengZhuangTai2String(XueYuanKeChengZhuangTai xueYuanKeChengZhuangTai) {
+        String keChengZhuangTai = null;
+        if(XueYuanKeChengZhuangTai.DAI_QUE_REN.equals(xueYuanKeChengZhuangTai)) {
+            keChengZhuangTai = "待确认";
+        } else if(XueYuanKeChengZhuangTai.DAI_BU_JIAO.equals(xueYuanKeChengZhuangTai)) {
+            keChengZhuangTai = "待补缴";
+        }else if(XueYuanKeChengZhuangTai.DAI_PAI_KE.equals(xueYuanKeChengZhuangTai)) {
+            keChengZhuangTai = "待排课";
+        } else if(XueYuanKeChengZhuangTai.DAI_SHANG_KE.equals(xueYuanKeChengZhuangTai)) {
+            keChengZhuangTai = "待上课";
+        }else if(XueYuanKeChengZhuangTai.DAI_JIE_KE.equals(xueYuanKeChengZhuangTai)) {
+            keChengZhuangTai = "待结课";
+        } else if(XueYuanKeChengZhuangTai.YI_JIE_KE.equals(xueYuanKeChengZhuangTai)) {
+            keChengZhuangTai = "已结课";
+        } else {
+            keChengZhuangTai = "未知";
+        }
+        return keChengZhuangTai;
     }
 }

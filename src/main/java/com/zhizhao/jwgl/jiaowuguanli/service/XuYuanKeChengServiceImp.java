@@ -108,4 +108,20 @@ public class XuYuanKeChengServiceImp implements XueYuanKeChengService {
     public XueYuanKeCheng getXueYuanKeChengByXueYuanIdAndKeChengId(Long xueYuanId, Long keChengId) {
         return xueYuanKeChengRepository.findByXueYuanIdAndKeChengIdAndIsDeletedIsFalse(xueYuanId, keChengId);
     }
+
+    /**
+     * 根据学员Id, 获取不包含当前学员课程Id的，状态!=【已结课】的学员课程
+     *
+     * @param xueYuanId
+     * @param excludedXueYuanKeChengId
+     * @return
+     */
+    @Override
+    public List<XueYuanKeCheng> getQiTaWeiJieKeCheng(Long xueYuanId, Long excludedXueYuanKeChengId) {
+        if(xueYuanId == null) {
+            throw new BusinessException("请提供要查询的学员");
+        }
+        List<XueYuanKeCheng> xueYuanKeChengList = xueYuanKeChengMapper.getQiTaWeiJieKeCheng(xueYuanId, excludedXueYuanKeChengId);
+        return xueYuanKeChengList;
+    }
 }

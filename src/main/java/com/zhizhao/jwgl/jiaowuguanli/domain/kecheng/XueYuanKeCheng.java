@@ -7,6 +7,7 @@ import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanKeChengZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.YouHuiLeiXing;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
+import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
@@ -185,6 +186,11 @@ public class XueYuanKeCheng extends AggRoot {
         setKeChengZhuangTai(XueYuanKeChengZhuangTai.DAI_SHANG_KE);
     }
 
+    // 更改学员课程状态
+    public void gengGaiXueYuanKeChengZhangTai(XueYuanKeChengZhuangTai xueYuanKeChengZhuangTai) {
+        setKeChengZhuangTai(xueYuanKeChengZhuangTai);
+    }
+
     /**
      * 缴费确认更改学员课程状态
      * @param cmd
@@ -199,8 +205,9 @@ public class XueYuanKeCheng extends AggRoot {
      * @return 本次课消金额
      */
     public Double dianMingGengXinShengYuKeShiXiaoKeJinE(Double kouChuKeShi) {
-        if(!XueYuanKeChengZhuangTai.DAI_SHANG_KE.equals(getKeChengZhuangTai())) {
-            throw new BusinessException("当前学员课程状态不能点名");
+        // 学员课程状态为【待上课】或【待补缴】，可以排课上课
+        if(!XueYuanKeChengZhuangTai.DAI_SHANG_KE.equals(getKeChengZhuangTai()) || !XueYuanKeChengZhuangTai.DAI_BU_JIAO.equals(getKeChengZhuangTai())) {
+            throw new BusinessException("不能点名, 存在课程状态为【" + Converter.convertXueYuanKeChengZhuangTai2String(getKeChengZhuangTai()) + "】的记录");
         }
         Double keXiaoJinE = 0.0;
         // 赠送课时

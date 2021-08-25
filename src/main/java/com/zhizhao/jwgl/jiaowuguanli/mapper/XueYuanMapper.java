@@ -1,9 +1,12 @@
 package com.zhizhao.jwgl.jiaowuguanli.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXuYuanLiShi;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
 import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanQianZai;
+import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanZaiDu;
 
 import java.util.List;
 
@@ -43,4 +46,23 @@ public interface XueYuanMapper extends MyBaseMapper<XueYuan> {
      * @return
      */
     IPage<DtoXueYuanQianZai> huoQuQianZaiXueYuanLieBiao(IPage page, String keyword, String genJinZhuangTai, Long genJinRenId);
+
+    /**
+     * 获取在读学员列表
+     *
+     * @param keyword  关键字
+     * @param banJiId  班级Id
+     * @return
+     */
+    IPage<DtoXueYuanZaiDu> huoZaiDuXueYuanLieBiao(Page<DtoXueYuanZaiDu> page, String keyword, String banJiId);
+
+    /**
+     * 获取历史学员列表
+     *
+     * @param keyword     关键字
+     * @param keChengId   课程Id
+     * @param genJinRenId 跟进人Id
+     * @return
+     */
+    IPage<DtoXuYuanLiShi> huoQuLiShiXueYuanLieBiao(Page<DtoXueYuanZaiDu> page, String keyword, String keChengId, String genJinRenId);
 }

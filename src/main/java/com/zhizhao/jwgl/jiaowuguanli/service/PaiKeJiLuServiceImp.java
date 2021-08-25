@@ -116,4 +116,19 @@ public class PaiKeJiLuServiceImp implements PaiKeJiLuService{
         }
         return dtoPaiKeJiLu;
     }
+
+    /**
+     * 根据排课信息Id，获取所有未点名的排课记录
+     * @param paiKeXinXinXiIdList 排课信息Id组
+     * @return
+     */
+    @Override
+    public List<PaiKeJiLu> getWeiDianMingPaiKeJiLuByPaiKeXinXiId(List<Long> paiKeXinXinXiIdList) {
+        if(paiKeXinXinXiIdList == null || paiKeXinXinXiIdList.size() == 0) {
+            throw new BusinessException("请提供要查询的排课信息");
+        }
+        List<PaiKeJiLu> paiKeJiLuList = paiKeJiLuRepository.getWeiDianMingPaiKeJiLuByPaiKeXinXiId(paiKeXinXinXiIdList);
+        //List<PaiKeJiLu> paiKeJiLuList = paiKeJiLuMapper.getPaiKeJiLuByPaiKeXinXiIdZuAndShangKeXueYuan(paiKeXinXinXiIdList, shangKeXueYuanId);
+        return paiKeJiLuList;
+    }
 }

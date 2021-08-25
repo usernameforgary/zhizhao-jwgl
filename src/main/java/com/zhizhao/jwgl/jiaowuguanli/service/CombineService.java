@@ -66,4 +66,12 @@ public interface CombineService {
      * @return
      */
     void baoCunKeHouDianPingXinXi(List<DtoChengZhangJiLu> chengZhangJiLuZu);
+
+    /**
+     * 学员课程结课
+     * @param xueYuanKeChengId 学员课程Id
+     * @param banJiId 班级Id
+     * @return
+     */
+    void xueYuanKeChengJieKe(Long xueYuanKeChengId, Long banJiId);
 }

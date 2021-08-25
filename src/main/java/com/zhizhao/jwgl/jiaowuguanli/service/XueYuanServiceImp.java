@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhizhao.jwgl.jiaowuguanli.domain.constant.XueYuanZhuangTai;
 import com.zhizhao.jwgl.jiaowuguanli.domain.xueyuan.XueYuan;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoPageResult;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuan;
-import com.zhizhao.jwgl.jiaowuguanli.dto.DtoXueYuanQianZai;
+import com.zhizhao.jwgl.jiaowuguanli.dto.*;
 import com.zhizhao.jwgl.jiaowuguanli.exception.BusinessException;
 import com.zhizhao.jwgl.jiaowuguanli.mapper.XueYuanMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.XueYuanRepository;
@@ -153,6 +151,44 @@ public class XueYuanServiceImp implements XueYuanService {
         IPage<DtoXueYuanQianZai> dtoXueYuanQianZaiPageResult = xueYuanMapper.huoQuQianZaiXueYuanLieBiao(page, keyword, genJinZhuangTai, genJinRenId);
 
         DtoPageResult<DtoXueYuanQianZai> dtoPageResult = Converter.convertPageResultMybatisPlus(dtoXueYuanQianZaiPageResult);
+        return dtoPageResult;
+    }
+
+    /**
+     * 获取在读学员列表
+     *
+     * @param pageNum
+     * @param pageSize
+     * @param keyword  关键字
+     * @param banJiId  班级Id
+     * @return
+     */
+    @Override
+    public DtoPageResult<DtoXueYuanZaiDu> huoQuZaiDuXueYuanLieBiao(Integer pageNum, Integer pageSize, String keyword, String banJiId) {
+        Page<DtoXueYuanZaiDu> page = new Page<>(pageNum, pageSize);
+
+        IPage<DtoXueYuanZaiDu> dtoXueYuanZaiDuPageResult = xueYuanMapper.huoZaiDuXueYuanLieBiao(page, keyword, banJiId);
+
+        DtoPageResult<DtoXueYuanZaiDu> dtoPageResult = Converter.convertPageResultMybatisPlus(dtoXueYuanZaiDuPageResult);
+        return dtoPageResult;
+    }
+
+    /**
+     * 获取历史学员列表
+     *
+     * @param pageNum
+     * @param pageSize
+     * @param keyword     关键字
+     * @param keChengId   课程Id
+     * @param genJinRenId 跟进人Id
+     * @return
+     */
+    @Override
+    public DtoPageResult<DtoXuYuanLiShi> huoQuLiShiXueYuanLieBiao(Integer pageNum, Integer pageSize, String keyword, String keChengId, String genJinRenId) {
+        Page<DtoXueYuanZaiDu> page = new Page<>(pageNum, pageSize);
+        IPage<DtoXuYuanLiShi> dtoXuYuanLiShiPageResult = xueYuanMapper.huoQuLiShiXueYuanLieBiao(page, keyword, keChengId, genJinRenId);
+
+        DtoPageResult<DtoXuYuanLiShi> dtoPageResult = Converter.convertPageResultMybatisPlus(dtoXuYuanLiShiPageResult);
         return dtoPageResult;
     }
 }

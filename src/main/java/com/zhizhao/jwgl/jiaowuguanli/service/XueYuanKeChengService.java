@@ -55,4 +55,12 @@ public interface XueYuanKeChengService {
      * @return
      */
     XueYuanKeCheng getXueYuanKeChengByXueYuanIdAndKeChengId(Long xueYuanId, Long keChengId);
+
+    /**
+     * 根据学员Id, 获取不包含当前学员课程Id的，状态!=【已结课】的学员课程
+     * @param xueYuanId
+     * @param excludedXueYuanKeChengId
+     * @return
+     */
+    List<XueYuanKeCheng> getQiTaWeiJieKeCheng(Long xueYuanId, Long excludedXueYuanKeChengId);
 }

@@ -118,4 +118,22 @@
         </where>
     </select>
     <!-- 根据排课记录Id，查询排课记录，课后点评 end -->
+
+    <!-- 根据排课信息Id，上课学员Id。获取包含该学员的，所有【待点名】的上课排课记录 -->
+    <select id="getPaiKeJiLuByPaiKeXinXiIdZuAndShangKeXueYuan"
+            resultType="com.zhizhao.jwgl.jiaowuguanli.domain.paike.PaiKeJiLu">
+        select A.*
+        from pai_ke_ji_lu A
+        join pai_ke_ji_lu_shang_ke_xue_yuan_zu B on B.pai_ke_ji_lu_id = A.id
+        <where>
+            A.pai_ke_ji_lu_zhuang_tai = 'DAI_DIAN_MING'
+            and A.ban_ji_pai_ke_xin_xi_id in
+            <foreach collection="paiKeXinXinXiIdList" item="paiKeXinXinXiId" open="(" separator=","  close=")">
+                #{paiKeXinXinXiId}
+            </foreach>
+            and B.is_deleted = 0
+            and B.xue_yuan_id = #{shangKeXueYuanId}
+        </where>
+    </select>
+    <!-- 根据排课信息Id，上课学员Id。获取包含该学员的，所有【待点名】的上课排课记录 end -->
 </mapper>

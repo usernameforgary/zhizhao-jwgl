@@ -41,4 +41,11 @@ public interface PaiKeJiLuService {
      * @return
      */
     DtoPaiKeJiLu getPaiKeJiLuKeHouDianPingById(Long id);
+
+    /**
+     * 根据排课信息Id，获取所有未点名的排课记录
+     * @param paiKeXinXinXiIdList 排课信息Id组
+     * @return
+     */
+    List<PaiKeJiLu> getWeiDianMingPaiKeJiLuByPaiKeXinXiId(List<Long> paiKeXinXinXiIdList);
 }
