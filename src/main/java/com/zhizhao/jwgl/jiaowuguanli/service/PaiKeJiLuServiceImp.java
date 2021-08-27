@@ -11,6 +11,7 @@ import com.zhizhao.jwgl.jiaowuguanli.mapper.PaiKeJiLuMapper;
 import com.zhizhao.jwgl.jiaowuguanli.repository.PaiKeJiLuRepository;
 import com.zhizhao.jwgl.jiaowuguanli.service.oss.aliyun.OSSHelper;
 import com.zhizhao.jwgl.jiaowuguanli.utils.Converter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -130,5 +131,39 @@ public class PaiKeJiLuServiceImp implements PaiKeJiLuService{
         List<PaiKeJiLu> paiKeJiLuList = paiKeJiLuRepository.getWeiDianMingPaiKeJiLuByPaiKeXinXiId(paiKeXinXinXiIdList);
         //List<PaiKeJiLu> paiKeJiLuList = paiKeJiLuMapper.getPaiKeJiLuByPaiKeXinXiIdZuAndShangKeXueYuan(paiKeXinXinXiIdList, shangKeXueYuanId);
         return paiKeJiLuList;
+    }
+
+    /**
+     * 获取老师点名率，根据上课开始日期和上课结束日期
+     *
+     * @param shangKeLaoShiId
+     * @param shangKeRiQiStart
+     * @param shangKeRiQiEnd
+     * @return
+     */
+    @Override
+    public Double huoQuLaoShiDianMingLv(Long shangKeLaoShiId, Long shangKeRiQiStart, Long shangKeRiQiEnd) {
+        if(shangKeLaoShiId == null) {
+            throw new BusinessException("请指定要查询点名率的老师");
+        }
+        Double laoShiDianMingLv = paiKeJiLuMapper.huoQuLaoShiDianMingLv(shangKeLaoShiId, shangKeRiQiStart, shangKeRiQiEnd);
+        return laoShiDianMingLv;
+    }
+
+    /**
+     * 获取老师上课课时，根据上课开始日期和上课结束日期
+     *
+     * @param shangKeLaoShiId
+     * @param shangKeRiQiStart 上课开始日期
+     * @param shangKeRiQiEnd   上课结束日期
+     * @return
+     */
+    @Override
+    public Double huoQuLaoShiShangKeKeShi(Long shangKeLaoShiId, Long shangKeRiQiStart, Long shangKeRiQiEnd) {
+        if(shangKeLaoShiId == null) {
+            throw new BusinessException("请指定要查询点名率的老师");
+        }
+        Double shangKeKeShi = paiKeJiLuMapper.huoQuLaoShiShangKeKeShi(shangKeLaoShiId, shangKeRiQiStart, shangKeRiQiEnd);
+        return shangKeKeShi;
     }
 }

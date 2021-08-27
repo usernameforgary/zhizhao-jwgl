@@ -185,7 +185,7 @@ public class XueYuanServiceImp implements XueYuanService {
      */
     @Override
     public DtoPageResult<DtoXuYuanLiShi> huoQuLiShiXueYuanLieBiao(Integer pageNum, Integer pageSize, String keyword, String keChengId, String genJinRenId) {
-        Page<DtoXueYuanZaiDu> page = new Page<>(pageNum, pageSize);
+        Page<DtoXuYuanLiShi> page = new Page<>(pageNum, pageSize);
         IPage<DtoXuYuanLiShi> dtoXuYuanLiShiPageResult = xueYuanMapper.huoQuLiShiXueYuanLieBiao(page, keyword, keChengId, genJinRenId);
 
         DtoPageResult<DtoXuYuanLiShi> dtoPageResult = Converter.convertPageResultMybatisPlus(dtoXuYuanLiShiPageResult);

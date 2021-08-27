@@ -35,4 +35,23 @@ public interface PaiKeJiLuMapper extends MyBaseMapper<PaiKeJiLu> {
      * @return
      */
     List<PaiKeJiLu> getPaiKeJiLuByPaiKeXinXiIdZuAndShangKeXueYuan(List<Long> paiKeXinXinXiIdList, Long shangKeXueYuanId);
+
+    /**
+     * 获取老师点名率，根据上课开始日期和上课结束日期
+     * @param shangKeLaoShiId
+     * @param shangKeRiQiStart
+     * @param shangKeRiQiEnd
+     * @return
+     */
+    Double huoQuLaoShiDianMingLv(Long shangKeLaoShiId, Long shangKeRiQiStart, Long shangKeRiQiEnd);
+
+    /**
+     * 获取老师上课课时，根据上课开始日期和上课结束日期
+     *
+     * @param shangKeLaoShiId
+     * @param shangKeRiQiStart 上课开始日期
+     * @param shangKeRiQiEnd   上课结束日期
+     * @return
+     */
+    Double huoQuLaoShiShangKeKeShi(Long shangKeLaoShiId, Long shangKeRiQiStart, Long shangKeRiQiEnd);
 }

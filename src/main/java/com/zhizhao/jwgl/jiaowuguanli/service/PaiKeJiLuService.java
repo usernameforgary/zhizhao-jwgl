@@ -48,4 +48,22 @@ public interface PaiKeJiLuService {
      * @return
      */
     List<PaiKeJiLu> getWeiDianMingPaiKeJiLuByPaiKeXinXiId(List<Long> paiKeXinXinXiIdList);
+
+    /**
+     * 获取老师点名率，根据上课开始日期和上课结束日期
+     * @param shangKeLaoShiId
+     * @param shangKeRiQiStart 上课开始日期
+     * @param shangKeRiQiEnd 上课结束日期
+     * @return
+     */
+    Double huoQuLaoShiDianMingLv(Long shangKeLaoShiId, Long shangKeRiQiStart, Long shangKeRiQiEnd);
+
+    /**
+     * 获取老师上课课时，根据上课开始日期和上课结束日期
+     * @param shangKeLaoShiId
+     * @param shangKeRiQiStart 上课开始日期
+     * @param shangKeRiQiEnd 上课结束日期
+     * @return
+     */
+    Double huoQuLaoShiShangKeKeShi(Long shangKeLaoShiId, Long shangKeRiQiStart, Long shangKeRiQiEnd);
 }

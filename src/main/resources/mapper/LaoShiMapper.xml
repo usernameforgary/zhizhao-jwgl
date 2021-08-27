@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhizhao.jwgl.jiaowuguanli.mapper.LaoShiMapper">
     <select id="huoQuLaoShiAll" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoLaoShi">
-       select A.id as laoShiId, B.id as zhangHaoId, B.xing_ming as xingMing
+       select A.id, B.id as zhangHaoId, B.xing_ming as xingMing
        from lao_shi A
        join zhang_hao B
        on A.zhang_hao_id = B.id
@@ -16,4 +16,40 @@
            order by B.update_time desc
        </where>
     </select>
+
+    <!-- 获取老师列表 -->
+    <resultMap id="laoShiLieBiao" type="com.zhizhao.jwgl.jiaowuguanli.dto.DtoLaoShi">
+        <collection property="shanChangKeMuZu" select="huoQuShanChangKeMu" column="{laoShiId=id}"></collection>
+    </resultMap>
+    <select id="huoQuLaoShiLieBiao" resultMap="laoShiLieBiao">
+        select
+            A.id, A.xing_ming,
+            B.xing_bie, B.shou_ji, B.zai_zhi_zhuang_tai, B.id as zhangHaoId
+        from lao_shi A
+        join zhang_hao B on A.zhang_hao_id = B.id
+        <where>
+            A.is_deleted = 0
+            <if test="keyword != null and keyword != ''">
+                and (
+                    A.xing_ming LIKE CONCAT('%',#{keyword},'%')
+                    or B.shou_ji LIKE CONCAT('%',#{keyword},'%')
+                )
+            </if>
+            <if test="zaiZhiZhuangTai != null and zaiZhiZhuangTai == true">
+                and B.zai_zhi_zhuang_tai = 1
+            </if>
+            <if test="zaiZhiZhuangTai != null and zaiZhiZhuangTai == false">
+                and B.zai_zhi_zhuang_tai = 0
+            </if>
+        </where>
+    </select>
+    <select id="huoQuShanChangKeMu" resultType="com.zhizhao.jwgl.jiaowuguanli.dto.DtoCommon">
+        select B.id, B.min_cheng as mingCheng
+        from lao_shi_shan_chang_ke_mu_zu A
+        join shan_chang_ke_mu B on A.shan_chang_ke_mu_id = B.id
+        <where>
+            A.lao_shi_id = #{laoShiId}
+        </where>
+    </select>
+    <!-- 获取老师列表 end -->
 </mapper>

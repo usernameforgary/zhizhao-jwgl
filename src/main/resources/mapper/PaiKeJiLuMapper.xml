@@ -28,10 +28,10 @@
         <where>
             A.is_deleted = 0
             and B.is_deleted = 0
-            <if test="banJiId!=null">
+            <if test="banJiId!=null and banJiId != ''">
                 and B.ban_ji_id = #{banJiId}
             </if>
-            <if test="shangKeLaoShiId!=null">
+            <if test="shangKeLaoShiId!=null and shangKeLaoShiId != ''">
                 and A.shang_ke_lao_shi_id=#{shangKeLaoShiId}
             </if>
             <if test="null != paiKeJiLuZhuangTaiZu and paiKeJiLuZhuangTaiZu.size > 0">
@@ -40,13 +40,13 @@
                     #{paiKeJiLuZhuangTai}
                 </foreach>
             </if>
-            <if test="shangKeRiQiBegin!=null">
+            <if test="shangKeRiQiBegin!=null and shangKeRiQiBegin != ''">
                 and A.shang_ke_ri_qi <![CDATA[ > ]]> #{shangKeRiQiBegin}
             </if>
-            <if test="shangKeRiQiEnd!=null">
+            <if test="shangKeRiQiEnd!=null and shangKeRiQiEnd != ''">
                and A.shang_ke_ri_qi <![CDATA[ < ]]> #{shangKeRiQiEnd}
             </if>
-            <if test="shangKeRiQiEnd==null">
+            <if test="shangKeRiQiEnd==null and shangKeRiQiEnd != ''">
                 order by A.update_time desc
             </if>
         </where>
@@ -136,4 +136,61 @@
         </where>
     </select>
     <!-- 根据排课信息Id，上课学员Id。获取包含该学员的，所有【待点名】的上课排课记录 end -->
+
+    <!-- 获取老师点名率，根据上课开始日期和上课结束日期 -->
+    <select id="huoQuLaoShiDianMingLv" resultType="java.lang.Double">
+        select (BB.allCount / AA.allCount) as dianMingLv
+        from
+        (
+            select count(*) as allCount
+            from pai_ke_ji_lu A
+            <where>
+                A.is_deleted = 0
+                and A.shang_ke_lao_shi_id = #{shangKeLaoShiId}
+                <if test="shangKeRiQiStart!=null and shangKeRiQiStart != ''">
+                    and A.shang_ke_ri_qi <![CDATA[ > ]]> #{shangKeRiQiStart}
+                </if>
+                <if test="shangKeRiQiEnd!=null and shangKeRiQiEnd != ''">
+                    and A.shang_ke_ri_qi <![CDATA[ < ]]> #{shangKeRiQiEnd}
+                </if>
+            </where>
+        ) AA
+        join
+        (
+            select count(*) as allCount
+            from pai_ke_ji_lu A
+            <where>
+                A.is_deleted = 0
+                and A.shang_ke_lao_shi_id = #{shangKeLaoShiId}
+                and A.pai_ke_ji_lu_zhuang_tai != 'DAI_DIAN_MING'
+                <if test="shangKeRiQiStart!=null and shangKeRiQiStart != ''">
+                    and A.shang_ke_ri_qi <![CDATA[ > ]]> #{shangKeRiQiStart}
+                </if>
+                <if test="shangKeRiQiEnd!=null and shangKeRiQiEnd != ''">
+                    and A.shang_ke_ri_qi <![CDATA[ < ]]> #{shangKeRiQiEnd}
+                </if>
+            </where>
+        ) BB
+    </select>
+    <!-- 获取老师点名率，根据上课开始日期和上课结束日期 end -->
+
+    <!-- 获取老师上课课时，根据上课开始日期和上课结束日期 -->
+    <select id="huoQuLaoShiShangKeKeShi" resultType="java.lang.Double">
+        select sum(B.kou_chu_ke_shi)
+        from pai_ke_ji_lu A
+        join dian_ming_ji_lu B on B.pai_ke_ji_lu_id = A.id
+        <where>
+            A.is_deleted = 0
+            and A.shang_ke_lao_shi_id = #{shangKeLaoShiId}
+            and A.pai_ke_ji_lu_zhuang_tai != 'DAI_DIAN_MING'
+            <if test="shangKeRiQiStart!=null and shangKeRiQiStart != ''">
+                and A.shang_ke_ri_qi <![CDATA[ > ]]> #{shangKeRiQiStart}
+            </if>
+            <if test="shangKeRiQiEnd!=null and shangKeRiQiEnd != ''">
+                and A.shang_ke_ri_qi <![CDATA[ < ]]> #{shangKeRiQiEnd}
+            </if>
+            and B.is_deleted = 0
+        </where>
+    </select>
+    <!-- 获取老师上课课时，根据上课开始日期和上课结束日期 end -->
 </mapper>

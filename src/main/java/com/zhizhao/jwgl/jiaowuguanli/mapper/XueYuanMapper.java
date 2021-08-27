@@ -64,5 +64,5 @@ public interface XueYuanMapper extends MyBaseMapper<XueYuan> {
      * @param genJinRenId 跟进人Id
      * @return
      */
-    IPage<DtoXuYuanLiShi> huoQuLiShiXueYuanLieBiao(Page<DtoXueYuanZaiDu> page, String keyword, String keChengId, String genJinRenId);
+    IPage<DtoXuYuanLiShi> huoQuLiShiXueYuanLieBiao(Page<DtoXuYuanLiShi> page, String keyword, String keChengId, String genJinRenId);
 }
