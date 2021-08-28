@@ -51,7 +51,7 @@
         where A.ban_ji_id = #{ban_ji_id}
         and A.is_deleted = 0
         and B.is_deleted = 0
-        and B.pai_ke_ji_lu_zhuang_tai = 'YI_DIAN_MING'
+        and B.pai_ke_ji_lu_zhuang_tai != 'DAI_DIAN_MING'
     </select>
     <!-- 查询班级列表 end -->
 
