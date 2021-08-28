@@ -37,7 +37,7 @@
         <result column="ding_jia_biao_zhun_zu" property="dingJiaBiaoZhunZu" jdbcType="VARCHAR" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
     </resultMap>
     <select id="getWeiXuanKeChengListByXueYuanId" resultMap="keChengResultMap">
-        select A.* from Ke_cheng A
+        select A.* from ke_cheng A
         <where>
             A.is_deleted = 0
             <if test="xueYuanId!=null">
