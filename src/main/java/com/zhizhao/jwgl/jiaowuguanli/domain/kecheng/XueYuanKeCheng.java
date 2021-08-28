@@ -206,7 +206,7 @@ public class XueYuanKeCheng extends AggRoot {
      */
     public Double dianMingGengXinShengYuKeShiXiaoKeJinE(Double kouChuKeShi) {
         // 学员课程状态为【待上课】或【待补缴】，可以排课上课
-        if(!XueYuanKeChengZhuangTai.DAI_SHANG_KE.equals(getKeChengZhuangTai()) || !XueYuanKeChengZhuangTai.DAI_BU_JIAO.equals(getKeChengZhuangTai())) {
+        if(!(XueYuanKeChengZhuangTai.DAI_SHANG_KE.equals(getKeChengZhuangTai()) || XueYuanKeChengZhuangTai.DAI_BU_JIAO.equals(getKeChengZhuangTai()))) {
             throw new BusinessException("不能点名, 存在课程状态为【" + Converter.convertXueYuanKeChengZhuangTai2String(getKeChengZhuangTai()) + "】的记录");
         }
         Double keXiaoJinE = 0.0;
