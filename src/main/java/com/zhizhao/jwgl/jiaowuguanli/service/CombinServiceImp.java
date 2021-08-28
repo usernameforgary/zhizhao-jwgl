@@ -654,9 +654,11 @@ public class CombinServiceImp implements CombineService {
                 // 学员课程_更新剩余课时&消课金额 end
 
                 // 更新学员课程状态
-                if((currentShengYuKeShi - dtoShangKeXueYuan.getKouChuKeShi()) < xueYuanKeCheng.getZengSongKeShi()) {
-                    // (剩余课时 - 扣除课时) <= 赠送课时。更改学员课程状态为【待结课】
-                    xueYuanKeCheng.gengGaiXueYuanKeChengZhangTai(XueYuanKeChengZhuangTai.DAI_JIE_KE);
+                if((currentShengYuKeShi - dtoShangKeXueYuan.getKouChuKeShi() - xueYuanKeCheng.getZengSongKeShi()) <= 0) {
+                    if(!XueYuanKeChengZhuangTai.DAI_JIE_KE.equals(xueYuanKeCheng.getKeChengZhuangTai())) {
+                        // (剩余课时 - 扣除课时 - 赠送课时) <= 0。更改学员课程状态为【待结课】
+                        xueYuanKeCheng.gengGaiXueYuanKeChengZhangTai(XueYuanKeChengZhuangTai.DAI_JIE_KE);
+                    }
                 }
                 // 更新学员课程状态 end
 
@@ -684,9 +686,11 @@ public class CombinServiceImp implements CombineService {
                 // 学员课程_更新剩余课时&消课金额 end
 
                 // 更新学员课程状态
-                if((currentShengYuKeShi - dtoShangKeXueYuan.getKouChuKeShi()) < xueYuanKeCheng.getZengSongKeShi()) {
-                    // (剩余课时 - 扣除课时) <= 赠送课时。更改学员课程状态为【待结课】
-                    xueYuanKeCheng.gengGaiXueYuanKeChengZhangTai(XueYuanKeChengZhuangTai.DAI_JIE_KE);
+                if((currentShengYuKeShi - dtoShangKeXueYuan.getKouChuKeShi() - xueYuanKeCheng.getZengSongKeShi()) <= 0) {
+                    if(!XueYuanKeChengZhuangTai.DAI_JIE_KE.equals(xueYuanKeCheng.getKeChengZhuangTai())) {
+                        // (剩余课时 - 扣除课时 - 赠送课时) <= 0。更改学员课程状态为【待结课】
+                        xueYuanKeCheng.gengGaiXueYuanKeChengZhangTai(XueYuanKeChengZhuangTai.DAI_JIE_KE);
+                    }
                 }
                 // 更新学员课程状态 end
 
