@@ -723,7 +723,11 @@ public class CombinServiceImp implements CombineService {
         if(banJi == null) {
             throw new BusinessException("对应班级没有找到");
         }
-        banJi.setYiShouKeShi(banJiYiShouKeShi);
+        Double prevYiShouKeShi = banJi.getYiShouKeShi();
+        if(prevYiShouKeShi == null) {
+            prevYiShouKeShi = 0.0;
+        }
+        banJi.setYiShouKeShi(prevYiShouKeShi + banJiYiShouKeShi);
         // 更新班级已授课时 end
     }
 
